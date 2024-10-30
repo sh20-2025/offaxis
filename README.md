@@ -8,3 +8,8 @@
 - 2802089 Tee Zhi Xi "Hello World!"
 - 2618972 McIntyre Aaron "Hello World"
 - 2768903 Nelson Freddie hello universe
+
+## Requirements
+
+- python 3.12
+- django 5.1.2
