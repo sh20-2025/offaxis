@@ -12,4 +12,4 @@
 *.vsix
 
 # environment file
-.venv
+venv/
