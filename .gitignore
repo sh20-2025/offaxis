@@ -13,3 +13,10 @@
 
 # environment file
 venv/
+
+# pycache
+__pycache__/
+*.py[cod]
+
+# db
+db.sqlite3
