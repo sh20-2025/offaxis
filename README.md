@@ -13,3 +13,13 @@
 
 - python 3.12
 - django 5.1.2
+
+## Contributing
+
+Commit messages should follow the guidelines described [here](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)
+
+Once you have cloned the repository, you can run the `setup.ps1` script setup python and it's dependencies, as well as pre-commit hooks.
+
+```powershell
+.\setup.ps1
+```
