@@ -20,8 +20,8 @@ class Artist (models.Model):
     is_approved = models.BooleanField(default=False)
     profile_picture_url = models.URLField(blank=True)
 
-    social_links = models.TextField(max_length=500, blank=True) # Will change with next atrib issue.
-    genre_tags = models.TextField(max_length=500, blank=True) # Will change with next atrib issue.
+    social_links = models.ManyToManyField('SocialLink', blank=True)
+    genre_tags = models.ManyToManyField('GenreTag', blank=True)
     gigs = models.TextField(max_length=500, blank=True) # models.ManyToManyField('Gig', blank=True) eventually.
 
     slug = models.SlugField(unique=True, default='default-slug')
@@ -34,3 +34,18 @@ class Artist (models.Model):
     def __str__(self):
 
         return self.user.username
+
+# social link attribute.
+class SocialLink (models.Model):
+    type = models.CharField(max_length=100)
+    url = models.URLField()
+
+    def __str__(self):
+        return self.type
+
+# genre tag attribute.
+class GenreTag (models.Model):
+    tag = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.tag
