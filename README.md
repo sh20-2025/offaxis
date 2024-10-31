@@ -21,13 +21,13 @@ Commit messages should follow the guidelines described [here](https://gist.githu
 Once you have cloned the repository, you can run the `setup.ps1` script setup python and it's dependencies, as well as pre-commit hooks.
 
 ```powershell
-.\setup.ps1
+.\scripts\setup.ps1
 ```
 
 The python virtual environment will be created in `C:\Users\Public\sh20-main-venv`, it will be automatically activated by the setup script. However you can also activate it using:
 
 ```powershell
-.\activate-venv.ps1
+.\scripts\activate-venv.ps1
 ```
 
 And deactivate it using:

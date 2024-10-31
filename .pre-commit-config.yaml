@@ -15,6 +15,11 @@ repos:
         stages: [commit-msg]
         language: system
 
+      - id: check-django
+        name: Check Django Project
+        entry: powershell scripts/check-django.ps1
+        language: system
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
