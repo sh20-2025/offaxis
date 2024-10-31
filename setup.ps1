@@ -78,6 +78,17 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host $prefix "Pre-commit hooks installed successfully"
 
+Write-Host $prefix "Installing commit-msg hook"
+
+pre-commit install --hook-type commit-msg
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host $prefix "Failed to install commit-msg hook"
+    Exit
+}
+
+Write-Host $prefix "Commit-msg hook installed successfully"
+
 Write-Host $prefix "Git setup for SH20-main complete"
 
 Write-Host $prefix "Setup for SH20-main complete"
