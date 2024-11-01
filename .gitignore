@@ -13,3 +13,4 @@
 
 # environment file
 venv/
+__pycache__/
