@@ -1,0 +1,40 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+default_stages: [pre-commit, pre-push]
+default_language_version:
+  python: python3.12
+
+repos:
+  - repo: local
+    hooks:
+      - id: validate-commit-msg
+        name: Validate Commit Message
+        entry: python scripts/validate_commit_msg.py
+        always_run: true
+        stages: [commit-msg]
+        language: system
+
+      - id: check-django
+        name: Check Django Project
+        entry: powershell scripts/check-django.ps1
+        language: system
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-illegal-windows-names
+      - id: check-case-conflict
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
