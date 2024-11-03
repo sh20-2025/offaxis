@@ -6,7 +6,11 @@ props:
     type?: The type of the button
     variant?: The variant of the button (primary, secondary, rainbow)
     text?: The text of the button
+    size?: The size of the button (sm, md, lg)
+    full?: Whether the button should take up the full width of its container (full, null)
 {% endcomment %}
 <button id="{{ id|default:"" }}"
         type="{{ type|default:"button" }}"
-        class="btn btn-{{ variant|default:"primary" }}">{{ text|default:"Click Me" }}</button>
+        class="btn btn-{{ variant|default:"primary" }} btn-{{ size|default:"md" }} btn-{{ full }}">
+    {{ text|default:"Click Me" }}
+</button>

@@ -10,6 +10,20 @@
   transition: all 0.3s ease;
 }
 
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+}
+
+.btn-lg {
+  padding: 1.2rem 2.4rem;
+  font-size: 1.2rem;
+}
+
+.btn-full {
+  width: 100%;
+}
+
 .btn-primary {
   color: var(--oa-text-light);
   background-color: var(--oa-pink);
@@ -47,4 +61,107 @@
 
 .btn-rainbow:focus {
   filter: brightness(70%);
+}
+
+.input {
+  font-size: 1rem;
+  padding: 1rem 0.8rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--oa-text-mid);
+  transition: border-color 0.3s ease;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--oa-pink);
+}
+
+.input-sm {
+  padding: 0.7rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 0.3rem;
+}
+
+.input-lg {
+  padding: 1.1rem 1rem;
+  font-size: 1.2rem;
+}
+
+.input-light {
+  background-color: var(--oa-text-light);
+  color: var(--oa-text-dark);
+}
+
+.input-dark {
+  background-color: var(--oa-text-dark);
+  color: var(--oa-text-light);
+}
+
+.input-full {
+  width: 100%;
+}
+
+.input-password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-password-container .input {
+  padding-right: 3.4rem;
+}
+
+.input-password-container .input-sm {
+  padding-right: 2.8rem;
+}
+
+.input-password-container .input-lg {
+  padding-right: 3.9rem;
+}
+
+.input-password-toggle {
+  position: absolute;
+  right: 0.8rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+  mask-image: url("../icons/eye.svg");
+  -webkit-mask-image: url("../icons/eye.svg");
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
+.input-password-toggle:hover {
+  opacity: 0.75;
+}
+
+.input-password-toggle-off {
+  mask-image: url("../icons/eye-off.svg");
+  -webkit-mask-image: url("../icons/eye-off.svg");
+}
+
+.input-password-toggle-sm {
+  right: 0.6rem;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.input-password-toggle-lg {
+  right: 1rem;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.input-password-toggle-light {
+  background-color: var(--oa-text-dark);
+}
+
+.input-password-toggle-dark {
+  background-color: var(--oa-text-light);
 }

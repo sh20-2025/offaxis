@@ -22,10 +22,11 @@
       }
 
       .components {
+        width: 100%;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         grid-template-rows: auto;
-        gap: 3rem;
+        gap: 4rem;
         margin-top: 5rem;
       }
 
@@ -53,10 +54,42 @@
   <body>
     <h1>Components</h1>
     <div class="components">
-      <div class="component" data-name="Button">
-        {% include "components/button.html" with id="button1" type="button" variant="primary" text="Click Me" %}
-        {% include "components/button.html" with id="button2" type="button" variant="secondary" text="Click Me" %}
-        {% include "components/button.html" with id="button3" type="button" variant="rainbow" text="Click Me" %}
+      {% comment %} buttons {% endcomment %}
+      <div class="component" data-name="button--primary">
+        {% include "components/button.html" with id="button1" type="button" variant="primary" text="Click Me" size="lg" %}
+        {% include "components/button.html" with id="button2" type="button" variant="primary" text="Click Me" size="md" %}
+        {% include "components/button.html" with id="button3" type="button" variant="primary" text="Click Me" size="sm" %}
+      </div>
+      <div class="component" data-name="button--secondary">
+        {% include "components/button.html" with id="button4" type="button" variant="secondary" text="Click Me" size="lg" %}
+        {% include "components/button.html" with id="button5" type="button" variant="secondary" text="Click Me" size="md" %}
+        {% include "components/button.html" with id="button6" type="button" variant="secondary" text="Click Me" size="sm" %}
+      </div>
+      <div class="component" data-name="button--rainbow">
+        {% include "components/button.html" with id="button7" type="button" variant="rainbow" text="Click Me" size="lg" %}
+        {% include "components/button.html" with id="button8" type="button" variant="rainbow" text="Click Me" size="md" %}
+        {% include "components/button.html" with id="button9" type="button" variant="rainbow" text="Click Me" size="sm" %}
+      </div>
+      {% comment %} inputs {% endcomment %}
+      <div class="component" data-name="input--light">
+        {% include "components/input.html" with id="input1" name="name" type="text" variant="light" placeholder="Please enter your name..." size="lg" %}
+        {% include "components/input.html" with id="input2" name="name" type="text" variant="light" placeholder="Please enter your name..." size="md" %}
+        {% include "components/input.html" with id="input3" name="name" type="text" variant="light" placeholder="Please enter your name..." size="sm" %}
+      </div>
+      <div class="component" data-name="input--dark">
+        {% include "components/input.html" with id="input4" name="email" type="email" variant="dark" placeholder="Please enter your email..." size="lg" %}
+        {% include "components/input.html" with id="input5" name="email" type="email" variant="dark" placeholder="Please enter your email..." size="md" %}
+        {% include "components/input.html" with id="input6" name="email" type="email" variant="dark" placeholder="Please enter your email..." size="sm" %}
+      </div>
+      <div class="component" data-name="input--password--light">
+        {% include "components/input.html" with id="input7" name="password" type="password" variant="light" placeholder="Please enter your password..." size="lg" %}
+        {% include "components/input.html" with id="input8" name="password" type="password" variant="light" placeholder="Please enter your password..." size="md" %}
+        {% include "components/input.html" with id="input9" name="password" type="password" variant="light" placeholder="Please enter your password..." size="sm" %}
+      </div>
+      <div class="component" data-name="input--password--dark">
+        {% include "components/input.html" with id="input10" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="lg" %}
+        {% include "components/input.html" with id="input11" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="md" %}
+        {% include "components/input.html" with id="input12" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="sm" %}
       </div>
     </div>
   </body>
