@@ -20,7 +20,7 @@
   font-size: 1.2rem;
 }
 
-.btn-full {
+.btn-full-true {
   width: 100%;
 }
 
@@ -67,7 +67,7 @@
   font-size: 1rem;
   padding: 1rem 0.8rem;
   border-radius: 0.4rem;
-  border: 1px solid var(--oa-text-mid);
+  border: 1px solid var(--oa-text-medium);
   transition: border-color 0.3s ease;
   outline: none;
 }
@@ -97,7 +97,7 @@
   color: var(--oa-text-light);
 }
 
-.input-full {
+.input-full-true {
   width: 100%;
 }
 
@@ -164,4 +164,32 @@
 
 .input-password-toggle-dark {
   background-color: var(--oa-text-light);
+}
+
+.label {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.label-sm {
+  font-size: 0.8rem;
+}
+
+.label-lg {
+  font-size: 1.2rem;
+}
+
+.label-required-true::after {
+  content: "*";
+  color: var(--oa-pink);
+  margin-left: 0.25rem;
+}
+
+.label-light {
+  color: var(--oa-text-dark);
+}
+
+.label-dark {
+  color: var(--oa-text-medium-light);
 }

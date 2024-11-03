@@ -8,12 +8,13 @@ props:
     name?: The name of the input
     placeholder?: The placeholder text of the input
     size?: The size of the input (sm, md, lg)
-    full?: Whether the input should take up the full width of its container (full, null)
+    full?: Whether the input should take up the full width of its container (true, false)
     min?: The minimum value of the input (for number inputs)
     max? The maximum value of the input (for number inputs)
     minlength?: The minimum length of the input (for text inputs)
     maxlength?: The maximum length of the input (for text inputs)
     htmlsize?: The size of the input
+    required?: Whether the input is required (true, false)
 {% endcomment %}
 {% if type == 'password' %}
     <div class="input-password-container">
@@ -26,7 +27,8 @@ props:
                min="{{ min|default:"" }}"
                max="{{ max|default:"" }}"
                minlength="{{ minlength|default:"" }}"
-               maxlength="{{ maxlength|default:"" }}">
+               maxlength="{{ maxlength|default:"" }}"
+               required="{{ required|default:"false" }}">
         <button class="input-password-toggle input-password-toggle-{{ size|default:"md" }} input-password-toggle-{{ variant|default:"light" }} input-password-toggle-off"
                 type="button"></button>
         <script>
@@ -48,7 +50,7 @@ props:
         </script>
     </div>
 {% else %}
-    <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-{{ full }}"
+    <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full|default:"false" }}"
            id="{{ id|default:"" }}"
            type="{{ type|default:"text" }}"
            placeholder="{{ placeholder|default:"" }}"
@@ -57,5 +59,6 @@ props:
            min="{{ min|default:"" }}"
            max="{{ max|default:"" }}"
            minlength="{{ minlength|default:"" }}"
-           maxlength="{{ maxlength|default:"" }}">
+           maxlength="{{ maxlength|default:"" }}"
+           required="{{ required|default:"false" }}">
 {% endif %}

@@ -1,0 +1,14 @@
+{% comment %}
+This is a simple resuable label component that can be used in any template.
+
+props:
+    id?: The id of the label
+    variant?: The variant of the label (light, dark)
+    required?: Whether the label is for a required input (true, false)
+    for?: The for attribute of the label
+    size?: The size of the label (sm, md, lg)
+    text?: The text of the label
+{% endcomment %}
+<label for="{{ for|default:"" }}"
+       class="label label-{{ variant|default:"light" }} label-{{ size|default:"md" }} label-required-{{ required|default:"false" }}"
+       id="{{ id|default:"" }}">{{ text|default:"" }}</label>

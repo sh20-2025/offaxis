@@ -38,7 +38,7 @@
         flex-direction: column;
         gap: 1.5rem;
         padding: 2rem;
-        border: 1px solid var(--oa-text-mid);
+        border: 1px solid var(--oa-text-medium);
         border-radius: 0.5rem;
       }
 
@@ -48,6 +48,10 @@
         content: attr(data-name);
         font-size: 1.5rem;
         font-weight: bold;
+      }
+
+      .component-light {
+        background-color: var(--oa-text-light);
       }
     </style>
   </head>
@@ -90,6 +94,17 @@
         {% include "components/input.html" with id="input10" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="lg" %}
         {% include "components/input.html" with id="input11" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="md" %}
         {% include "components/input.html" with id="input12" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="sm" %}
+      </div>
+      {% comment %} labels {% endcomment %}
+      <div class="component component-light" data-name="label--light">
+        {% include "components/label.html" with id="label1" variant="light" required="true" for="input1" size="lg" text="Name" %}
+        {% include "components/label.html" with id="label2" variant="light" required="true" for="input2" size="md" text="Name" %}
+        {% include "components/label.html" with id="label3" variant="light" required="true" for="input3" size="sm" text="Name" %}
+      </div>
+      <div class="component" data-name="label--dark">
+        {% include "components/label.html" with id="label4" variant="dark" required="true" for="input4" size="lg" text="Email" %}
+        {% include "components/label.html" with id="label5" variant="dark" required="true" for="input5" size="md" text="Email" %}
+        {% include "components/label.html" with id="label6" variant="dark" required="true" for="input6" size="sm" text="Email" %}
       </div>
     </div>
   </body>

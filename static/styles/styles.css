@@ -17,7 +17,8 @@
 
   --oa-text-dark: #000000;
   --oa-text-light: #ffffff;
-  --oa-text-mid: #5a5a5a;
+  --oa-text-medium: #5a5a5a;
+  --oa-text-medium-light: #a4a4a4;
 }
 
 * {
