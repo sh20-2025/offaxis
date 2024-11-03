@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="description" content="Off Axis Components" />
+    <meta name="keywords" content="Off Axis, Components" />
+    <title>Components</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'styles/styles.css' %}" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'styles/components.css' %}" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+      }
+
+      .components {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        grid-template-rows: auto;
+        gap: 3rem;
+        margin-top: 5rem;
+      }
+
+      .component {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 2rem;
+        border: 1px solid var(--oa-text-mid);
+        border-radius: 0.5rem;
+      }
+
+      .component::before {
+        position: absolute;
+        top: -2rem;
+        content: attr(data-name);
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Components</h1>
+    <div class="components">
+      <div class="component" data-name="Button">
+        {% include "components/button.html" with id="button1" type="button" variant="primary" text="Click Me" %}
+        {% include "components/button.html" with id="button2" type="button" variant="secondary" text="Click Me" %}
+        {% include "components/button.html" with id="button3" type="button" variant="rainbow" text="Click Me" %}
+      </div>
+    </div>
+  </body>
+</html>

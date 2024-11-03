@@ -1,8 +1,50 @@
-body {
-  background-color: black;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  color: white;
+.btn {
+  text-align: center;
+  padding: 1rem 2rem;
+  border-radius: 0.3rem;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  color: var(--oa-text-light);
+  background-color: var(--oa-pink);
+}
+
+.btn-primary:hover {
+  background-color: var(--oa-pink-light);
+}
+
+.btn-primary:focus {
+  background-color: var(--oa-pink-dark);
+}
+
+.btn-secondary {
+  color: var(--oa-text-light);
+  background-color: var(--oa-blue);
+}
+
+.btn-secondary:hover {
+  background-color: var(--oa-blue-light);
+}
+
+.btn-secondary:focus {
+  background-color: var(--oa-blue-dark);
+}
+
+.btn-rainbow {
+  color: var(--oa-text-dark);
+  background: linear-gradient(90deg, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue));
+}
+
+.btn-rainbow:hover {
+  filter: saturate(175%);
+}
+
+.btn-rainbow:focus {
+  filter: brightness(70%);
 }

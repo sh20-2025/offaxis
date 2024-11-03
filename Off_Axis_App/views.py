@@ -4,4 +4,4 @@ from django.shortcuts import render
 
 
 def components(request):
-    return render(request, "components.html")
+    return render(request, "components/index.html")

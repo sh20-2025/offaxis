@@ -1,0 +1,12 @@
+{% comment %}
+This is a simple resuable button component that can be used in any template.
+
+props:
+    id?: The id of the button
+    type?: The type of the button
+    variant?: The variant of the button (primary, secondary, rainbow)
+    text?: The text of the button
+{% endcomment %}
+<button id="{{ id|default:"" }}"
+        type="{{ type|default:"button" }}"
+        class="btn btn-{{ variant|default:"primary" }}">{{ text|default:"Click Me" }}</button>
