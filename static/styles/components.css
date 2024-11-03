@@ -166,6 +166,10 @@
   background-color: var(--oa-text-light);
 }
 
+select.input {
+  cursor: pointer;
+}
+
 .label {
   font-size: 1rem;
   margin-bottom: 0.25rem;

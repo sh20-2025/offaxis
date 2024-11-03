@@ -3,7 +3,7 @@ This is a simple resuable input component that can be used in any template.
 
 props:
     id?: The id of the input
-    type?: The type of the input
+    type?: The type of the input (all html types and select)
     variant?: The variant of the input (light, dark)
     name?: The name of the input
     placeholder?: The placeholder text of the input
@@ -15,6 +15,7 @@ props:
     maxlength?: The maximum length of the input (for text inputs)
     htmlsize?: The size of the input
     required?: Whether the input is required (true, false)
+    options?: The options for the select input (for select inputs, list of { label: string, value: string } objects)
 {% endcomment %}
 {% if type == 'password' %}
     <div class="input-password-container">
@@ -49,6 +50,14 @@ props:
             }
         </script>
     </div>
+{% elif type == 'select' %}
+    <select class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full|default:"false" }}"
+            id="{{ id|default:"" }}"
+            name="{{ name|default:"" }}"
+            size="{{ htmlsize|default:"" }}"
+            required="{{ required|default:"false" }}">
+        {% for option in options %}<option value="{{ option.value }}">{{ option.label }}</option>{% endfor %}
+    </select>
 {% else %}
     <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full|default:"false" }}"
            id="{{ id|default:"" }}"

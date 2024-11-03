@@ -95,6 +95,16 @@
         {% include "components/input.html" with id="input11" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="md" %}
         {% include "components/input.html" with id="input12" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="sm" %}
       </div>
+      <div class="component" data-name="input--select--light">
+        {% include "components/input.html" with id="input13" name="country" type="select" variant="light" placeholder="Enter your country..." size="lg" options=test_options %}
+        {% include "components/input.html" with id="input14" name="country" type="select" variant="light" placeholder="Enter your country..." size="md" options=test_options %}
+        {% include "components/input.html" with id="input15" name="country" type="select" variant="light" placeholder="Enter your country..." size="sm" options=test_options %}
+      </div>
+      <div class="component" data-name="input--select--dark">
+        {% include "components/input.html" with id="input16" name="country" type="select" variant="dark" placeholder="Enter your country..." size="lg" options=test_options %}
+        {% include "components/input.html" with id="input17" name="country" type="select" variant="dark" placeholder="Enter your country..." size="md" options=test_options %}
+        {% include "components/input.html" with id="input18" name="country" type="select" variant="dark" placeholder="Enter your country..." size="sm" options=test_options %}
+      </div>
       {% comment %} labels {% endcomment %}
       <div class="component component-light" data-name="label--light">
         {% include "components/label.html" with id="label1" variant="light" required="true" for="input1" size="lg" text="Name" %}
