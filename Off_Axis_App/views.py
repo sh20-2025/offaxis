@@ -33,17 +33,8 @@ def artists_view(request):
 def artist_view(request, slug):
     context = {}
     artist = Artist.objects.get(slug=slug)
-    context["artist"] = artist
-    return render(request, "Off_Axis/artist.html", context)
-
-
-def artist_profile(request, slug):
-    artist_profile_page = get_object_or_404(Artist, slug=slug)
-    if artist_profile_page.is_approved:
-        return render(
-            request, "artist_profile.html", {"artist_profile": artist_profile_page}
-        )
+    if artist.is_approved:
+        context["artist"] = artist
+        return render(request, "Off_Axis/artist.html", context)
     else:
-        return render(
-            request, "artist_not_approved.html", {"artist_profile": artist_profile_page}
-        )
+        return render(request, "Off_Axis/artist_not_approved.html", context)

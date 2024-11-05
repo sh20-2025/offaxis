@@ -22,5 +22,4 @@ from Off_Axis_App import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("Off_Axis_App.urls")),
-    path("artist_profile/<slug:slug>/", views.artist_profile, name="artist_profile"),
 ]
