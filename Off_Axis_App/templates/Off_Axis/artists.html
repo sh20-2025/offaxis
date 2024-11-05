@@ -14,7 +14,7 @@
 {% for artist in artists %}
     <ul>
         <li>
-            <a href="{% url 'Off_Axis_App:artist' slug=artist.slug %}">
+            <a href="{% url 'artist' slug=artist.slug %}">
                 {{ artist.user.username }} </a>
             <p>{{ artist.bio }}</p>
             <p>{{ artist.genre }}</p>

@@ -17,5 +17,5 @@ def artists_view(request):
 def artist_view(request, slug):
     context = {}
     artist = Artist.objects.get(slug=slug)
-    context["artists"] = artist
+    context["artist"] = artist
     return render(request, "Off_Axis/artist.html", context)
