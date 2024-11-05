@@ -1,0 +1,27 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+
+
+{% block title_block %}
+    Artists
+{% endblock %}
+
+{% block import_block %}
+    <link rel = "stylesheet" href="{% static "css/profile.css" %}">
+{% endblock %}
+
+{% block body_block %}
+{% for artist in artists %}
+    <ul>
+        <li>
+            <a href="{% url 'Off_Axis_App:artist' slug=artist.slug %}">
+                {{ artist.user.username }} </a>
+            <p>{{ artist.bio }}</p>
+            <p>{{ artist.genre }}</p>
+        </li>
+    </ul>
+{% empty %}
+    <p>No artists found</p>
+{% endfor %}
+
+{% endblock %}

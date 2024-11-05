@@ -17,7 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from Off_Axis_App import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("artists/", views.artists_view, name="artists"),
+    path("artist/<slug:slug>/", views.artist_view, name="artist"),
+    path("", views.index, name="index"),
 ]
