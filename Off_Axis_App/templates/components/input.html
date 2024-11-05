@@ -1,0 +1,73 @@
+{% comment %}
+This is a simple resuable input component that can be used in any template.
+
+props:
+    id?: The id of the input
+    type?: The type of the input (all html types and select)
+    variant?: The variant of the input (light, dark)
+    name?: The name of the input
+    placeholder?: The placeholder text of the input
+    size?: The size of the input (sm, md, lg)
+    full?: Whether the input should take up the full width of its container (true, false)
+    min?: The minimum value of the input (for number inputs)
+    max? The maximum value of the input (for number inputs)
+    minlength?: The minimum length of the input (for text inputs)
+    maxlength?: The maximum length of the input (for text inputs)
+    htmlsize?: The size of the input
+    required?: Whether the input is required (true, false)
+    options?: The options for the select input (for select inputs, list of { label: string, value: string } objects)
+{% endcomment %}
+{% if type == 'password' %}
+    <div class="input-password-container">
+        <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-{{ full }}"
+               id="{{ id|default:"" }}"
+               type="{{ type|default:"text" }}"
+               placeholder="{{ placeholder|default:"" }}"
+               name="{{ name|default:"" }}"
+               size="{{ htmlsize|default:"" }}"
+               min="{{ min|default:"" }}"
+               max="{{ max|default:"" }}"
+               minlength="{{ minlength|default:"" }}"
+               maxlength="{{ maxlength|default:"" }}"
+               required="{{ required|default:"false" }}">
+        <button class="input-password-toggle input-password-toggle-{{ size|default:"md" }} input-password-toggle-{{ variant|default:"light" }} input-password-toggle-off"
+                type="button"></button>
+        <script>
+            {
+                const input = document.getElementById("{{ id|default:"" }}");
+                const toggle = input.parentElement.querySelector(".input-password-toggle");
+                toggle.addEventListener("click", () => {
+                    if (input.type === "password") {
+                        input.type = "text";
+                        toggle.classList.remove("input-password-toggle-off");
+                        toggle.classList.add("input-password-toggle-on");
+                    } else {
+                        input.type = "password";
+                        toggle.classList.remove("input-password-toggle-on");
+                        toggle.classList.add("input-password-toggle-off");
+                    }
+                });
+            }
+        </script>
+    </div>
+{% elif type == 'select' %}
+    <select class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full|default:"false" }}"
+            id="{{ id|default:"" }}"
+            name="{{ name|default:"" }}"
+            size="{{ htmlsize|default:"" }}"
+            required="{{ required|default:"false" }}">
+        {% for option in options %}<option value="{{ option.value }}">{{ option.label }}</option>{% endfor %}
+    </select>
+{% else %}
+    <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full|default:"false" }}"
+           id="{{ id|default:"" }}"
+           type="{{ type|default:"text" }}"
+           placeholder="{{ placeholder|default:"" }}"
+           name="{{ name|default:"" }}"
+           size="{{ htmlsize|default:"" }}"
+           min="{{ min|default:"" }}"
+           max="{{ max|default:"" }}"
+           minlength="{{ minlength|default:"" }}"
+           maxlength="{{ maxlength|default:"" }}"
+           required="{{ required|default:"false" }}">
+{% endif %}

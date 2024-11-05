@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="description" content="Off Axis Components" />
+    <meta name="keywords" content="Off Axis, Components" />
+    <title>Components</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'styles/styles.css' %}" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'styles/components.css' %}" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+      }
+
+      .components {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        grid-template-rows: auto;
+        gap: 4rem;
+        margin-top: 5rem;
+      }
+
+      .component {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 2rem;
+        border: 1px solid var(--oa-text-medium);
+        border-radius: 0.5rem;
+      }
+
+      .component::before {
+        position: absolute;
+        top: -2rem;
+        content: attr(data-name);
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .component-light {
+        background-color: var(--oa-text-light);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Components</h1>
+    <div class="components">
+      {% comment %} buttons {% endcomment %}
+      <div class="component" data-name="button--primary">
+        {% include "components/button.html" with id="button1" type="button" variant="primary" text="Click Me" size="lg" %}
+        {% include "components/button.html" with id="button2" type="button" variant="primary" text="Click Me" size="md" %}
+        {% include "components/button.html" with id="button3" type="button" variant="primary" text="Click Me" size="sm" %}
+      </div>
+      <div class="component" data-name="button--secondary">
+        {% include "components/button.html" with id="button4" type="button" variant="secondary" text="Click Me" size="lg" %}
+        {% include "components/button.html" with id="button5" type="button" variant="secondary" text="Click Me" size="md" %}
+        {% include "components/button.html" with id="button6" type="button" variant="secondary" text="Click Me" size="sm" %}
+      </div>
+      <div class="component" data-name="button--rainbow">
+        {% include "components/button.html" with id="button7" type="button" variant="rainbow" text="Click Me" size="lg" %}
+        {% include "components/button.html" with id="button8" type="button" variant="rainbow" text="Click Me" size="md" %}
+        {% include "components/button.html" with id="button9" type="button" variant="rainbow" text="Click Me" size="sm" %}
+      </div>
+      {% comment %} inputs {% endcomment %}
+      <div class="component" data-name="input--light">
+        {% include "components/input.html" with id="input1" name="name" type="text" variant="light" placeholder="Please enter your name..." size="lg" %}
+        {% include "components/input.html" with id="input2" name="name" type="text" variant="light" placeholder="Please enter your name..." size="md" %}
+        {% include "components/input.html" with id="input3" name="name" type="text" variant="light" placeholder="Please enter your name..." size="sm" %}
+      </div>
+      <div class="component" data-name="input--dark">
+        {% include "components/input.html" with id="input4" name="email" type="email" variant="dark" placeholder="Please enter your email..." size="lg" %}
+        {% include "components/input.html" with id="input5" name="email" type="email" variant="dark" placeholder="Please enter your email..." size="md" %}
+        {% include "components/input.html" with id="input6" name="email" type="email" variant="dark" placeholder="Please enter your email..." size="sm" %}
+      </div>
+      <div class="component" data-name="input--password--light">
+        {% include "components/input.html" with id="input7" name="password" type="password" variant="light" placeholder="Please enter your password..." size="lg" %}
+        {% include "components/input.html" with id="input8" name="password" type="password" variant="light" placeholder="Please enter your password..." size="md" %}
+        {% include "components/input.html" with id="input9" name="password" type="password" variant="light" placeholder="Please enter your password..." size="sm" %}
+      </div>
+      <div class="component" data-name="input--password--dark">
+        {% include "components/input.html" with id="input10" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="lg" %}
+        {% include "components/input.html" with id="input11" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="md" %}
+        {% include "components/input.html" with id="input12" name="password" type="password" variant="dark" placeholder="Please enter your password..." size="sm" %}
+      </div>
+      <div class="component" data-name="input--select--light">
+        {% include "components/input.html" with id="input13" name="country" type="select" variant="light" placeholder="Enter your country..." size="lg" options=test_options %}
+        {% include "components/input.html" with id="input14" name="country" type="select" variant="light" placeholder="Enter your country..." size="md" options=test_options %}
+        {% include "components/input.html" with id="input15" name="country" type="select" variant="light" placeholder="Enter your country..." size="sm" options=test_options %}
+      </div>
+      <div class="component" data-name="input--select--dark">
+        {% include "components/input.html" with id="input16" name="country" type="select" variant="dark" placeholder="Enter your country..." size="lg" options=test_options %}
+        {% include "components/input.html" with id="input17" name="country" type="select" variant="dark" placeholder="Enter your country..." size="md" options=test_options %}
+        {% include "components/input.html" with id="input18" name="country" type="select" variant="dark" placeholder="Enter your country..." size="sm" options=test_options %}
+      </div>
+      {% comment %} labels {% endcomment %}
+      <div class="component component-light" data-name="label--light">
+        {% include "components/label.html" with id="label1" variant="light" required="true" for="input1" size="lg" text="Name" %}
+        {% include "components/label.html" with id="label2" variant="light" required="true" for="input2" size="md" text="Name" %}
+        {% include "components/label.html" with id="label3" variant="light" required="true" for="input3" size="sm" text="Name" %}
+      </div>
+      <div class="component" data-name="label--dark">
+        {% include "components/label.html" with id="label4" variant="dark" required="true" for="input4" size="lg" text="Email" %}
+        {% include "components/label.html" with id="label5" variant="dark" required="true" for="input5" size="md" text="Email" %}
+        {% include "components/label.html" with id="label6" variant="dark" required="true" for="input6" size="sm" text="Email" %}
+      </div>
+    </div>
+  </body>
+</html>
