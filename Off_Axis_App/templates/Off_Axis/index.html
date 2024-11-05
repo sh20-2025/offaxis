@@ -1,8 +1,49 @@
 {% extends "Off_Axis/base.html" %}
 
 {% block title_block %}
+    Off Axis - Home
 {% endblock %}
 
 {% block body_block %}
-    <h1>hello index</h1>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Discover New Artists and Upcoming Gigs</h1>
+            <p>Connecting talented artists with passionate audiences.</p>
+            <a href="#" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Featured artists segment -->
+    <section class="featured-artists">
+        <div class="container">
+            <h2>Featured Artists</h2>
+            <div class="artists-grid">
+                <!-- Loop through featured artists -->
+                {% for artist in artists %}
+                    <div class="artist-card">
+                        <img src="{{ artist.image.url }}" alt="{{ artist.name }}">
+                        <h3>{{ artist.name }}</h3>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- We add upcoming gigs under this section -->
+    <section class="upcoming-gigs">
+        <div class="container">
+            <h2>Upcoming Gigs</h2>
+            <ul>
+                {% for gig in gigs %}
+                    <li>
+                        <h3>{{ gig.title }}</h3>
+                        <p>{{ gig.date }} - {{ gig.location }}</p>
+                        <a href="#">More Info</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
 {% endblock %}
