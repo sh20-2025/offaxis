@@ -21,10 +21,18 @@ body {
     z-index: 1000;
 }
 
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .header .logo {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #fff;
+    margin-right: 20px;
+}
+
+.header .logo img {
+    height: 50px;
 }
 
 .header .nav ul {
@@ -32,11 +40,11 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 15px;
+    gap: 20px;
 }
 
 .header .nav ul li {
-    margin-right: 15px;
+    margin: 0;
 }
 
 .header .nav ul li a {
