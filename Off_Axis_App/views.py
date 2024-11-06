@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Artist
+from .forms import UserForm
 
 
 # Create your views here.
@@ -38,3 +39,13 @@ def artist_view(request, slug):
         return render(request, "Off_Axis/artist.html", context)
     else:
         return render(request, "Off_Axis/artist_not_approved.html", context)
+
+
+def register(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("/")
+
+    return render(request, "Off_Axis/register.html")

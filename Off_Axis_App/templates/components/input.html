@@ -19,7 +19,7 @@ props:
 {% endcomment %}
 {% if type == 'password' %}
     <div class="input-password-container">
-        <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-{{ full }}"
+        <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full }}"
                id="{{ id|default:"" }}"
                type="{{ type|default:"text" }}"
                placeholder="{{ placeholder|default:"" }}"
