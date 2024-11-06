@@ -41,18 +41,18 @@
                     </ul>
                 </nav>
             </div>
-        </header>
-        {% block body_block %}{% endblock %}
-        <footer class="footer">
-            <div class="container">
-                <p>&copy; 2024 Off Axis Gigs. All rights reserved.</p>
-                <div class="sign-up-form">
-                    <h3>Subscribe to our Newsletter</h3>
-                    {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
-                    {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="md" required="true" %}
-                    <div class="cta-button">
-                        {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
-                    </div>
+        </div>
+    </header>
+    {% block body_block %}{% endblock %}
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Off Axis Gigs. All rights reserved.</p>
+            <div class="sign-up-form">
+                <h3>Subscribe to our Newsletter</h3>
+                {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
+                {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="md" required="true" %}
+                <div class="cta-button">
+                    {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
                 </div>
             </div>
         </footer>
