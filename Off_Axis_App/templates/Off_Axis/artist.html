@@ -1,0 +1,48 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+
+
+{% block title_block %}
+    Artist profile
+{% endblock %}
+
+{% block import_block %}
+    <link rel = "stylesheet" href="{% static "css/profile.css" %}">
+{% endblock %}
+
+{% block body_block %}
+<h1>{{ artist.user.username }}'s Profile</h1>
+
+    {% if artist.profile_picture_url %}
+      <img src={{ artist.profile_picture_url}}, width=300px, height=300px/>
+    {% else %}
+      <p>No Profile Picture Given.</p>
+    {% endif %}
+
+    {% if artist.gigs %}
+      <p> {{ artist.user.username }}'s Gigs: {{ artist.gigs}} </p>
+    {% else %}
+      <p> {{ artist.user.username }} currently has no gigs! </p>
+    {% endif%}
+
+    <p> {{ artist.user.username }}'s Genres: </p>
+    <ul>
+      {% for tag in artist.genre_tags.all %}
+          <li>{{ tag.tag }}</li>
+      {% empty %}
+          <li>No genres available.</li>
+      {% endfor %}
+    </ul>
+
+    <p>Bio: {{ artist.bio }}</p>
+
+    <p> {{ artist.user.username }}'s Socials: </p>
+    <ul>
+      {% for social_link in artist.social_links.all %}
+          <a href={{ social_link.url }}><li>{{ social_link.type }}</li></a>
+      {% empty %}
+          <li>No socials available.</li>
+      {% endfor %}
+    </ul>
+
+{% endblock %}
