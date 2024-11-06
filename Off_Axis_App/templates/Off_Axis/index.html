@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block body_block %}
-    <!-- Hero Section -->
     <section class="hero">
         <h1>Welcome to Off Axis Gigs</h1>
-        <p>Discover amazing gigs and talented artists near you. Connect, explore, and enjoy live music experiences.</p>
+        <p>
+            <br>Discover amazing gigs and talented artists near you. Connect, explore, and enjoy live music experiences.
+        </p>
         <div class="cta-button">
             {% include "components/button.html" with id="hero-button" type="button" variant="rainbow" text="Explore Gigs" size="lg" %}
         </div>
     </section>
 
-    <!-- Call to Action Section -->
     <section class="cta-section">
         <h2>Sign Up for Updates</h2>
         <p>Get the latest updates on upcoming gigs and artist news directly in your inbox.</p>
@@ -24,27 +24,6 @@
             {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="lg" required="true" %}
             <div class="cta-button">
                 {% include "components/button.html" with id="signup-button" type="button" variant="primary" text="Sign Up" size="lg" %}
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features-section">
-        <div class="container">
-            <h2>Why Off Axis Gigs?</h2>
-            <div class="features">
-                <div class="feature">
-                    <h3>Discover Artists</h3>
-                    <p>Find talented artists performing near you. Experience live music like never before.</p>
-                </div>
-                <div class="feature">
-                    <h3>Book Your Tickets</h3>
-                    <p>Booking made easy for all upcoming gigs. Reserve your spot in just a few clicks.</p>
-                </div>
-                <div class="feature">
-                    <h3>Stay Updated</h3>
-                    <p>Never miss an event again. Stay up to date with notifications for gigs and concerts.</p>
-                </div>
             </div>
         </div>
     </section>

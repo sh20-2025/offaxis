@@ -2,19 +2,15 @@
   --oa-pink: #dd1167;
   --oa-pink-light: #fd3689;
   --oa-pink-dark: #a40f4d;
-
   --oa-yellow: #f7ef3b;
   --oa-yellow-light: #fff990;
   --oa-yellow-dark: #dcd212;
-
   --oa-green: #19892a;
   --oa-green-light: #23bc3a;
   --oa-green-dark: #136620;
-
   --oa-blue: #1892be;
   --oa-blue-light: #1ab2e9;
   --oa-blue-dark: #146c8d;
-
   --oa-text-dark: #000000;
   --oa-text-light: #ffffff;
   --oa-text-medium: #5a5a5a;
@@ -29,10 +25,166 @@
 
 body {
   background-color: black;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  color: white;
+  color: var(--oa-text-light);
   font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  background-color: var(--oa-text-dark);
+  padding: 15px 0;
+  border-bottom: 1px solid var(--oa-text-medium-light);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo img {
+  height: 50px;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav ul li a {
+  color: var(--oa-yellow);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav ul li a:hover {
+  color: var(--oa-yellow-light);
+}
+
+.hero {
+  background-color: var(--oa-blue-dark);
+  color: var(--oa-text-light);
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3em;
+  color: var(--oa-yellow);
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.hero p {
+  font-size: 1.2em;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  color: var(--oa-text-light);
+  line-height: 1.5;
+}
+
+.cta-button button {
+  background-color: var(--oa-pink);
+  border: none;
+  padding: 15px 30px;
+  color: var(--oa-text-light);
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cta-button button:hover {
+  background-color: var(--oa-pink-light);
+}
+
+
+.cta-section {
+  background-color: var(--oa-green-dark);
+  color: var(--oa-text-light);
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2.5em;
+  color: var(--oa-yellow);
+  margin-bottom: 20px;
+}
+
+.cta-section p {
+  font-size: 1.1em;
+  max-width: 600px;
+  margin: 0 auto 20px;
+}
+
+.cta-section input[type="email"] {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid var(--oa-yellow);
+  border-radius: 5px;
+  color: var(--oa-text-dark);
+  width: 300px;
+  margin-top: 10px;
+}
+
+.cta-section input[type="email"]::placeholder {
+  color: var(--oa-text-medium-light);
+}
+
+.cta-section .cta-button button {
+  background-color: var(--oa-yellow);
+  color: var(--oa-text-dark);
+  padding: 10px 20px;
+  margin-top: 10px;
+}
+
+.cta-section .cta-button button:hover {
+  background-color: var(--oa-yellow-light);
+}
+
+.footer {
+  background-color: var(--oa-text-dark);
+  color: var(--oa-text-light);
+  padding: 20px;
+  text-align: center;
+}
+
+.footer p {
+  margin: 0;
+  padding: 10px 0;
+}
+
+.footer .sign-up-form h3 {
+  color: var(--oa-yellow);
+  margin-bottom: 15px;
+}
+
+.footer .sign-up-form input[type="email"] {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 5px;
+  width: 250px;
+}
+
+.footer .sign-up-form .cta-button button {
+  background-color: var(--oa-pink);
+  color: var(--oa-text-light);
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.footer .sign-up-form .cta-button button:hover {
+  background-color: var(--oa-pink-light);
 }
