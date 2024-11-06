@@ -1,0 +1,30 @@
+{% extends "Off_Axis/base.html" %}
+
+{% block title_block %}
+    Off Axis Gigs - Landing Page
+{% endblock %}
+
+{% block body_block %}
+    <section class="hero">
+        <h1>Welcome to Off Axis Gigs</h1>
+        <p>
+            <br>Discover amazing gigs and talented artists near you. Connect, explore, and enjoy live music experiences.
+        </p>
+        <div class="cta-button">
+            {% include "components/button.html" with id="hero-button" type="button" variant="rainbow" text="Explore Gigs" size="lg" %}
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Sign Up for Updates</h2>
+        <p>Get the latest updates on upcoming gigs and artist news directly in your inbox.</p>
+        <div>
+            {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
+            <br>
+            {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="lg" required="true" %}
+            <div class="cta-button">
+                {% include "components/button.html" with id="signup-button" type="button" variant="primary" text="Sign Up" size="lg" %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
