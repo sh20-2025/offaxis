@@ -1,35 +1,3 @@
-:root {
-  --oa-pink: #dd1167;
-  --oa-pink-light: #fd3689;
-  --oa-pink-dark: #a40f4d;
-  --oa-yellow: #f7ef3b;
-  --oa-yellow-light: #fff990;
-  --oa-yellow-dark: #dcd212;
-  --oa-green: #19892a;
-  --oa-green-light: #23bc3a;
-  --oa-green-dark: #136620;
-  --oa-blue: #1892be;
-  --oa-blue-light: #1ab2e9;
-  --oa-blue-dark: #146c8d;
-  --oa-text-dark: #000000;
-  --oa-text-light: #ffffff;
-  --oa-text-medium: #5a5a5a;
-  --oa-text-medium-light: #a4a4a4;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-body {
-  background-color: black;
-  color: var(--oa-text-light);
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.6;
-}
-
 .container {
   width: 90%;
   max-width: 1200px;
@@ -73,7 +41,6 @@ body {
 }
 
 .hero {
-  background-color: var(--oa-blue-dark);
   color: var(--oa-text-light);
   padding: 60px 20px;
   text-align: center;
@@ -108,9 +75,7 @@ body {
   background-color: var(--oa-pink-light);
 }
 
-
 .cta-section {
-  background-color: var(--oa-green-dark);
   color: var(--oa-text-light);
   padding: 60px 20px;
   text-align: center;
@@ -143,7 +108,6 @@ body {
 }
 
 .cta-section .cta-button button {
-  background-color: var(--oa-yellow);
   color: var(--oa-text-dark);
   padding: 10px 20px;
   margin-top: 10px;
@@ -154,7 +118,6 @@ body {
 }
 
 .footer {
-  background-color: var(--oa-text-dark);
   color: var(--oa-text-light);
   padding: 20px;
   text-align: center;
