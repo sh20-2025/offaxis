@@ -35,12 +35,14 @@ body {
 .container {
   width: 90%;
   margin: 0 auto;
+  max-width: 1200px;
+  padding: 20px;
 }
 
 .header {
-  background: #000;
-  color: #fff;
-  padding: 20px 0;
+  background-color: var(--oa-text-dark);
+  padding: 15px 0;
+  border-bottom: 1px solid var(--oa-text-medium-light);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -49,6 +51,7 @@ body {
 .header-container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 20px;
 }
 
@@ -56,11 +59,11 @@ body {
   margin-right: 20px;
 }
 
-.header .logo img {
+.logo img {
   height: 50px;
 }
 
-.header .nav ul {
+.nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -68,23 +71,23 @@ body {
   gap: 20px;
 }
 
-.header .nav ul li {
+.nav ul li {
   margin: 0;
 }
 
-.header .nav ul li a {
-  color: #fff;
+.nav ul li a {
+  color: var(--oa-yellow);
   text-decoration: none;
   font-weight: bold;
 }
 
-.header .nav ul li a:hover {
-  color: #ff4747;
+.nav ul li a:hover {
+  color: var(--oa-yellow-light);
 }
 
 .hero {
   background: #000;
-  color: #fff;
+  color: var(--oa-text-light);
   height: 500px;
   display: flex;
   align-items: center;
@@ -93,29 +96,33 @@ body {
   padding: 0 20px;
 }
 
-.hero-content h1 {
+.hero h1 {
   font-size: 3em;
-  font-weight: bold;
+  color: var(--oa-yellow);
   margin-bottom: 20px;
+  font-weight: bold;
 }
 
-.hero-content p {
+.hero p {
   font-size: 1.2em;
   max-width: 600px;
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
+  color: var(--oa-text-light);
+  line-height: 1.5;
 }
 
-.hero-content .cta-button {
-  background: #ff4747;
+.cta-button button {
+  background-color: var(--oa-pink);
+  border: none;
   padding: 15px 30px;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
+  color: var(--oa-text-light);
   font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-.hero-content .cta-button:hover {
-  background: #ff7373;
+.cta-button button:hover {
+  background-color: var(--oa-pink-light);
 }
 
 .featured-artists {
@@ -158,12 +165,12 @@ body {
 
 .artist-card p {
   font-size: 1em;
-  color: #777;
+  color: #666;
 }
 
 .upcoming-gigs {
   padding: 60px 0;
-  background: #fafafa;
+  background: var(--oa-text-dark);
   text-align: center;
 }
 
@@ -179,7 +186,7 @@ body {
 }
 
 .upcoming-gigs ul li {
-  background: #fff;
+  background: var(--oa-text-light);
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 10px;
@@ -187,8 +194,8 @@ body {
 }
 
 .footer {
-  background: #000;
-  color: #fff;
+  background: var(--oa-text-dark);
+  color: var(--oa-text-light);
   padding: 20px 0;
   text-align: center;
 }
@@ -199,14 +206,33 @@ body {
 }
 
 .footer .social-links a {
-  color: #fff;
+  color: var(--oa-text-light);
   margin: 0 10px;
   text-decoration: none;
   font-size: 1.5em;
 }
 
 .footer .social-links a:hover {
-  color: #ff4747;
+  color: var(--oa-pink);
+}
+
+.footer .sign-up-form input[type="email"] {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 5px;
+  width: 250px;
+}
+
+.footer .sign-up-form .cta-button button {
+  background-color: var(--oa-pink);
+  color: var(--oa-text-light);
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.footer .sign-up-form .cta-button button:hover {
+  background-color: var(--oa-pink-light);
 }
 
 @media (max-width: 768px) {
