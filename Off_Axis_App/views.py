@@ -9,7 +9,7 @@ from .forms import UserForm
 def components(request):
     return render(
         request,
-        "components/index.html",
+        "components/components_show_room.html",
         {
             "test_options": [
                 {"label": "United States", "value": "US"},
