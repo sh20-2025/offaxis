@@ -1,18 +1,23 @@
 {% extends "Off_Axis/base.html" %}
-
+{% load static %}
 {% block title_block %}
     Off Axis Gigs - Landing Page
 {% endblock %}
 
+{% block import_block %}
+    <link rel="stylesheet" href="{% static "styles/landing_page.css" %}">
+{% endblock %}
+
 {% block body_block %}
     <section class="hero">
-        <h1>Welcome to Off Axis Gigs</h1>
-        <p>
-            <br>Discover amazing gigs and talented artists near you. Connect, explore, and enjoy live music experiences.
-        </p>
-        <div class="cta-button">
-            {% include "components/button.html" with id="hero-button" type="button" variant="rainbow" text="Explore Gigs" size="lg" %}
-        </div>
+    
+    <div class="hero-circles">
+        <div class="hero-circle" style="background-color: var(--oa-pink)"></div>
+        <div class="hero-circle" style="background-color: var(--oa-yellow)"></div>
+        <div class="hero-circle" style="background-color: var(--oa-green)"></div>
+        <div class="hero-circle" style="background-color: var(--oa-blue)"></div>
+    </div>
+       
     </section>
 
     <section class="cta-section">

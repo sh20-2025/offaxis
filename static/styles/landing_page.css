@@ -1,0 +1,15 @@
+.hero-circles {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5rem;
+}
+
+.hero-circle {
+  content: "";
+  margin-left: -5rem;
+  opacity: 75%;
+  border-radius: 50%;
+  height: 15rem;
+  width: 15rem;
+}
