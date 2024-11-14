@@ -21,8 +21,22 @@
 .hero-circle {
   content: "";
   margin-left: -5rem;
-  opacity: 75%;
+  opacity: 100%;
   border-radius: 50%;
-  height: 15rem;
-  width: 15rem;
+  height: 18rem;
+  width: 18rem;
+}
+
+.hero-circles img {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  filter: grayscale(100%) saturate(300%) opacity(70%);
+}
+
+/* overlay each image with its background color */
+
+.hero-circle img:hover {
+  filter: grayscale(0%) opacity(100%);
 }
