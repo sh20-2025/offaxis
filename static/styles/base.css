@@ -3,8 +3,6 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  background: black;
-  color: white;
 }
 
 :root {
@@ -24,6 +22,10 @@ body {
   --oa-text-light: #ffffff;
   --oa-text-medium: #5a5a5a;
   --oa-text-medium-light: #a4a4a4;
+
+  background: url("../images/background_static.png") repeat;
+  background-size: cover;
+  color: white;
 }
 
 * {
@@ -40,9 +42,7 @@ body {
 }
 
 .header {
-  background-color: var(--oa-text-dark);
   padding: 15px 0;
-  border-bottom: 1px solid var(--oa-text-medium-light);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -86,8 +86,6 @@ body {
 }
 
 .hero {
-  background: #000;
-  color: var(--oa-text-light);
   height: 500px;
   display: flex;
   align-items: center;

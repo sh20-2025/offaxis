@@ -1,3 +1,16 @@
+:root {
+  animation: backgroundShift 10s infinite alternate;
+}
+
+@keyframes backgroundShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50% 0;
+  }
+}
+
 .hero-circles {
   display: flex;
   justify-content: center;
