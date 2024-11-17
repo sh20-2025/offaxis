@@ -5,14 +5,36 @@
 {% endblock title_block %}
 {% block import_block %}
     <link rel="stylesheet" href="{% static "styles/auth.css" %}">
+    <script>
+        function toggleForms(){
+            const isArtistChecked = document.getElementById("isArtist").checked;
+            document.getElementById("artistForm").style.display = isArtistChecked ? "block" : "none";
+            document.getElementById("clientForm").style.display = isArtistChecked ? "none" : "block";
+        }
+    </script>
 {% endblock import_block %}
 {% block body_block %}
     <section class="register">
-        <h1>Register</h1>
-        <form class="auth-form" method="post" action="{% url 'register' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Register" size="lg" %}
-        </form>
+        <h1>Registration</h1>
+        <div>
+            <input type="checkbox" id="isArtist" onclick="toggleForms()"> Register as an Artist!
+        </div>
+
+        <div class="auth-form" id="artistForm" style = "display: none;">
+            <form  method="post" action="{% url 'register' %}">
+                {% csrf_token %}
+                {{ artist_form.as_p }}
+                <input type="hidden" name="is_artist" value="true">
+                {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Register" size="lg" %}
+            </form>
+        </div>
+
+        <div class="auth-form" id="clientForm" style="display: block;">
+            <form class="auth-form" method="post" action="{% url 'register' %}">
+                {% csrf_token %}
+                {{ client_form.as_p }}
+                <input type="hidden" name="is_artist" value="false">
+                {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Register" size="lg" %}
+            </form>
     </section>
 {% endblock body_block %}

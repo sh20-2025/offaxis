@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Artist
-from .forms import UserForm
+from .forms import UserForm, ArtistForm
 
 
 # Create your views here.
@@ -42,12 +42,24 @@ def artist_view(request, slug):
 
 
 def register(request):
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("/")
-    else:
-        form = UserForm()
+    artist_form = ArtistForm()
+    client_form = UserForm()
 
-    return render(request, "Off_Axis/register.html", {"form": form})
+    if request.method == "POST":
+        if "is_artist" in request.POST:
+            if request.POST.get("is_artist") == "true":
+                form = ArtistForm(request.POST)
+            else:
+                form = UserForm(request.POST)
+
+            if form.is_valid():
+                form.save()
+                return redirect("/")
+        else:
+            form = UserForm(request.POST)
+
+    return render(
+        request,
+        "Off_Axis/register.html",
+        {"artist_form": artist_form, "client_form": client_form},
+    )
