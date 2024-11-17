@@ -11,11 +11,7 @@
         <h1>Register</h1>
         <form class="auth-form" method="post" action="{% url 'register' %}">
             {% csrf_token %}
-            {% include "components/input.html" with id="usernameInput" name="username" type="text" variant="light" placeholder="Please enter a username..." size="lg" full="true" %}
-            {% include "components/input.html" with id="emailInput" name="email" type="text" variant="light" placeholder="Please enter an email..." size="lg" full="true" %}
-            {% include "components/input.html" with id="phoneNoInput" name="phone_number" type="tel" variant="light" placeholder="Please enter a phone number..." size="lg" full="true" %}
-            {% include "components/input.html" with id="passwordInput" name="password" type="password" variant="light" placeholder="Please enter a password..." size="lg" full="true" %}
-            {% include "components/input.html" with id="confirmPasswordInput" name="confirm_password" type="password" variant="light" placeholder="Please enter password again..." size="lg" full="true" %}
+            {{ form.as_p }}
             {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Register" size="lg" %}
         </form>
     </section>

@@ -47,5 +47,7 @@ def register(request):
         if form.is_valid():
             form.save()
             return redirect("/")
+    else:
+        form = UserForm()
 
-    return render(request, "Off_Axis/register.html")
+    return render(request, "Off_Axis/register.html", {"form": form})
