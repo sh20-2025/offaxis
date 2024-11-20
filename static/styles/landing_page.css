@@ -16,8 +16,8 @@ body::before {
   border-style: solid;
   border-width: 5px;
   border-color: var(--oa-pink) var(--oa-yellow) var(--oa-green) var(--oa-blue);
-  pointer-events: none; /* Ensures the border does not interfere with content interaction */
-  box-sizing: border-box; /* Ensures the border is included in the element's dimensions */
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 @keyframes backgroundShift {
@@ -46,10 +46,112 @@ body::before {
 }
 
 .hero-circles img {
-   /*display: none;*/
+  /*display: none;*/
   position: relative;
   height: 100%;
   width: 100%;
   border-radius: 50%;
   mix-blend-mode: luminosity;
+}
+
+.gigs-section {
+  display:flex;
+  justify-content: space-evenly;
+  background-color: var(--oa-text-dark);
+
+  margin-top: 5rem;
+}
+
+.gigs-section .left {
+  content: "";
+  width:40%;
+  height: 100%;
+}
+
+.gigs-section .right {
+  content: "";
+  width: 60%;
+  height: 100%;
+}
+
+.gigs-section .gig {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  height: 7rem;
+}
+
+.gigs-section .right .gig:nth-child(1){
+  background-color: var(--oa-pink-low-alpha);
+}
+
+.gigs-section .right .gig:nth-child(2){
+  background-color: var(--oa-yellow-low-alpha);
+}
+
+.gigs-section .right .gig:nth-child(3){
+  background-color: var(--oa-green-low-alpha);
+}
+
+.gigs-section .right .gig:nth-child(4){
+  background-color: var(--oa-blue-low-alpha);
+}
+
+.gigs-section .date {
+  width: 5rem;
+  height: 5rem;
+  margin: 1rem;
+  font-size: 1rem;
+  text-align: center;
+  color: var(--oa-text-dark);
+  flex-grow: 2;
+}
+
+.gigs-section .date .num{
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.gigs-section .description {
+  width:100%;
+  text-align: left;
+  flex-shrink: 2;
+}
+
+.gigs-section .description .name{
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+
+.gigs-section .buy-btn {
+  width: 5rem;
+  height: 5rem;
+  margin: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  color: var(--oa-text-dark);
+  flex-grow: 2;
+}
+
+.gigs-section .right .gig:nth-child(1) .date,
+.gigs-section .right .gig:nth-child(1) .buy-btn{
+  background-color: var(--oa-pink);
+}
+
+.gigs-section .right .gig:nth-child(2) .date,
+.gigs-section .right .gig:nth-child(2) .buy-btn{
+  background-color: var(--oa-yellow);
+}
+
+.gigs-section .right .gig:nth-child(3) .date,
+.gigs-section .right .gig:nth-child(3) .buy-btn{
+  background-color: var(--oa-green);
+}
+
+.gigs-section .right .gig:nth-child(4) .date,
+.gigs-section .right .gig:nth-child(4) .buy-btn{
+  background-color: var(--oa-blue);
 }
