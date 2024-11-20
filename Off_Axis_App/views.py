@@ -1,9 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Artist
+from .models import Artist, Gig
 from .forms import UserForm
-
-
-# Create your views here.
 
 
 def components(request):
@@ -49,3 +46,10 @@ def register(request):
             return redirect("/")
 
     return render(request, "Off_Axis/register.html")
+
+
+def gigs(request):
+    context = {}
+    context["gigs"] = Gig.objects.all()
+
+    return render(request, "Off_Axis/gigs.html", context)
