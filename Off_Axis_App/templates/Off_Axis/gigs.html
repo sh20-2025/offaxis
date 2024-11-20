@@ -11,7 +11,7 @@
         <h1 class="gigs__title">Gigs</h1>
         <div class="gigs__list">
             {% for gig in gigs %}
-                <a class="gig" href="{% url 'gig' gig.id %}">
+                <a class="gig" href="{% url 'gig' gig.artist.slug gig.id %}">
                     <img class="gig__image"
                          width="300"
                          height="300"

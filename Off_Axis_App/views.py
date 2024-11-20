@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Artist, Gig
+from .models import Artist, Gig, Ticket
 from .forms import UserForm
 
 
@@ -53,3 +53,12 @@ def gigs(request):
     context["gigs"] = Gig.objects.all()
 
     return render(request, "Off_Axis/gigs.html", context)
+
+
+def gig(request, artist, id):
+    context = {}
+    context["gig"] = Gig.objects.get(id=id)
+    context["tickets_sold"] = Ticket.objects.filter(gig=context["gig"]).count()
+    context["capacity_last_few"] = context["gig"].capacity * 0.9
+
+    return render(request, "Off_Axis/gig.html", context)
