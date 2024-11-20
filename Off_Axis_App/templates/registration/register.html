@@ -21,20 +21,29 @@
         </div>
 
         <div class="auth-form" id="artistForm" style = "display: none;">
-            <form  method="post" action="{% url 'register' %}">
+            <form  method="post" action="{% url 'register' %}" >
                 {% csrf_token %}
                 {{ artist_form.as_p }}
                 <input type="hidden" name="is_artist" value="true">
+                {% comment %} {% include "components/input.html" with id="usernameInput" name="username" type="text" variant="light" placeholder="Please enter a username..." size="lg" full="true" %}
+                {% include "components/input.html" with id="emailInput" name="email" type="text" variant="light" placeholder="Please enter an email..." size="lg" full="true" %}
+                {% include "components/input.html" with id="phoneNoInput" name="phone_number" type="tel" variant="light" placeholder="Please enter a phone number..." size="lg" full="true" %}
+                {% include "components/input.html" with id="passwordInput" name="password" type="password" variant="light" placeholder="Please enter a password..." size="lg" full="true" %}
+                {% include "components/input.html" with id="confirmPasswordInput" name="confirm_password" type="password" variant="light" placeholder="Please enter password again..." size="lg" full="true" %}
+                {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Register" size="lg" %} {% endcomment %}
+
                 {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Register" size="lg" %}
             </form>
         </div>
 
         <div class="auth-form" id="clientForm" style="display: block;">
-            <form class="auth-form" method="post" action="{% url 'register' %}">
+            <form method="post" action="{% url 'register' %}">
                 {% csrf_token %}
                 {{ client_form.as_p }}
                 <input type="hidden" name="is_artist" value="false">
+
                 {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Register" size="lg" %}
             </form>
+        </div>
     </section>
 {% endblock body_block %}

@@ -3,7 +3,7 @@ from .models import Client, User, Artist, SocialLink, GenreTag
 from django.utils.text import slugify
 
 
-class UserForm(forms.ModelForm):
+class ClientForm(forms.ModelForm):
     username = forms.CharField(max_length=100)
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput())

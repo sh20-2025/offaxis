@@ -32,11 +32,26 @@
                             <a href="#">Festivals</a>
                         </li>
                         <li>
-                            <a href="/register/">Join</a>
-                        </li>
-                        <li>
                             <a href="#">Contact</a>
                         </li>
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a>{{ user.username }}</a>
+                            </li>
+                            <li>
+                                <form action="{% url 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                    {% include "components/button.html" with id="button3" type="submit" variant="primary" text="Logout" size="sm" %}
+                                </form>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{% url 'login' %}">Login</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'register' %}">Join</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>

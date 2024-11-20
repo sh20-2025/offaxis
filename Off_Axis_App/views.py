@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from .models import Artist
-from .forms import UserForm, ArtistForm
+from .forms import ClientForm, ArtistForm
 
 
 # Create your views here.
@@ -43,23 +44,32 @@ def artist_view(request, slug):
 
 def register(request):
     artist_form = ArtistForm()
-    client_form = UserForm()
+    client_form = ClientForm()
 
     if request.method == "POST":
         if "is_artist" in request.POST:
             if request.POST.get("is_artist") == "true":
                 form = ArtistForm(request.POST)
             else:
-                form = UserForm(request.POST)
+                form = ClientForm(request.POST)
 
             if form.is_valid():
                 form.save()
                 return redirect("/")
         else:
-            form = UserForm(request.POST)
+            form = ClientForm(request.POST)
 
     return render(
         request,
-        "Off_Axis/register.html",
+        "registration/register.html",
         {"artist_form": artist_form, "client_form": client_form},
     )
+
+
+def login_redirect_view(request):
+    if request.user.is_staff:
+        return redirect("/admin/")
+    elif hasattr(request.user, "artist"):
+        return redirect(reverse("artist", args=[request.user.artist.slug]))
+    else:
+        return redirect("/")
