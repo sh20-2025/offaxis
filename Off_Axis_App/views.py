@@ -1,7 +1,8 @@
+from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from .models import Artist
-from .forms import ClientForm, ArtistForm
+from .forms import ClientForm
 
 
 # Create your views here.
@@ -35,34 +36,39 @@ def artists_view(request):
 def artist_view(request, slug):
     context = {}
     artist = Artist.objects.get(slug=slug)
-    if artist.is_approved:
-        context["artist"] = artist
-        return render(request, "Off_Axis/artist.html", context)
-    else:
-        return render(request, "Off_Axis/artist_not_approved.html", context)
+
+    context["artist"] = artist
+    return render(request, "Off_Axis/artist.html", context)
 
 
 def register(request):
-    artist_form = ArtistForm()
     client_form = ClientForm()
+    is_artist = request.POST.get("isArtist") == "true"
 
     if request.method == "POST":
-        if "is_artist" in request.POST:
-            if request.POST.get("is_artist") == "true":
-                form = ArtistForm(request.POST)
-            else:
-                form = ClientForm(request.POST)
+        client_form = ClientForm(request.POST)
+        if client_form.is_valid():
+            try:
+                client = client_form.save()
 
-            if form.is_valid():
-                form.save()
+                if is_artist:
+                    artist = Artist(user=client.user)
+                    artist.save()
+                    return redirect(reverse("artist", args=[artist.slug]))
+
                 return redirect("/")
-        else:
-            form = ClientForm(request.POST)
+
+            except IntegrityError:
+                return render(
+                    request,
+                    "registration/register.html",
+                    {"error": "Username already exists"},
+                )
 
     return render(
         request,
         "registration/register.html",
-        {"artist_form": artist_form, "client_form": client_form},
+        {"clientForm": client_form},
     )
 
 
