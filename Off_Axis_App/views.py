@@ -49,3 +49,7 @@ def register(request):
             return redirect("/")
 
     return render(request, "Off_Axis/register.html")
+
+
+def contact(request):
+    return render(request, "Off_Axis/contact.html")

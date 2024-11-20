@@ -56,3 +56,14 @@ class GenreTag(models.Model):
 
     def __str__(self):
         return self.tag
+
+
+class ContactInformation(models.Model):
+    # Arbitrary max lengths, can be changed
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=254)
+    messageContent = models.TextField(max_length=2000)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.email})"
