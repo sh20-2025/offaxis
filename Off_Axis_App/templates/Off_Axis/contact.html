@@ -1,1 +1,37 @@
-{% extends "Off_Axis/base.html" %} {% load static %}
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}
+Off Axis Gigs - Contact
+{% endblock title_block %}
+{% block import_block %}
+<link rel="stylesheet" href="{% static "styles/auth.css" %}">
+{% endblock import_block %}
+{% block body_block %}
+<section class="register">
+  <h1>Contact</h1>
+  <form class="auth-form" method="post" action="{% url 'contact' %}">
+    {% csrf_token %}
+
+    {% comment %} First Name Input {% endcomment %}
+    {% include "components/label.html" with id="contact_first_name_label" variant="dark" required="true" for="input1" size="lg" text="First Name" %}
+    {% include "components/input.html" with id="contact_first_name_input" name="contact_first_name" type="text" variant="light" placeholder="Please enter your firstname..." size="lg" %}
+
+    {% comment %} Last Name Input {% endcomment %}
+    {% include "components/label.html" with id="label1" variant="dark" required="true" for="input1" size="lg" text="Last Name" %}
+    {% include "components/input.html" with id="contact_last_name_input" name="contact_last_name" type="text" variant="light" placeholder="Please enter your surname..." size="lg" %}
+
+    {% comment %} Email Input {% endcomment %}
+    {% include "components/label.html" with id="label1" variant="dark" required="true" for="input1" size="lg" text="Name" %}
+    {% include "components/input.html" with id="contact_email_input" name="contact_email" type="text" variant="light" placeholder="Please enter your email..." size="lg" %}
+
+    {% comment %} Message Type Input {% endcomment %}
+    {% include "components/label.html" with id="label1" variant="dark" required="true" for="input1" size="lg" text="Name" %}
+    {% include "components/input.html" with id="contact_message_type_select" name="contact_message_type_select" type="select" variant="light" placeholder="Choose your issue..." size="lg" options=contact_message_type %}
+
+    {% comment %} Message Text Input {% endcomment %}
+    {% include "components/label.html" with id="label1" variant="dark" required="true" for="input1" size="lg" text="Name" %}
+    {% include "components/input.html" with id="contact_message_box" name="contact_message_textbox" type="text" variant="light" size="lg" %}
+
+</form>
+</section>
+{% endblock body_block %}

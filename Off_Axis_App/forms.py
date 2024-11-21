@@ -11,4 +11,4 @@ class UserForm(forms.ModelForm):
 class ContactInformationForm(forms.ModelForm):
     class Meta:
         model = ContactInformation
-        fields = ("first_name", "last_name", "email", "message_content")
+        fields = ("first_name", "last_name", "email", "message_content", "message_type")

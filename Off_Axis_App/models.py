@@ -63,7 +63,15 @@ class ContactInformation(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
-    messageContent = models.TextField(max_length=2000)
+    message_content = models.TextField(max_length=2000)
+
+    MESSAGE_TYPE = [
+        ("general_question", "General Question"),
+        ("cant_find_tickets", "I can't find my tickets"),
+        ("ticket_query", "Ticket Query"),
+        ("press_enquiry", "Press Enquiry"),
+    ]
+    message_type = models.CharField(max_length=20, choices=MESSAGE_TYPE)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.email})"
+        return f"{self.first_name} {self.last_name} ({self.email}) {self.message_type}"
