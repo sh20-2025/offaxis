@@ -138,7 +138,7 @@ body::before {
   width: 5rem;
   height: 5rem;
   margin: 1rem;
-  font-size: 1rem;
+  font-size: 0.8rem;
   text-align: center;
   color: var(--oa-text-dark);
   flex-grow: 2;
