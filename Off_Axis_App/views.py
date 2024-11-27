@@ -93,3 +93,7 @@ def login_redirect_view(request):
         return redirect(reverse("artist", args=[request.user.artist.slug]))
     else:
         return redirect("/")
+
+
+def password_change(request):
+    return render(request, "registration/password_change_form.html")

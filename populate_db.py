@@ -1,5 +1,6 @@
 import os
 import django
+
 from Off_Axis_App.models import (
     Artist,
     Client,
