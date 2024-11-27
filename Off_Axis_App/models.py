@@ -24,9 +24,6 @@ class Artist(models.Model):
     profile_picture_url = models.URLField(blank=True)
     social_links = models.ManyToManyField("SocialLink", blank=True)
     genre_tags = models.ManyToManyField("GenreTag", blank=True)
-    gigs = models.TextField(
-        max_length=500, blank=True
-    )  # models.ManyToManyField('Gig', blank=True) eventually.
     slug = models.SlugField(unique=True, default="default-slug")
 
     def save(self, *args, **kwargs):
@@ -73,3 +70,40 @@ class ContactInformation(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.email}) {self.message_type}"
+
+
+class Gig(models.Model):
+    artist = models.ForeignKey("Artist", on_delete=models.CASCADE)
+    venue = models.ForeignKey("Venue", on_delete=models.CASCADE)
+    supporting_artists = models.ManyToManyField(
+        "Artist", blank=True, related_name="supporting_artists"
+    )
+    date = models.DateTimeField()
+    price = models.DecimalField(max_digits=19, decimal_places=2)
+    booking_fee = models.DecimalField(max_digits=19, decimal_places=2, default=1.25)
+    capacity = models.IntegerField()
+    description = models.TextField(max_length=500)
+    gig_photo_url = models.TextField(max_length=2048)
+
+
+class Venue(models.Model):
+    name = models.TextField(max_length=500)
+    address = models.OneToOneField("Address", on_delete=models.CASCADE)
+    description = models.TextField(max_length=500)
+    venue_photo_url = models.TextField(max_length=2048)
+
+
+class Ticket(models.Model):
+    gig = models.ForeignKey("Gig", on_delete=models.CASCADE)
+    user = models.ForeignKey("Client", on_delete=models.CASCADE)
+    discount_used = models.TextField(max_length=256, blank=True)
+    is_used = models.BooleanField(default=False)
+
+
+class Address(models.Model):
+    line_1 = models.TextField(max_length=256)
+    line_2 = models.TextField(max_length=256)
+    country = models.TextField(max_length=256)
+    city = models.TextField(max_length=256)
+    state_or_province = models.TextField(max_length=256)
+    post_code = models.TextField(max_length=64)
