@@ -14,10 +14,12 @@
 {% for artist in artists %}
     <ul>
         <li>
-            <a href="{% url 'artist' slug=artist.slug %}">
-                {{ artist.user.username }} </a>
-            <p>{{ artist.bio }}</p>
-            <p>{{ artist.genre }}</p>
+            <div class="artists-card">
+                <h3>{{ artist.user.username }}</h3>
+                <a href="{% url 'artist' slug=artist.slug %}">{{ artist.user.username }} </a>
+                    <p>{{ artist.bio }}</p>
+                    <p>{{ artist.genre }}</p>
+            </div>
         </li>
     </ul>
 {% empty %}

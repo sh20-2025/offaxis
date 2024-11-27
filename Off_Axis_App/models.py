@@ -22,10 +22,8 @@ class Artist(models.Model):
     bio = models.TextField(max_length=500, blank=True)
     is_approved = models.BooleanField(default=False)
     profile_picture_url = models.URLField(blank=True)
-
     social_links = models.ManyToManyField("SocialLink", blank=True)
     genre_tags = models.ManyToManyField("GenreTag", blank=True)
-
     slug = models.SlugField(unique=True, default="default-slug")
 
     def save(self, *args, **kwargs):

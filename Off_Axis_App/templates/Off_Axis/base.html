@@ -26,17 +26,32 @@
                             <a href="/gigs/">Gigs</a>
                         </li>
                         <li>
-                            <a href="/artists/">Artists</a>
+                            <a href="{% url 'artists' %}">Artists</a>
                         </li>
                         <li>
                             <a href="#">Festivals</a>
                         </li>
                         <li>
-                            <a href="/register/">Join</a>
-                        </li>
-                        <li>
                             <a href="#">Contact</a>
                         </li>
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a>{{ user.username }}</a>
+                            </li>
+                            <li>
+                                <form action="{% url 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                    {% include "components/button.html" with id="button3" type="submit" variant="primary" text="Logout" size="sm" %}
+                                </form>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{% url 'login' %}">Login</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'register' %}">Join</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>
@@ -50,9 +65,7 @@
                 <h3>Subscribe to our Newsletter</h3>
                 {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
                 {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="md" required="true" %}
-                <div class="cta-button">
-                    {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
-                </div>
+                {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
             </div>
         </footer>
     </body>
