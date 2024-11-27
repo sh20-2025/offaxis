@@ -2,11 +2,12 @@ from django.urls import path, include
 from django.contrib import admin
 from . import views
 
-# admin.site.site_header = "Off Axis"
-# admin.site.index_title = "Admin Dashboard"
-# admin.site.site_url = "/"
-# admin.site.enable_nav_sidebar = True
-# admin.site.empty_value_display = "-"
+admin.site.site_header = "Off Axis Administration"
+admin.site.index_title = "Admin Dashboard"
+admin.site.site_title = "Off Axis Admin Portal"
+admin.site.site_url = "/"
+admin.site.enable_nav_sidebar = True
+admin.site.empty_value_display = "-"
 
 urlpatterns = [
     path("artists/", views.artists_view, name="artists"),

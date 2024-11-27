@@ -1,6 +1,7 @@
 from django.contrib import admin
 from Off_Axis_App.models import Artist, Client, SocialLink, GenreTag
-from .models import Artist
+
+# from .models import Artist
 
 # Register your models here.
 admin.site.register(Artist)
