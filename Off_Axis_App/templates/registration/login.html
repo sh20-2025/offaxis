@@ -1,0 +1,20 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}
+    Off Axis Gigs - Login
+{% endblock title_block %}
+{% block import_block %}
+    <link rel="stylesheet" href="{% static "styles/auth.css" %}">
+{% endblock import_block %}
+{% block body_block %}
+    <h1>Login</h1>
+    <div class="section">
+        <div class="auth-form">
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Login" size="lg" %}
+            </form>
+        </div>
+    </div>
+{% endblock body_block %}

@@ -13,6 +13,8 @@ urlpatterns = [
     path("artists/", views.artists_view, name="artists"),
     path("artist/<slug:slug>/", views.artist_view, name="artist"),
     path("register/", views.register, name="register"),
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("login-redirect/", views.login_redirect_view, name="login_redirect"),
     path("", views.index, name="index"),
     path("components", views.components, name="components"),
 ]
