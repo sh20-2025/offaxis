@@ -1,0 +1,9 @@
+.cart {
+  padding: 4rem 10%;
+}
+
+.cart__title {
+  font-size: 3.25rem;
+  text-align: center;
+  margin-bottom: 4rem;
+}

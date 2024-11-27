@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -6,6 +7,7 @@ from django.template.defaultfilters import slugify
 # Client will always be made when a user is made.
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cart = models.OneToOneField("Cart", null=True, on_delete=models.CASCADE)
     billing_info = models.CharField(
         max_length=100, blank=True
     )  # This will need to change to link to a billing model.
@@ -66,6 +68,18 @@ class Gig(models.Model):
     description = models.TextField(max_length=500)
     gig_photo_url = models.TextField(max_length=2048)
 
+    def tickets(self):
+        return Ticket.objects.filter(gig=self.id)
+
+    def tickets_sold(self):
+        return self.tickets().count()
+
+    def tickets_available(self):
+        return max(0, self.capacity - self.tickets_sold())
+
+    def full_price(self):
+        return self.price + self.booking_fee
+
 
 class Venue(models.Model):
     name = models.TextField(max_length=500)
@@ -88,3 +102,14 @@ class Address(models.Model):
     city = models.TextField(max_length=256)
     state_or_province = models.TextField(max_length=256)
     post_code = models.TextField(max_length=64)
+
+
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey("Cart", on_delete=models.CASCADE)
+    gig = models.ForeignKey("Gig", on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    total_price = models.DecimalField(max_digits=19, decimal_places=2)

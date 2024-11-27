@@ -1,0 +1,40 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}
+    Off Axis Gigs - Cart
+{% endblock title_block %}
+{% block import_block %}
+    <link rel="stylesheet" href="{% static "styles/cart.css" %}">
+{% endblock import_block %}
+{% block body_block %}
+    <section class="cart">
+        <h1 class="cart__title">Cart</h1>
+        {% if error != "" %}<p class="cart__error">{{ error }}</p>{% endif %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.gig.artist.user.username }}</td>
+                        <td>£{{ item.gig.full_price }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>£{{ item.total_price }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">Total</td>
+                    <td>£{{ cart_total_price }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+{% endblock body_block %}
