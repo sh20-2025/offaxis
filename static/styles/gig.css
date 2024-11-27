@@ -28,10 +28,22 @@
 
 .gig__price {
   font-size: 1.25rem;
+  line-height: 1.8rem;
 }
 
 .gig__price span {
   margin-left: 3rem;
+}
+
+.gig__price-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.gig__price-table td {
+  border: 1px solid var(--oa-text-light);
+  padding: 0.5rem;
+  font-size: 1rem;
 }
 
 .gig__tickets-status {

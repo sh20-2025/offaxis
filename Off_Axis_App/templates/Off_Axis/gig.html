@@ -34,6 +34,16 @@
                     Tickets Available!
                 {% endif %}
             </p>
+            <table class="gig__price-table">
+                <tr>
+                    <td>Booking Fee Per Ticket</td>
+                    <td>£{{ gig.booking_fee }}</td>
+                </tr>
+                <tr>
+                    <td>Total Payable Amount</td>
+                    <td>£{{ total_payable_amount }}</td>
+                </tr>
+            </table>
             <form class="gig__form">
                 <div class="gig__form__quantity">
                     {% include "components/label.html" with variant="dark" required="true" for="quantity" size="lg" text="Quantity" %}

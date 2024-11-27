@@ -60,5 +60,6 @@ def gig(request, artist, id):
     context["gig"] = Gig.objects.get(id=id)
     context["tickets_sold"] = Ticket.objects.filter(gig=context["gig"]).count()
     context["capacity_last_few"] = context["gig"].capacity * 0.9
+    context["total_payable_amount"] = context["gig"].price + context["gig"].booking_fee
 
     return render(request, "Off_Axis/gig.html", context)
