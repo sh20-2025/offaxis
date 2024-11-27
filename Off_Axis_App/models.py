@@ -63,6 +63,7 @@ class Gig(models.Model):
     )
     date = models.DateTimeField()
     price = models.DecimalField(max_digits=19, decimal_places=2)
+    booking_fee = models.DecimalField(max_digits=19, decimal_places=2, default=1.25)
     capacity = models.IntegerField()
     description = models.TextField(max_length=500)
     gig_photo_url = models.TextField(max_length=2048)
