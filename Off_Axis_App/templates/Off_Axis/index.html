@@ -61,18 +61,63 @@
             <div class="buy-btn"> Buy Tickets </div>
         </div>
     </div>
+    
     </section>
-
-    <section class="cta-section">
-        <h2>Sign Up for Updates</h2>
-        <p>Get the latest updates on upcoming gigs and artist news directly in your inbox.</p>
-        <div>
-            {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
-            <br>
-            {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="lg" required="true" %}
-            <div class="cta-button">
-                {% include "components/button.html" with id="signup-button" type="button" variant="primary" text="Sign Up" size="lg" %}
+    <div class="all-gigs-btn">
+    <a href='#'>
+        {% include "components/button.html" with id="button7" type="button" variant="rainbow" text="View All Gigs!" size="lg" %}
+    </a>
+    </div>
+    
+    <section class="artist-of-the-week">
+    <div class="left">
+        <div class="artist-of-the-week-media">
+            
+        </div>
+    </div>
+    <div class="right">
+        <div class="artist-of-the-week-info">
+            <h2>Artist of the Week</h2>
+            <h3>Flair</h3>
+            <p>Flair is a Glasgow-based band that has been making waves in the music scene with their unique sound and energetic live performances. Their music is a blend of indie rock and pop, with catchy hooks and infectious melodies that will have you dancing all night long. Check out their latest single "Electric Dreams" and catch them live at a venue near you!</p>
+            <div class="artist-of-the-week-button">
+                <a href="#">
+                {% include "components/button.html" with id="button9" type="button" variant="rainbow" text="Read More" size="sm" %}
+                </a>
             </div>
         </div>
+    </div>
+    </section>
+    <section class="offaxis-socials">
+    <div class="socials">
+        <h2> <a href="https://www.instagram.com/offaxisgigs/"> @offaxisgigs </a> On Instagram</h2>
+    </div>
+    </section>
+    <section class="extra-features">
+        <div class="media-feature"></div>
+        <div class="media-feature"></div>
+        <div class="media-feature"></div>
+        <div class="media-feature"></div>
+        <div class="media-feature"></div>
+        <div class="media-feature"></div>
+        <div class="media-feature"></div>
+        <div class="media-feature"></div>
+    </section>
+    
+    <section class="bottom-info-section">
+        <h3> Our Partners </h3>
+        <div class="our-partners">
+            <div class="partner"></div>
+            <div class="partner"></div>
+            <div class="partner"></div>
+            <div class="partner"></div>
+        </div>
+        <div class="info-text">
+            <h4> My account | Terms & Conditions | Privacy Policy </h4>
+            <h4> OFF AXIS Tours CIC © 2024 | Website built by Glasgow University team SH20</h4>
+        </div>
+    </section>
+    <section class="cta-section">
+    
     </section>
 {% endblock %}

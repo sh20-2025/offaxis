@@ -55,6 +55,7 @@ body::before {
   width: 100%;
   border-radius: 50%;
   mix-blend-mode: luminosity;
+  background-image: url(https://i.ytimg.com/vi_webp/wtOvDo1Mrh8/maxresdefault.webp);
 }
 
 .hero-circle h4 {
@@ -190,3 +191,133 @@ body::before {
 .gigs-section .right .gig:nth-child(4) .buy-btn{
   background-color: var(--oa-blue);
 }
+
+.all-gigs-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  background-color: var(--oa-text-dark);
+}
+
+.artist-of-the-week {
+  display:flex;
+  justify-content: space-evenly;
+}
+
+.artist-of-the-week .left {
+  content: "";
+  width:40%;
+  height: 100%;
+  background-color: var(--oa-text-dark);
+  display: flex;
+  justify-content: center;
+}
+
+.artist-of-the-week .left .artist-of-the-week-media{
+  padding: 2rem;
+  background-color: var(--oa-text-medium);
+  width: 20rem;
+  height: 20rem;
+}
+
+.artist-of-the-week .right {
+  content: "";
+  width: 60%;
+  height: 20rem;
+  background-color:transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+
+.offaxis-socials{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-align: center;
+  background-color: var(--oa-text-dark);
+}
+
+.offaxis-socials a {
+  text-decoration: none;
+  color: var(--oa-blue);
+  transition: color 0.5s;
+}
+
+.offaxis-socials a:hover {
+  background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.extra-features {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: var(--oa-text-dark);
+}
+
+.extra-features .media-feature{
+  position: relative;
+  width:9rem;
+  height: 9rem;
+  background-color: var(--oa-text-medium);
+  margin:0.1rem;
+}
+
+.extra-features .media-feature::after{
+  content: "\25B6"; /* Unicode character for play button */
+  color: var(--oa-text-dark);
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
+}
+
+.bottom-info-section {
+  background-color: var(--oa-text-dark);
+}
+
+.bottom-info-section h3 {
+  padding: 2rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-align: left;
+  color: var(--oa-text-light);
+}
+
+.our-partners {
+  display:flex;
+  justify-content: left;
+  padding:1rem;
+}
+
+.our-partners .partner{
+  position: relative;
+  width:9rem;
+  height: 9rem;
+  background-color: var(--oa-text-medium);
+  margin:0.1rem;
+}
+
+.bottom-info-section .info-text {
+  padding: 2rem;
+  font-size: 1rem;
+  text-align: left;
+  color: var(--oa-text-light);
+}
+
+

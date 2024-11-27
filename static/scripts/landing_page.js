@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
   const headings = document.querySelectorAll(".hero-circle h4");
-  console.log(headings);
   headings.forEach(heading => {
     const text = heading.textContent;
     heading.innerHTML = "";
