@@ -1,11 +1,8 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
+from .models import Artist, Gig, Ticket
 from django.urls import reverse
-from .models import Artist
 from .forms import ClientForm
-
-
-# Create your views here.
 
 
 def components(request):
@@ -70,6 +67,23 @@ def register(request):
         "registration/register.html",
         {"clientForm": client_form},
     )
+
+
+def gigs(request):
+    context = {}
+    context["gigs"] = Gig.objects.all()
+
+    return render(request, "Off_Axis/gigs.html", context)
+
+
+def gig(request, artist, id):
+    context = {}
+    context["gig"] = Gig.objects.get(id=id)
+    context["tickets_sold"] = Ticket.objects.filter(gig=context["gig"]).count()
+    context["capacity_last_few"] = context["gig"].capacity * 0.9
+    context["total_payable_amount"] = context["gig"].price + context["gig"].booking_fee
+
+    return render(request, "Off_Axis/gig.html", context)
 
 
 def login_redirect_view(request):

@@ -26,6 +26,11 @@ body {
   --oa-blue-dark: #146c8d;
   --oa-blue-low-alpha: #1892be33;
 
+  --oa-orange: #d66d0f;
+  --oa-orange-light: #f57b0f;
+  --oa-orange-dark: #a84f0f;
+  --oa-orange-low-alpha: #d66d0f33;
+
   --oa-text-dark: #000000;
   --oa-text-light: #ffffff;
   --oa-text-medium: #5a5a5a;
