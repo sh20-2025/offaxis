@@ -5,6 +5,8 @@ from .models import Artist, ContactInformation
 from .forms import ClientForm, ContactInformationForm
 from django.core.cache import cache
 from django.utils.timezone import now
+import math
+from urllib.parse import urlencode
 
 
 # Create your views here.
@@ -99,7 +101,7 @@ def contact(request):
                 "Off_Axis/contact.html",
                 {
                     "form": ContactInformationForm(),
-                    "cooldown": time_remaining,
+                    "cooldown": math.ceil(time_remaining),
                     "contact_message_type": contact_message_type,
                 },
             )
@@ -110,6 +112,10 @@ def contact(request):
         if form.is_valid():
             form.save()
             cache.set(cache_key, now(), timeout=cooldown_period)
+
+            base_url = reverse("contact")
+            query_string = urlencode({"contact_page_submission_value": "success"})
+            return redirect(f"{base_url}?{query_string}")
 
     else:
         form = ContactInformationForm()

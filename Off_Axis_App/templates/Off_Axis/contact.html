@@ -9,9 +9,15 @@ Off Axis Gigs - Contact
 {% block body_block %}
 <section class="register">
   <h1>Contact</h1>
-  {% if cooldown %}
-      <p>You must wait {{ cooldown|floatformat:2 }} seconds before submitting again.</p>
-    {% endif %}
+  {% if request.GET.contact_page_submission_value != "success" and cooldown %}
+      cooldown:
+      <p>You must wait {{ cooldown|floatformat:0 }} seconds before submitting again.</p>
+  {% endif %}
+  {% if request.GET.contact_page_submission_value == "success" %}
+    <p class="success-message">Your message was submitted successfully!</p>
+{% endif %}
+
+
   <form class="auth-form" method="post" action="{% url 'contact' %}">
     {% csrf_token %}
 
@@ -33,9 +39,9 @@ Off Axis Gigs - Contact
 
     {% comment %} Message Text Input {% endcomment %}
     {% include "components/label.html" with id="label1" variant="dark" required="true" for="input1" size="lg" text="Extra Information about Problem" %}
-    {% include "components/input.html" with id="contact_message_box" name="message_content" type="text" variant="light" size="lg" %}
-
+    {% include "components/input.html" with id="contact_message_box" name="message_content" type="textarea" variant="light" placeholder="Provide additional details about the issue..." size="lg" required="true" %}
     {% include "components/button.html" with id="button1" type="submit" variant="primary" text="Submit" size="lg" %}
+
 
 </form>
 </section>
