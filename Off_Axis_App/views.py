@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Artist, Gig, Ticket
 from django.urls import reverse
 from .forms import ClientForm
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 def components(request):
@@ -103,3 +106,21 @@ def approve_artist(request, slug):
         artist.is_approved = "approve" in request.POST
         artist.save()
     return redirect(reverse("artist", args=[artist.slug]))
+
+
+@login_required
+def upload_profile_picture(request):
+    artist_slug = request.POST.get("artist_slug")
+    artist = get_object_or_404(Artist, slug=artist_slug)
+
+    if artist.profile_picture:
+        artist.profile_picture.delete()
+
+    if (
+        "profile_picture" in request.FILES
+    ):  # Ensure the name matches the name in the JavaScript
+        artist.profile_picture = request.FILES["profile_picture"]
+        artist.save()
+        return JsonResponse({"picture_url": artist.profile_picture.url})
+
+    return JsonResponse({"error": "No file uploaded"}, status=400)

@@ -43,3 +43,8 @@ a {
 .approval-section {
   margin: 2rem;
 }
+
+.unapproved-message {
+  display: flex;
+  justify-content: center;
+}
