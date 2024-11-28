@@ -1,6 +1,9 @@
 import os
 import django
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
+django.setup()
+
 from Off_Axis_App.models import (
     Artist,
     Client,
@@ -12,11 +15,20 @@ from Off_Axis_App.models import (
     Address,
 )
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
-django.setup()
 
 
 def populate():
+    add_genre_tag("Rock")
+    add_genre_tag("Pop")
+    add_genre_tag("Rap")
+    add_genre_tag("Country")
+    add_genre_tag("Jazz")
+    add_genre_tag("Soul")
+    add_genre_tag("Blues")
+    add_genre_tag("Folk")
+    add_genre_tag("Indie")
+    add_genre_tag("Punk")
+
     a1 = add_artist("Ed Armeson", "I am a musician", True)
     a2 = add_artist("Precious Ink", "I am a musician", True)
     a3 = add_artist("Sub Violet", "I am a musician", True)
@@ -98,7 +110,6 @@ def populate():
         "/static/images/gig-placeholder.png",
     )
 
-
 def add_artist(name, bio, is_approved):
     u = User.objects.get_or_create(username=name)[0]
     a = Artist.objects.get_or_create(user=u, bio=bio, is_approved=is_approved)[0]
@@ -137,6 +148,9 @@ def add_gig(artist, venue, date, price, capacity, description, gig_photo_url):
         gig_photo_url=gig_photo_url,
     )[0]
     return g
+
+def add_genre_tag(tag):
+    return GenreTag.objects.get_or_create(tag=tag)[0]
 
 
 # Start execution here!
