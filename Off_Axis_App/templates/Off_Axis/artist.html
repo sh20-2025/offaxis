@@ -9,7 +9,8 @@
 {% block import_block %}
     <link rel = "stylesheet" href="{% static "styles/profile.css" %}">
     <link rel="stylesheet" href="{% static "styles/gigs_section.css" %}">
-    <script src="{% static "scripts/profile.js" %}" defer></script>
+    <script src="{% static "scripts/profile_upload_image.js" %}" defer></script>
+    <script src="{% static "scripts/profile_edit_info.js" %}" defer></script>
 {% endblock %}
 
 {% block body_block %}
@@ -37,7 +38,12 @@
     <section class="profile-header">
         <h1>{{ artist.user.username }}'s Profile</h1>
     
-        <p class="profile-bio">{{ artist.bio }}</p>
+        <p class="profile-bio" id="bio-text">{{ artist.bio }}</p>
+    
+        {% if user == artist.user or user.is_staff%}  
+        <button id="edit-bio-button" data-artist-slug="{{ artist.slug }}">Edit</button>
+        <button id="save-bio-button" style="display: none;">Save</button>
+        {% endif %}
     
         <p> {{ artist.user.username }}'s Genres: </p>
         <div class="genre-tags">

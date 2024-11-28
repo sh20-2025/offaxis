@@ -17,4 +17,5 @@ urlpatterns = [
         views.upload_profile_picture,
         name="upload_profile_picture",
     ),
+    path("update_text/", views.update_text, name="update_text"),
 ]

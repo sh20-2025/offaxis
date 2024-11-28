@@ -124,3 +124,23 @@ def upload_profile_picture(request):
         return JsonResponse({"picture_url": artist.profile_picture.url})
 
     return JsonResponse({"error": "No file uploaded"}, status=400)
+
+
+@login_required
+def update_text(request):
+    if request.method == "POST":
+        section_id = request.POST.get("section_id")
+        new_text = request.POST.get("new_text")
+
+        artist_slug = request.POST.get("artist_slug")
+        artist = get_object_or_404(Artist, slug=artist_slug)
+
+        if section_id == "bio-text":
+            artist.bio = new_text
+            artist.save()
+        else:
+            return JsonResponse({"error": "Invalid section ID"}, status=400)
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
