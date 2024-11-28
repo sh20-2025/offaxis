@@ -11,4 +11,5 @@ urlpatterns = [
     path("login-redirect/", views.login_redirect_view, name="login_redirect"),
     path("", views.index, name="index"),
     path("components", views.components, name="components"),
+    path("approve_artist/<slug:slug>/", views.approve_artist, name="approve_artist"),
 ]

@@ -1,5 +1,6 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from .models import Artist, Gig, Ticket
 from django.urls import reverse
 from .forms import ClientForm
@@ -93,3 +94,12 @@ def login_redirect_view(request):
         return redirect(reverse("artist", args=[request.user.artist.slug]))
     else:
         return redirect("/")
+
+
+@login_required
+def approve_artist(request, slug):
+    artist = get_object_or_404(Artist, slug=slug)
+    if request.method == "POST":
+        artist.is_approved = "approve" in request.POST
+        artist.save()
+    return redirect(reverse("artist", args=[artist.slug]))

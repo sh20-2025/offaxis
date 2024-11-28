@@ -68,7 +68,17 @@
     </section>
     
     <section class="approval-section">
-    <h2>Approval Status</h2>
-    <p> {{ artist.user.username }}'s Approval Status: {{ artist.is_approved }} </p>
+    {% if user == artist.user or user.is_staff%}
+        <h2>Approval Status</h2>
+        <p>{{ artist.user.username }}'s Approval Status: {{ artist.is_approved }}</p>
+        {% if user.is_staff %}
+            <form method="post" action="{% url 'approve_artist' artist.slug %}">
+                {% csrf_token %}
+                <label for="approve">Approve Artist:</label>
+                <input type="checkbox" id="approve" name="approve" {% if artist.is_approved %}checked{% endif %}>
+                <button type="submit">Save</button>
+            </form>
+        {% endif %}
+    {% endif %}
     </section>
 {% endblock %}
