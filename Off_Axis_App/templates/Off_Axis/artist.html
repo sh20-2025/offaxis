@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static "styles/gigs_section.css" %}">
     <script src="{% static "scripts/profile_upload_image.js" %}" defer></script>
     <script src="{% static "scripts/profile_edit_info.js" %}" defer></script>
+    <script src="{% static "scripts/profile_add_genres.js" %}" defer></script>
 {% endblock %}
 
 {% block body_block %}
@@ -46,13 +47,26 @@
         {% endif %}
     
         <p> {{ artist.user.username }}'s Genres: </p>
-        <div class="genre-tags">
-        {% for tag in artist.genre_tags.all %}
-          <div>{{ tag.tag }}</div>
-        {% empty %}
-          <div>No genres available.</div>
-        {% endfor %}
+        <div class="genre-tags" id="genre-tags">
+            {% for tag in artist.genre_tags.all %}
+              <div class="genre">{{ tag.tag }}</div>
+            {% empty %}
+              <div>No genres available.</div>
+            {% endfor %}
         </div>
+    
+        {% if user == artist.user or user.is_staff%}
+        <div class="add-genre">
+                <label for="genre">Add Genre:</label>
+                <select id="genre" name="genre" data-artist-slug="{{ artist.slug }}">
+                    {% for genre in genres %}
+                        <option value="{{ genre.tag }}">{{ genre.tag }}</option>
+                    {% endfor %}
+                </select>
+                <button id="add-genre-button" type="submit">Add</button>         
+        </div>
+        {% endif %}
+        
         
         
     </section>

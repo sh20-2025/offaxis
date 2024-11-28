@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Artist, Gig, Ticket
+from .models import Artist, Gig, Ticket, GenreTag
 from django.urls import reverse
 from .forms import ClientForm
 from django.http import JsonResponse
@@ -37,8 +37,9 @@ def artists_view(request):
 def artist_view(request, slug):
     context = {}
     artist = Artist.objects.get(slug=slug)
-
+    genres = GenreTag.objects.all()
     context["artist"] = artist
+    context["genres"] = genres
     return render(request, "Off_Axis/artist.html", context)
 
 
@@ -140,6 +141,22 @@ def update_text(request):
             artist.save()
         else:
             return JsonResponse({"error": "Invalid section ID"}, status=400)
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@login_required
+def add_genre(request):
+    if request.method == "POST":
+        genre_tag = request.POST.get("genre")
+        artist_slug = request.POST.get("artist_slug")
+        artist = get_object_or_404(Artist, slug=artist_slug)
+
+        genre, created = GenreTag.objects.get_or_create(tag=genre_tag)
+        artist.genre_tags.add(genre)
+        artist.save()
 
         return JsonResponse({"success": True})
 

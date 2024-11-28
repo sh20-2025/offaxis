@@ -18,4 +18,5 @@ urlpatterns = [
         name="upload_profile_picture",
     ),
     path("update_text/", views.update_text, name="update_text"),
+    path("add_genre/", views.add_genre, name="add_genre"),
 ]
