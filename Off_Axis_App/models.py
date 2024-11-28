@@ -54,7 +54,7 @@ class GenreTag(models.Model):
 
 
 class Gig(models.Model):
-    artist = models.ForeignKey("Artist", on_delete=models.CASCADE)
+    artist = models.ForeignKey("Artist", on_delete=models.CASCADE, related_name="gigs")
     venue = models.ForeignKey("Venue", on_delete=models.CASCADE)
     supporting_artists = models.ManyToManyField(
         "Artist", blank=True, related_name="supporting_artists"

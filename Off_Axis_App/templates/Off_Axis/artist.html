@@ -7,42 +7,63 @@
 {% endblock %}
 
 {% block import_block %}
-    <link rel = "stylesheet" href="{% static "css/../../../static/styles/profile.css" %}">
+    <link rel = "stylesheet" href="{% static "styles/profile.css" %}">
+    <link rel="stylesheet" href="{% static "styles/gigs_section.css" %}">
 {% endblock %}
 
 {% block body_block %}
-<h1>{{ artist.user.username }}'s Profile</h1>
-
-    {% if artist.profile_picture_url %}
-      <img src={{ artist.profile_picture_url}}, width=300px, height=300px/>
-    {% else %}
-      <p>No Profile Picture Given.</p>
-    {% endif %}
-
-    {% if artist.gigs %}
-      <p> {{ artist.user.username }}'s Gigs: {{ artist.gigs}} </p>
-    {% else %}
-      <p> {{ artist.user.username }} currently has no gigs! </p>
-    {% endif%}
-
-    <p> {{ artist.user.username }}'s Genres: </p>
-    <ul>
-      {% for tag in artist.genre_tags.all %}
-          <li>{{ tag.tag }}</li>
-      {% empty %}
-          <li>No genres available.</li>
-      {% endfor %}
-    </ul>
-
-    <p>Bio: {{ artist.bio }}</p>
-
-    <p> {{ artist.user.username }}'s Socials: </p>
-    <ul>
-      {% for social_link in artist.social_links.all %}
-          <a href={{ social_link.url }}><li>{{ social_link.type }}</li></a>
-      {% empty %}
-          <li>No socials available.</li>
-      {% endfor %}
-    </ul>
-
+    <section class="profile">
+    <section class="profile-picture">
+        {% if artist.profile_picture_url %}
+          <img src="{{ artist.profile_picture_url}}" alt="profile picture"/>
+        {% else %}
+          <img src="{% static "icons/image.svg" %}" alt="profile picture"/>
+          <p>No Profile Picture Given.</p>
+        {% endif %}
+    </section>
+    <section class="profile-header">
+        <h1>{{ artist.user.username }}'s Profile</h1>
+    
+        <p class="profile-bio">{{ artist.bio }}</p>
+    
+        <p> {{ artist.user.username }}'s Genres: </p>
+        <div class="genre-tags">
+        {% for tag in artist.genre_tags.all %}
+          <div>{{ tag.tag }}</div>
+        {% empty %}
+          <div>No genres available.</div>
+        {% endfor %}
+        </div>
+        
+        
+    </section>
+    
+    <section class="profile-socials">
+        <p> {{ artist.user.username }}'s Socials: </p>
+        <ul>
+          {% for social_link in artist.social_links.all %}
+              <a href={{ social_link.url }}><li>{{ social_link.type }}</li></a>
+          {% empty %}
+              <li>No socials available.</li>
+          {% endfor %}
+        </ul>
+    </section>
+    
+    <section class="profile-gigs">
+    <div class="gigs-section" style="width: 70%; margin-top: 0;">
+    <div class="right" style="width: 100%">
+        {% for gig in artist.gigs.all %}
+          <a class="gig" href="{% url 'gig' gig.artist.slug gig.id %}">
+            <div class="date"><div class="num">{{ gig.date|date:"d" }}</div> {{ gig.date|date:"F" }}</div>
+            <div class="description"><div class="name">{{ artist.user.username }}</div> with - {{ gig.venue.name }} | {{ gig.date|date:"d/m/Y" }}</div>
+            <div class="buy-btn"> Buy Tickets </div>
+          </a>
+        {% empty %}
+          <p> {{ artist.user.username }} currently has no gigs! </p>
+        {% endfor %}
+        </div>
+        </div>
+    </section>
+    
+    </section>
 {% endblock %}

@@ -1,0 +1,40 @@
+.profile {
+  /* grid method */
+  display: grid;
+  /* shorten width of first column */
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 1rem;
+}
+
+.profile .profile-picture img{
+  /* left image and 20rem * 20rem */
+  width: 20rem;
+  height: 20rem;
+}
+
+.profile .profile-header{
+  padding: 2rem 0;
+}
+
+.profile .profile-header h1{
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.profile .profile-header p.profile-bio {
+  margin:0.5rem;
+}
+
+.profile .profile-header .genre-tags {
+  margin:0.5rem;
+  width:70%;
+  display: flex;
+  gap: 1rem;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
