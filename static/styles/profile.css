@@ -4,6 +4,7 @@
   /* shorten width of first column */
   grid-template-columns: 1fr 2fr;
   grid-gap: 1rem;
+  margin-bottom: 5rem;
 }
 
 .profile .profile-picture img{
@@ -37,4 +38,8 @@
 a {
   text-decoration: none;
   color: inherit;
+}
+
+.approval-section {
+  margin: 2rem;
 }
