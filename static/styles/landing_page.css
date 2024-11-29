@@ -1,0 +1,323 @@
+:root {
+  animation: backgroundShift 10s infinite alternate;
+}
+
+body {
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 98.8vw;
+  height: 100vh;
+  border-style: solid;
+  border-width: 5px;
+  border-color: var(--oa-pink) var(--oa-yellow) var(--oa-green) var(--oa-blue);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+@keyframes backgroundShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50% 0;
+  }
+}
+
+.hero-circles {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5rem;
+}
+
+.hero-circle {
+  position: relative;
+  display: inline-block;
+  content: "";
+  margin-left: -5rem;
+  opacity: 100%;
+  border-radius: 50%;
+  height: 18rem;
+  width: 18rem;
+  text-align: center;
+}
+
+.hero-circles img {
+  /*display: none;*/
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  mix-blend-mode: luminosity;
+  background-image: url(https://i.ytimg.com/vi_webp/wtOvDo1Mrh8/maxresdefault.webp);
+}
+
+.hero-circle h4 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: bolder;
+}
+
+.hero-circles .hero-circle:nth-child(1) h4{
+  color: var(--oa-pink);
+}
+
+.hero-circles .hero-circle:nth-child(2) h4{
+  color: var(--oa-yellow);
+}
+
+.hero-circles .hero-circle:nth-child(3) h4{
+  color: var(--oa-green);
+}
+
+.hero-circles .hero-circle:nth-child(4) h4{
+  color: var(--oa-blue);
+}
+
+.hero-circle h4 span {
+  position: absolute;
+  transform-origin: bottom center;
+  transition: transform 2s;
+}
+
+.gigs-section {
+  display:flex;
+  justify-content: space-evenly;
+  background-color: var(--oa-text-dark);
+
+  margin-top: 5rem;
+}
+
+.gigs-section .left {
+  content: "";
+  width:40%;
+  height: 100%;
+}
+
+.gigs-section .right {
+  content: "";
+  width: 60%;
+  height: 100%;
+}
+
+.gigs-section .gig {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  height: 7rem;
+}
+
+.gigs-section .right .gig:nth-child(1){
+  background-color: var(--oa-pink-low-alpha);
+}
+
+.gigs-section .right .gig:nth-child(2){
+  background-color: var(--oa-yellow-low-alpha);
+}
+
+.gigs-section .right .gig:nth-child(3){
+  background-color: var(--oa-green-low-alpha);
+}
+
+.gigs-section .right .gig:nth-child(4){
+  background-color: var(--oa-blue-low-alpha);
+}
+
+.gigs-section .date {
+  width: 5rem;
+  height: 5rem;
+  margin: 1rem;
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--oa-text-dark);
+  flex-grow: 2;
+}
+
+.gigs-section .date .num{
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.gigs-section .description {
+  width:100%;
+  text-align: left;
+  flex-shrink: 2;
+}
+
+.gigs-section .description .name{
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+
+.gigs-section .buy-btn {
+  width: 5rem;
+  height: 5rem;
+  margin: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  color: var(--oa-text-dark);
+  flex-grow: 2;
+}
+
+.gigs-section .right .gig:nth-child(1) .date,
+.gigs-section .right .gig:nth-child(1) .buy-btn{
+  background-color: var(--oa-pink);
+}
+
+.gigs-section .right .gig:nth-child(2) .date,
+.gigs-section .right .gig:nth-child(2) .buy-btn{
+  background-color: var(--oa-yellow);
+}
+
+.gigs-section .right .gig:nth-child(3) .date,
+.gigs-section .right .gig:nth-child(3) .buy-btn{
+  background-color: var(--oa-green);
+}
+
+.gigs-section .right .gig:nth-child(4) .date,
+.gigs-section .right .gig:nth-child(4) .buy-btn{
+  background-color: var(--oa-blue);
+}
+
+.all-gigs-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  background-color: var(--oa-text-dark);
+}
+
+.artist-of-the-week {
+  display:flex;
+  justify-content: space-evenly;
+}
+
+.artist-of-the-week .left {
+  content: "";
+  width:40%;
+  height: 100%;
+  background-color: var(--oa-text-dark);
+  display: flex;
+  justify-content: center;
+}
+
+.artist-of-the-week .left .artist-of-the-week-media{
+  padding: 2rem;
+  background-color: var(--oa-text-medium);
+  width: 20rem;
+  height: 20rem;
+}
+
+.artist-of-the-week .right {
+  content: "";
+  width: 60%;
+  height: 20rem;
+  background-color:transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+
+.offaxis-socials{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-align: center;
+  background-color: var(--oa-text-dark);
+}
+
+.offaxis-socials a {
+  text-decoration: none;
+  color: var(--oa-blue);
+  transition: color 0.5s;
+}
+
+.offaxis-socials a:hover {
+  background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.extra-features {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: var(--oa-text-dark);
+}
+
+.extra-features .media-feature{
+  position: relative;
+  width:9rem;
+  height: 9rem;
+  background-color: var(--oa-text-medium);
+  margin:0.1rem;
+}
+
+.extra-features .media-feature::after{
+  content: "\25B6"; /* Unicode character for play button */
+  color: var(--oa-text-dark);
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
+}
+
+.bottom-info-section {
+  background-color: var(--oa-text-dark);
+}
+
+.bottom-info-section h3 {
+  padding: 2rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-align: left;
+  color: var(--oa-text-light);
+}
+
+.our-partners {
+  display:flex;
+  justify-content: left;
+  padding:1rem;
+}
+
+.our-partners .partner{
+  position: relative;
+  width:9rem;
+  height: 9rem;
+  background-color: var(--oa-text-medium);
+  margin:0.1rem;
+}
+
+.bottom-info-section .info-text {
+  padding: 2rem;
+  font-size: 1rem;
+  text-align: left;
+  color: var(--oa-text-light);
+}
+
+

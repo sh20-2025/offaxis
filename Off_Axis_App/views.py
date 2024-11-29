@@ -1,5 +1,6 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
+from .models import Artist, Gig, Ticket
 from django.urls import reverse
 from django.contrib import admin
 from django.conf import settings
@@ -7,9 +8,6 @@ from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Artist
 from .forms import ClientForm
-
-
-# Create your views here.
 
 
 def components(request):

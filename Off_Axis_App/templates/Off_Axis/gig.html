@@ -1,0 +1,58 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}
+    Off Axis Gigs - {{ gig.artist.user.username|upper }} {{ gig.venue.address.city|upper }}
+{% endblock title_block %}
+{% block import_block %}
+    <link rel="stylesheet" href="{% static "styles/gig.css" %}">
+{% endblock import_block %}
+{% block body_block %}
+    <section class="gig">
+        <img src="{{ gig.gig_photo_url }}"
+             width="500"
+             height="500"
+             alt="{{ gig.artist.user.username }}'s gig"
+             class="gig__image">
+        <div class="gig__details">
+            <h1 class="gig__title">{{ gig.artist.user.username }}</h1>
+            <div class="gig__info">
+                <p>{{ gig.date|date:"d/m/Y" }}</p>
+                <p>Start time - {{ gig.date|date:"H:i" }}</p>
+                <p>{{ gig.venue.name }}, {{ gig.venue.address.city }}</p>
+            </div>
+            <div class="gig__price">
+                <h2>
+                    Ticket Price <span>£{{ gig.price }}</span>
+                </h2>
+            </div>
+            <p class="gig__tickets-status">
+                {% if tickets_sold >= capacity %}
+                    Sold Out!
+                {% elif tickets_sold >= capacity_last_few %}
+                    Last Few Tickets!
+                {% else %}
+                    Tickets Available!
+                {% endif %}
+            </p>
+            <table class="gig__price-table">
+                <tr>
+                    <td>Booking Fee Per Ticket</td>
+                    <td>£{{ gig.booking_fee }}</td>
+                </tr>
+                <tr>
+                    <td>Total Payable Amount</td>
+                    <td>£{{ total_payable_amount }}</td>
+                </tr>
+            </table>
+            <form class="gig__form">
+                <div class="gig__form__quantity">
+                    {% include "components/label.html" with variant="dark" required="true" for="quantity" size="lg" text="Quantity" %}
+                    {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="lg" full="true" %}
+                </div>
+                {% include "components/button.html" with id="submitButton" type="button" variant="rainbow" text="Add to cart" size="lg" %}
+            </form>
+            <p class="gig__description">{{ gig.description }}</p>
+        </div>
+    </section>
+    <script>document.getElementById("quantityInput").value = 1;</script>
+{% endblock body_block %}

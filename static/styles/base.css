@@ -3,27 +3,42 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  background: black;
-  color: white;
 }
 
 :root {
   --oa-pink: #dd1167;
   --oa-pink-light: #fd3689;
   --oa-pink-dark: #a40f4d;
+  --oa-pink-low-alpha: #dd116733;
+
   --oa-yellow: #f7ef3b;
   --oa-yellow-light: #fff990;
   --oa-yellow-dark: #dcd212;
+  --oa-yellow-low-alpha: #dcd21233;
+
   --oa-green: #19892a;
   --oa-green-light: #23bc3a;
   --oa-green-dark: #136620;
+  --oa-green-low-alpha: #19892a33;
+
   --oa-blue: #1892be;
   --oa-blue-light: #1ab2e9;
   --oa-blue-dark: #146c8d;
+  --oa-blue-low-alpha: #1892be33;
+
+  --oa-orange: #d66d0f;
+  --oa-orange-light: #f57b0f;
+  --oa-orange-dark: #a84f0f;
+  --oa-orange-low-alpha: #d66d0f33;
+
   --oa-text-dark: #000000;
   --oa-text-light: #ffffff;
   --oa-text-medium: #5a5a5a;
   --oa-text-medium-light: #a4a4a4;
+
+  background: url("../images/background_static.png") repeat;
+  background-size: cover;
+  color: white;
 }
 
 * {
@@ -40,9 +55,7 @@ body {
 }
 
 .header {
-  background-color: var(--oa-text-dark);
   padding: 15px 0;
-  border-bottom: 1px solid var(--oa-text-medium-light);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -86,8 +99,6 @@ body {
 }
 
 .hero {
-  background: #000;
-  color: var(--oa-text-light);
   height: 500px;
   display: flex;
   align-items: center;
