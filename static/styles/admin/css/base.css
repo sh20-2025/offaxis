@@ -1,195 +1,326 @@
 /*
-    Off Axis Django Admin styles
+    Off Axis Django Admin - Base Stylesheet
+    File: base.css
 */
 
 /* VARIABLE DEFINITIONS */
 :root {
-    --oa-pink: #dd1167;
-    --oa-pink-light: #fd3689;
-    --oa-pink-dark: #a40f4d;
-    --oa-yellow: #f7ef3b;
-    --oa-yellow-light: #fff990;
-    --oa-yellow-dark: #dcd212;
-    --oa-green: #19892a;
-    --oa-green-light: #23bc3a;
-    --oa-green-dark: #136620;
-    --oa-blue: #1892be;
-    --oa-blue-light: #1ab2e9;
-    --oa-blue-dark: #146c8d;
-    --oa-text-dark: #000000;
-    --oa-text-light: #ffffff;
-    --oa-text-medium: #5a5a5a;
-    --oa-text-medium-light: #a4a4a4;
+  --oa-pink: #dd1167;
+  --oa-pink-light: #fd3689;
+  --oa-pink-dark: #a40f4d;
+  --oa-yellow: #f7ef3b;
+  --oa-yellow-light: #fff990;
+  --oa-yellow-dark: #dcd212;
+  --oa-green: #19892a;
+  --oa-green-light: #23bc3a;
+  --oa-green-dark: #136620;
+  --oa-blue: #1892be;
+  --oa-blue-light: #1ab2e9;
+  --oa-blue-dark: #146c8d;
+  --oa-text-dark: #000000;
+  --oa-text-light: #ffffff;
+  --oa-text-medium: #5a5a5a;
+  --oa-text-medium-light: #a4a4a4;
 
-    --body-bg: black;
-    --body-fg: var(--oa-text-light);
-    --header-bg: var(--oa-text-dark);
-    --header-color: var(--oa-yellow);
-    --header-branding-color: var(--oa-yellow);
-    --link-fg: var(--oa-yellow);
-    --link-hover-color: var(--oa-yellow-light);
-    --breadcrumbs-bg: var(--oa-blue);
-    --breadcrumbs-fg: var(--oa-text-light);
-    --breadcrumbs-link-fg: var(--oa-text-light);
-    --button-bg: var(--oa-pink);
-    --button-hover-bg: var(--oa-pink-light);
-    --border-color: var(--oa-text-medium-light);
-    --selected-bg: var(--oa-yellow-light);
+  --body-bg: black;
+  --body-fg: var(--oa-text-light);
+  --header-bg: var(--oa-text-dark);
+  --header-color: var(--oa-yellow);
+  --header-branding-color: var(--oa-yellow);
+  --link-fg: var(--oa-yellow);
+  --link-hover-color: var(--oa-yellow-light);
+  --breadcrumbs-bg: var(--oa-blue);
+  --breadcrumbs-fg: var(--oa-text-light);
+  --breadcrumbs-link-fg: var(--oa-text-light);
+  --button-bg: var(--oa-pink);
+  --button-hover-bg: var(--oa-pink-light);
+  --border-color: var(--oa-text-medium-light);
+  --selected-bg: var(--oa-yellow-light);
+}
+
+/* GLOBAL STYLES */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  background: var(--body-bg);
+  color: var(--body-fg);
+  line-height: 1.6;
+}
+
+a:link, a:visited {
+  color: var(--link-fg);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+a:hover, a:focus {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+  color: var(--oa-yellow);
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+ul, ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+/* BUTTONS */
+button, input[type="submit"], .btn {
+  background-color: var(--button-bg);
+  color: var(--body-fg);
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px; /* Dynamic padding for spacing */
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  display: inline-flex; /* Use flexbox for centering */
+  align-items: center; /* Vertically center text */
+  justify-content: center; /* Horizontally center text */
+  white-space: nowrap; /* Prevent text wrapping */
+  min-width: 100px; /* Minimum width for smaller text buttons */
+  box-sizing: border-box; /* Ensures padding is included in button dimensions */
+}
+
+button:hover, input[type="submit"]:hover, .btn:hover {
+  background-color: var(--button-hover-bg);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* HEADER */
+#header {
+  background: var(--header-bg);
+  color: var(--header-color);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#header a {
+  color: var(--header-color);
+}
+
+#header .logo img {
+  height: 50px;
+}
+
+/* USER TOOLS */
+#user-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align items to the right */
+}
+
+#user-links {
+  display: flex;
+  gap: 15px; /* Even spacing between buttons */
+}
+
+#user-links a,
+#user-links form {
+  flex: 1; /* Make all elements take equal available space */
+  display: flex;
+  align-items: center;
+}
+
+#user-links a.btn, #user-links form .btn {
+  flex: 1; /* Equal button sizes */
+  text-align: center;
+}
+
+/* BREADCRUMBS */
+.breadcrumbs {
+  background: var(--breadcrumbs-bg);
+  color: var(--breadcrumbs-fg);
+  padding: 10px 20px;
+}
+
+.breadcrumbs a {
+  color: var(--breadcrumbs-link-fg);
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+/* TABLES */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+td, th {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+}
+
+th {
+  background: var(--oa-blue-dark);
+  color: var(--oa-text-light);
+  text-align: left;
+}
+
+/* FORMS */
+input, textarea, select {
+  background: var(--oa-text-light);
+  color: var(--oa-text-dark);
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--oa-yellow);
+  outline: none;
+}
+
+/* MESSAGES */
+ul.messagelist {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+ul.messagelist li {
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+ul.messagelist li.success {
+  background: var(--oa-green-light);
+  color: var(--oa-text-dark);
+}
+
+ul.messagelist li.error {
+  background: var(--oa-pink-light);
+  color: var(--oa-text-light);
+}
+
+/* FOOTER */
+.footer {
+  background: var(--header-bg);
+  color: var(--header-color);
+  text-align: center;
+  padding: 15px;
+}
+
+/* RESPONSIVE DESIGN */
+
+/* Adjust header and user tools for smaller screens */
+@media (max-width: 768px) {
+  /* Stack header elements vertically */
+  #header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 15px 20px;
   }
 
-  /* GLOBAL STYLES */
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    background: var(--body-bg);
-    color: var(--body-fg);
-    line-height: 1.6;
+  /* Adjust branding/logo */
+  #header .logo img {
+      height: 40px;
+      margin-bottom: 10px;
   }
 
-  a:link, a:visited {
-    color: var(--link-fg);
-    text-decoration: none;
-    transition: color 0.15s;
+  /* Adjust user tools */
+  #user-tools {
+      width: 100%;
+      justify-content: space-between;
   }
 
-  a:hover, a:focus {
-    color: var(--link-hover-color);
-    text-decoration: underline;
+  /* Stack user links vertically */
+  #user-links {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px; /* Adjust gap for vertical layout */
   }
 
-  h1, h2, h3, h4, h5 {
-    font-weight: bold;
-    margin-bottom: 1rem;
+  /* Ensure buttons take equal width */
+  #user-links a.btn,
+  #user-links form .btn {
+      width: 100%;
   }
 
+  /* Adjust breadcrumbs padding */
+  .breadcrumbs {
+      padding: 10px;
+  }
+
+  /* Adjust main content padding */
+  #container .main {
+      padding: 10px;
+  }
+
+  /* Adjust button sizes for better fit */
+  .btn {
+      width: 100%;
+      text-align: center;
+  }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+  /* Reduce padding in header */
+  #header {
+      padding: 10px 10px;
+  }
+
+  /* Reduce logo size */
+  #header .logo img {
+      height: 35px;
+  }
+
+  /* Reduce font sizes */
   h1 {
-    font-size: 2rem;
-    color: var(--oa-yellow);
+      font-size: 1.5rem;
   }
 
   h2 {
-    font-size: 1.5rem;
+      font-size: 1.2rem;
   }
 
-  p {
-    margin-bottom: 1rem;
+  button, input[type="submit"], .btn {
+      padding: 16px 16px;
+      font-size: 0.9rem;
   }
 
-  ul, ol {
-    margin: 1rem 0;
-    padding-left: 1.5rem;
+  .btn {
+      font-size: 0.85rem;
+      padding: 8px calc(12px + 0.25vw);
   }
 
-  button, input[type="submit"] {
-    background-color: var(--button-bg);
-    color: var(--body-fg);
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-
-  button:hover, input[type="submit"]:hover {
-    background-color: var(--button-hover-bg);
-  }
-
-  /* HEADER */
-  #header {
-    background: var(--header-bg);
-    color: var(--header-color);
-    padding: 15px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  #header a {
-    color: var(--header-color);
-  }
-
-  #header .logo img {
-    height: 50px;
-  }
-
-  /* BREADCRUMBS */
+  /* Adjust breadcrumbs */
   .breadcrumbs {
-    background: var(--breadcrumbs-bg);
-    color: var(--breadcrumbs-fg);
-    padding: 10px 20px;
+      padding: 8px 10px;
+      font-size: 0.9rem;
   }
 
-  .breadcrumbs a {
-    color: var(--breadcrumbs-link-fg);
+  /* Ensure buttons do not overflow */
+  #user-links {
+      gap: 8px;
   }
-
-  .breadcrumbs a:hover {
-    text-decoration: underline;
-  }
-
-  /* TABLES */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1rem;
-  }
-
-  td, th {
-    padding: 10px;
-    border: 1px solid var(--border-color);
-  }
-
-  th {
-    background: var(--oa-blue-dark);
-    color: var(--oa-text-light);
-    text-align: left;
-  }
-
-  /* FORMS */
-  input, textarea, select {
-    background: var(--oa-text-light);
-    color: var(--oa-text-dark);
-    border: 1px solid var(--border-color);
-    padding: 10px;
-    border-radius: 5px;
-    width: 100%;
-  }
-
-  input:focus, textarea:focus, select:focus {
-    border-color: var(--oa-yellow);
-    outline: none;
-  }
-
-  /* MESSAGES */
-  ul.messagelist {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0;
-  }
-
-  ul.messagelist li {
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-
-  ul.messagelist li.success {
-    background: var(--oa-green-light);
-    color: var(--oa-text-dark);
-  }
-
-  ul.messagelist li.error {
-    background: var(--oa-pink-light);
-    color: var(--oa-text-light);
-  }
-
-  /* FOOTER */
-  .footer {
-    background: var(--header-bg);
-    color: var(--header-color);
-    text-align: center;
-    padding: 15px;
-  }
+}
