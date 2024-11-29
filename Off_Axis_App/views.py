@@ -1,6 +1,10 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from django.contrib import admin
+from django.conf import settings
+from django.contrib.auth import logout, authenticate
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Artist
 from .forms import ClientForm
 
@@ -71,11 +75,41 @@ def register(request):
         {"clientForm": client_form},
     )
 
+# def login_redirect_view(request):
+#     if request.user.is_staff:
+#         return redirect("/admin/")
+#     elif hasattr(request.user, "artist"):
+#         return redirect(reverse("artist", args=[request.user.artist.slug]))
+#     else:
+#         return redirect("/")
 
-def login_redirect_view(request):
-    if request.user.is_staff:
-        return redirect("/admin/")
-    elif hasattr(request.user, "artist"):
-        return redirect(reverse("artist", args=[request.user.artist.slug]))
+# @login_required
+# def logout_redirect_view(request):
+#     logout(request)
+#     return redirect("/")
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            return redirect('index')
+        else:
+            return render(request, 'login.html',{'error':'Invalid credentials.'})
     else:
-        return redirect("/")
+        return render(request, 'login.html')
+    
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('/')
+
+@user_passes_test(lambda u: u.is_staff)
+def admin_logout_view(request):
+    logout(request)
+    return redirect('/admin/login/?next=/admin/')
+# @login_required
+# def admin_logout_redirect_view(request):
+#     logout(request) # redirects to regular login page rather than admin 
+#     return redirect('/admin/login/')
