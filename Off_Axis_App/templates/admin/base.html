@@ -43,7 +43,16 @@
         {% block header %}
         <header id="header">
             <div id="branding">
-                {% block branding %}{% endblock %}
+                {% block branding %}
+                <div class="branding-container">
+                    <h1 class="branding-title">Off Axis Admin Login</h1>
+                </div>
+                {% endblock %}
+                <div class="logo">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'images/logo.png' %}" alt="Off Axis Logo">
+                    </a>
+                </div>
             </div>
             {% block usertools %}
             {% if has_permission %}

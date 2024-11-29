@@ -1,6 +1,5 @@
 /*
     Off Axis Django Admin - Base Stylesheet
-    File: base.css
 */
 
 /* VARIABLE DEFINITIONS */
@@ -90,17 +89,17 @@ button, input[type="submit"], .btn {
   color: var(--body-fg);
   border: none;
   border-radius: 5px;
-  padding: 8px 12px; /* Dynamic padding for spacing */
+  padding: 8px 12px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
-  display: inline-flex; /* Use flexbox for centering */
-  align-items: center; /* Vertically center text */
-  justify-content: center; /* Horizontally center text */
-  white-space: nowrap; /* Prevent text wrapping */
-  min-width: 100px; /* Minimum width for smaller text buttons */
-  box-sizing: border-box; /* Ensures padding is included in button dimensions */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  min-width: 100px;
+  box-sizing: border-box;
 }
 
 button:hover, input[type="submit"]:hover, .btn:hover {
@@ -130,23 +129,23 @@ button:hover, input[type="submit"]:hover, .btn:hover {
 #user-tools {
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* Align items to the right */
+  justify-content: flex-end;
 }
 
 #user-links {
   display: flex;
-  gap: 15px; /* Even spacing between buttons */
+  gap: 15px;
 }
 
 #user-links a,
 #user-links form {
-  flex: 1; /* Make all elements take equal available space */
+  flex: 1;
   display: flex;
   align-items: center;
 }
 
 #user-links a.btn, #user-links form .btn {
-  flex: 1; /* Equal button sizes */
+  flex: 1;
   text-align: center;
 }
 
@@ -231,70 +230,58 @@ ul.messagelist li.error {
 
 /* RESPONSIVE DESIGN */
 
-/* Adjust header and user tools for smaller screens */
+
 @media (max-width: 768px) {
-  /* Stack header elements vertically */
   #header {
       flex-direction: column;
       align-items: flex-start;
       padding: 15px 20px;
   }
 
-  /* Adjust branding/logo */
   #header .logo img {
       height: 40px;
       margin-bottom: 10px;
   }
 
-  /* Adjust user tools */
   #user-tools {
       width: 100%;
       justify-content: space-between;
   }
 
-  /* Stack user links vertically */
   #user-links {
       flex-direction: column;
       align-items: stretch;
-      gap: 10px; /* Adjust gap for vertical layout */
+      gap: 10px;
   }
 
-  /* Ensure buttons take equal width */
   #user-links a.btn,
   #user-links form .btn {
       width: 100%;
   }
 
-  /* Adjust breadcrumbs padding */
   .breadcrumbs {
       padding: 10px;
   }
 
-  /* Adjust main content padding */
   #container .main {
       padding: 10px;
   }
 
-  /* Adjust button sizes for better fit */
   .btn {
       width: 100%;
       text-align: center;
   }
 }
 
-/* Further adjustments for very small screens */
 @media (max-width: 480px) {
-  /* Reduce padding in header */
   #header {
       padding: 10px 10px;
   }
 
-  /* Reduce logo size */
   #header .logo img {
       height: 35px;
   }
 
-  /* Reduce font sizes */
   h1 {
       font-size: 1.5rem;
   }
@@ -313,13 +300,11 @@ ul.messagelist li.error {
       padding: 8px calc(12px + 0.25vw);
   }
 
-  /* Adjust breadcrumbs */
   .breadcrumbs {
       padding: 8px 10px;
       font-size: 0.9rem;
   }
 
-  /* Ensure buttons do not overflow */
   #user-links {
       gap: 8px;
   }

@@ -11,7 +11,7 @@ html, body {
 
 #container {
     margin: 0;
-    padding-top: 70px; /* Adjust for fixed header */
+    padding-top: 70px;
     background-color: var(--body-bg);
 }
 
@@ -40,34 +40,34 @@ html, body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 15px; /* Even spacing between buttons */
+    gap: 15px;
 }
 
 /* User Buttons */
 #user-tools .btn, #user-tools .logout-button, #user-links button {
-    padding: 8px calc(12px + 0.5vw); /* Dynamic horizontal padding for flexibility */
-    font-size: 0.9rem; /* Consistent font size */
+    padding: 8px calc(12px + 0.5vw);
+    font-size: 0.9rem;
     background-color: var(--oa-pink);
     border: none;
     border-radius: 4px;
     color: var(--oa-text-light);
     cursor: pointer;
     text-align: center;
-    white-space: nowrap; /* Prevent text wrapping */
-    display: inline-flex; /* Use flexbox for centering */
-    align-items: center; /* Vertically center text */
-    justify-content: center; /* Horizontally center text */
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    min-width: 100px; /* Ensure a minimum width */
-    box-sizing: border-box; /* Includes padding in dimensions */
+    min-width: 100px;
+    box-sizing: border-box;
     position: relative;
     overflow: hidden;
 }
 
 /* Button Auto-Sizing */
 #user-tools .btn, #user-links button {
-    height: auto; /* Allow dynamic height based on content */
-    max-width: 100%; /* Ensure it doesn’t overflow */
+    height: auto;
+    max-width: 100%;
 }
 
 /* Button Hover Effect */
@@ -80,7 +80,7 @@ html, body {
 .dashboard {
     margin: 0 auto;
     padding: 15px;
-    max-width: 1200px; /* Optional: limit the width */
+    max-width: 1200px;
 }
 
 .dashboard .module {
@@ -208,7 +208,7 @@ ul.actionlist li .action-time {
     }
 
     #user-links button, #user-tools .btn {
-        width: 100%; /* Buttons take full width on smaller screens */
+        width: 100%;
     }
 }
 
@@ -222,7 +222,7 @@ ul.actionlist li .action-time {
     }
 
     .btn {
-        width: 100%; /* Full-width buttons for very small screens */
+        width: 100%;
         font-size: 0.85rem;
     }
 }
