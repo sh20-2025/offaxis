@@ -1,5 +1,5 @@
 from django import forms
-from .models import Client, User, Artist, SocialLink, GenreTag
+from .models import Client, User, ContactInformation, Artist, SocialLink, GenreTag
 from django.utils.text import slugify
 
 
@@ -10,6 +10,10 @@ class ClientForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
+
+        model = User
+        fields = ("username", "email", "password")
+
         model = Client
         fields = [
             "username",
@@ -48,3 +52,9 @@ class ClientForm(forms.ModelForm):
             client.save()
 
         return client
+
+
+class ContactInformationForm(forms.ModelForm):
+    class Meta:
+        model = ContactInformation
+        fields = ("first_name", "last_name", "email", "message_content", "message_type")
