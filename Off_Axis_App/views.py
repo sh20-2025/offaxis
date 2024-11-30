@@ -104,7 +104,7 @@ def cart(request):
     The request body should be:
     {
         "gig_id": <string> (required),
-        "quantity": <int> (required, >= 0)
+        "quantity": <int> (required, >= 0) (optional if action is "remove"),
         "action": "add" | "update" | "remove" (required)
     }
     """
@@ -123,28 +123,6 @@ def cart(request):
         request.user if request.user.is_authenticated else None,
         request.COOKIES.get("cart_id"),
     )
-
-    # if request.user.is_authenticated:
-    #     u = request.user
-    #     if hasattr(request.user, "artist"):
-    #         u = request.user.artist
-    #     elif hasattr(request.user, "client"):
-    #         u = request.user.client
-
-    #     if u.cart is not None:
-    #         cart = u.cart
-    #     else:
-    #         cart = Cart.objects.create()
-    #         u.cart = cart
-    #         u.save()
-
-    # else:
-    #     cart_id = request.COOKIES.get("cart_id")
-    #     if Cart.objects.filter(id=cart_id).exists():
-    #         cart = Cart.objects.get(id=cart_id)
-    #     else:
-    #         cart = Cart.objects.create()
-
     cart_items = CartItem.objects.filter(cart=cart)
 
     context = {
@@ -166,8 +144,14 @@ def cart(request):
 
         gig = Gig.objects.get(id=gig_id)
 
+        action = query_dict.get("action")
+
         # get quantity
-        quantity = int(query_dict.get("quantity"))
+        if query_dict.get("quantity") is None and action != "remove":
+            context["error"] = "Quantity required"
+            return response()
+
+        quantity = int(query_dict.get("quantity") or 0)
         if quantity < 0 or quantity > gig.tickets_available():
             context["error"] = (
                 f"Only {gig.tickets_available()} tickets available for '{gig.artist.name.upper()}'"
@@ -175,7 +159,6 @@ def cart(request):
             return response()
 
         # get action
-        action = query_dict.get("action")
         if action not in ["add", "update", "remove"]:
             context["error"] = "Invalid action"
             return response()
@@ -203,6 +186,7 @@ def cart(request):
                 )
         elif action == "remove" or (action == "update" and quantity == 0):
             existing_cart_item.delete()
+            existing_cart_item = None
         elif action == "update":
             existing_cart_item.quantity = quantity
 

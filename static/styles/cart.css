@@ -7,3 +7,23 @@
   text-align: center;
   margin-bottom: 4rem;
 }
+
+.cart__table {
+  border-collapse: separate;
+  width: 100%;
+  border: 1px solid var(--oa-text-light);
+  border-radius: 0.25rem;
+}
+
+.cart__table td,
+.cart__table th {
+  border: 0 solid var(--oa-text-light);
+  border-bottom-width: 1px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.cart__table tfoot td {
+  border-bottom-width: 0;
+}
