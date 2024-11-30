@@ -21,6 +21,7 @@ class Client(models.Model):
 # Artist will be made if a user decides then will have to be approved by an admin.
 class Artist(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cart = models.OneToOneField("Cart", null=True, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     is_approved = models.BooleanField(default=False)
     profile_picture_url = models.URLField(blank=True)

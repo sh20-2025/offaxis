@@ -5,6 +5,7 @@ from django.urls import reverse
 from .forms import ClientForm
 from django.http.response import HttpResponseBadRequest, HttpResponseNotAllowed
 from django.http import QueryDict
+from .helpers.cart import get_or_create_cart
 
 
 def components(request):
@@ -118,12 +119,31 @@ def cart(request):
         return res
 
     # find or create cart
-    cart_id = request.COOKIES.get("cart_id")
+    cart = get_or_create_cart(
+        request.user if request.user.is_authenticated else None,
+        request.COOKIES.get("cart_id"),
+    )
 
-    if Cart.objects.filter(id=cart_id).exists():
-        cart = Cart.objects.get(id=cart_id)
-    else:
-        cart = Cart.objects.create()
+    # if request.user.is_authenticated:
+    #     u = request.user
+    #     if hasattr(request.user, "artist"):
+    #         u = request.user.artist
+    #     elif hasattr(request.user, "client"):
+    #         u = request.user.client
+
+    #     if u.cart is not None:
+    #         cart = u.cart
+    #     else:
+    #         cart = Cart.objects.create()
+    #         u.cart = cart
+    #         u.save()
+
+    # else:
+    #     cart_id = request.COOKIES.get("cart_id")
+    #     if Cart.objects.filter(id=cart_id).exists():
+    #         cart = Cart.objects.get(id=cart_id)
+    #     else:
+    #         cart = Cart.objects.create()
 
     cart_items = CartItem.objects.filter(cart=cart)
 
