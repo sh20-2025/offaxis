@@ -1,18 +1,12 @@
 import os
 import django
-from Off_Axis_App.models import (
-    Artist,
-    Client,
-    User,
-    Gig,
-    Venue,
-    SocialLink,
-    GenreTag,
-    Address,
-)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
 django.setup()
+
+# fmt: off
+from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address)  # noqa: E402
+# fmt: on
 
 
 def populate():
