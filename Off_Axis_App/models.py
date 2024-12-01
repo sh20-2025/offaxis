@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from .helpers.stripe import create_product
 
 
 # Client will always be made when a user is made.
@@ -35,7 +36,6 @@ class Artist(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-
         return self.user.username
 
 
@@ -68,6 +68,8 @@ class Gig(models.Model):
     capacity = models.IntegerField()
     description = models.TextField(max_length=500)
     gig_photo_url = models.TextField(max_length=2048)
+    is_approved = models.BooleanField(default=False)
+    stripe_product_id = models.TextField(max_length=256, null=True, blank=True)
 
     def tickets(self):
         return Ticket.objects.filter(gig=self.id)
@@ -80,6 +82,20 @@ class Gig(models.Model):
 
     def full_price(self):
         return self.price + self.booking_fee
+
+    def approve(self):
+        self.is_approved = True
+
+        if not self.stripe_product_id:
+            product = create_product(
+                name=f"{
+                    self.artist.user.username} - {self.venue.address.city} - {self.date.strftime('%d/%m/%Y')}",
+                price=self.full_price(),
+                description=self.description,
+            )
+            self.stripe_product_id = product.id
+
+        self.save()
 
 
 class Venue(models.Model):
