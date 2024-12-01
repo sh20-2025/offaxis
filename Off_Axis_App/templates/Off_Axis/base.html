@@ -36,6 +36,7 @@
                         <li>
                             <a href="#">Contact</a>
                         </li>
+
                         {% if user.is_authenticated %}
                             <li>
                                 <a>{{ user.username }}</a>
@@ -60,7 +61,13 @@
                         {% endif %}
                     </ul>
                 </nav>
+                <div class="hamburger-menu">
+                    <a><button id="hamburgerButton"><img src="{% static 'icons/hamburger-menu.svg' %}" alt="Hamburger Menu" id="hamburgerMenu"></button></a>
+                </div>
             </div>
+
+
+
         </div>
     </header>
     {% block body_block %}{% endblock %}
