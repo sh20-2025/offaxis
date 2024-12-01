@@ -10,10 +10,12 @@
         <link rel="stylesheet" href="{% static "styles/components.css" %}">
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        {% block import_block %}{% endblock %}
+        {% block import_block %}
+        {% endblock %}
+        <script src="{% static "scripts/navbar.js" %}"></script>
     </head>
     <body>
-        <header class="header">
+        <header class="header" id="navbar-header-container">
             <div class="container header-container">
                 <div class="logo">
                     <a href="{% url 'index' %}">
@@ -38,6 +40,10 @@
                             <li>
                                 <a>{{ user.username }}</a>
                             </li>
+                            <li>
+                                <a><img src="{% static 'icons/shopping-cart.svg' %}" alt="Shopping Cart" id="shoppingCartIcon"></a>
+                            </li>
+
                             <li>
                                 <form action="{% url 'logout' %}" method="post">
                                     {% csrf_token %}

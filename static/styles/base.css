@@ -50,22 +50,26 @@ body {
 .container {
   width: 90%;
   margin: 0 auto;
-  max-width: 1200px;
   padding: 20px;
 }
 
 .header {
-  padding: 15px 0;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  position: fixed;
+  width: 100%;
+  background-color: transparent;
+  transition: top 0.3s ease, background-color 0.3s ease;
+  min-height:7%;
+}
+
+.header.scrolled {
+  background-color: var(--oa-text-dark)
 }
 
 .header-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  padding: 15px 20px;
 }
 
 .header .logo {
@@ -73,7 +77,7 @@ body {
 }
 
 .logo img {
-  height: 50px;
+  height: 60px;
 }
 
 .nav ul {
@@ -89,17 +93,19 @@ body {
 }
 
 .nav ul li a {
-  color: var(--oa-yellow);
+  color: var(--oa-text-light);
   text-decoration: none;
   font-weight: bold;
+  font-size:1.2em;
+  padding: 10px 15px;
 }
 
 .nav ul li a:hover {
-  color: var(--oa-yellow-light);
+  color: var(--oa-text-medium-light);
 }
 
 .hero {
-  height: 500px;
+  height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
