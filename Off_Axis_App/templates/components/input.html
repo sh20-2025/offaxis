@@ -61,6 +61,19 @@ props:
             value="{{ value|default:"" }}">
         {% for option in options %}<option value="{{ option.value }}">{{ option.label }}</option>{% endfor %}
     </select>
+
+{% elif type == 'textarea' %}
+    <textarea class="input input-{{ variant|default:"light" }} textarea-{{ size|default:"md" }} textarea-full-{{ full|default:"false" }}"
+            id="{{ id|default:"" }}"
+            name="{{ name|default:"" }}"
+            size="{{ htmlsize|default:"" }}"
+            placeholder="{{ placeholder|default:"" }}"
+            minlength="{{ minlength|default:"" }}"
+            maxlength="{{ maxlength|default:"" }}"
+            required="{{ required|default:"false" }}">
+    </textarea>
+
+
 {% else %}
     <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full|default:"false" }}"
            id="{{ id|default:"" }}"

@@ -10,8 +10,9 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("login-redirect/", views.login_redirect_view, name="login_redirect"),
     path("", views.index, name="index"),
-    path("components", views.components, name="components"),
+    path("components/", views.components, name="components"),
     path("cart/", views.cart, name="cart"),
     path("checkout/", views.checkout, name="checkout"),
     path("checkout/completed/", views.checkout_completed, name="checkout_completed"),
+    path("contact/", views.contact, name="contact"),
 ]
