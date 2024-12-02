@@ -7,10 +7,6 @@ from django.core.cache import cache
 from django.utils.timezone import now
 import math
 from urllib.parse import urlencode
-from django.contrib import admin
-from django.conf import settings
-from django.contrib.auth import logout, authenticate
-from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 def components(request):
@@ -143,48 +139,3 @@ def contact(request):
         "Off_Axis/contact.html",
         {"form": form, "contact_message_type": contact_message_type},
     )
-
-
-# def login_redirect_view(request):
-#     if request.user.is_staff:
-#         return redirect("/admin/")
-#     elif hasattr(request.user, "artist"):
-#         return redirect(reverse("artist", args=[request.user.artist.slug]))
-#     else:
-#         return redirect("/")
-
-# @login_required
-# def logout_redirect_view(request):
-#     logout(request)
-#     return redirect("/")
-
-
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            return redirect("index")
-        else:
-            return render(request, "login.html", {"error": "Invalid credentials."})
-    else:
-        return render(request, "login.html")
-
-
-@login_required
-def logout_view(request):
-    logout(request)
-    return redirect("/")
-
-
-@user_passes_test(lambda u: u.is_staff)
-def admin_logout_view(request):
-    logout(request)
-    return redirect("/admin/login/?next=/admin/")
-
-
-# @login_required
-# def admin_logout_redirect_view(request):
-#     logout(request) # redirects to regular login page rather than admin
-#     return redirect('/admin/login/')

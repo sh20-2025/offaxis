@@ -11,13 +11,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 STATIC_DIR = BASE_DIR / "static"
 DB_FILE = BASE_DIR / "db.sqlite3"
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -30,7 +30,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "sh20.pythonanywhere.com"]
 
+
 # Application definition
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -56,7 +58,7 @@ ROOT_URLCONF = "Off_Axis_Django.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "Off_Axis_App/templates/")],
+        "DIRS": [TEMPLATES_DIR],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -71,7 +73,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "Off_Axis_Django.wsgi.application"
 
+
 # Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -79,7 +84,10 @@ DATABASES = {
     }
 }
 
+
 # Password validation
+# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -95,22 +103,30 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
+# https://docs.djangoproject.com/en/5.1/topics/i18n/
+
 LANGUAGE_CODE = "en-us"
+
 TIME_ZONE = "UTC"
+
 USE_I18N = True
+
 USE_TZ = True
 
+
 # Static files (CSS, JavaScript, Images)
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+
+STATICFILES_DIRS = [STATIC_DIR]
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_REDIRECT_URL = "/login/"
+LOGIN_REDIRECT_URL = "/login-redirect/"
 LOGOUT_REDIRECT_URL = "/"
