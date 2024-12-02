@@ -112,11 +112,13 @@ def cart(request):
     The user can add a maximum of `min(gig.tickets_available(), settings.MAX_CART_QUANTITY)` tickets to the cart for one gig.
 
     The request body should be:
+    ```
     {
         "gig_id": <string> (required),
-        "quantity": <int> (required, >= 0) (optional if action is "remove"),
+        "quantity": <int> (required, >= 0 and <= settings.MAX_CART_QUANTITY) (optional if action is "remove"),
         "action": "add" | "update" | "remove" (required)
     }
+    ```
     """
 
     def response():
@@ -154,7 +156,12 @@ def cart(request):
 
         gig = Gig.objects.get(id=gig_id)
 
+        existing_cart_item = CartItem.objects.filter(cart=cart, gig=gig).first()
         action = query_dict.get("action")
+
+        if (action == "update" or action == "remove") and not existing_cart_item:
+            context["error"] = "Item not in cart"
+            return response()
 
         # get quantity
         if query_dict.get("quantity") is None and action != "remove":
@@ -173,7 +180,10 @@ def cart(request):
             )
             return response()
 
-        if quantity > settings.MAX_CART_QUANTITY:
+        if (
+            quantity + (existing_cart_item.quantity if existing_cart_item else 0)
+            > settings.MAX_CART_QUANTITY
+        ):
             context["error"] = (
                 f"Maximum of {settings.MAX_CART_QUANTITY} tickets can be added to cart for '{
                     gig.name()}'"
@@ -194,11 +204,6 @@ def cart(request):
             context["error"] = (
                 f"Maximum of {settings.MAX_CART_ITEMS} items can be added to cart"
             )
-            return response()
-
-        existing_cart_item = CartItem.objects.filter(cart=cart, gig=gig).first()
-        if (action == "update" or action == "remove") and not existing_cart_item:
-            context["error"] = "Item not in cart"
             return response()
 
         # perform action

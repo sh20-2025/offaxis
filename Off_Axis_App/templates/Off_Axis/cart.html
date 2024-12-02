@@ -23,7 +23,18 @@
             <tbody>
                 {% for item in cart_items %}
                     <tr>
-                        <td>{{ item.gig.name }}</td>
+                        <td>
+                            <a class="cart__table__product"
+                               href="{% url 'gig' item.gig.artist.slug item.gig.id %}"
+                               title="{{ item.gig.name }}'s Gig Page">
+                                <img class="gig__image"
+                                     width="200"
+                                     height="200"
+                                     src="{{ item.gig.gig_photo_url }}"
+                                     alt="{{ item.gig.name }}'s gig">
+                                <p>{{ item.gig.name }}</p>
+                            </a>
+                        </td>
                         <td>£{{ item.gig.full_price }}</td>
                         <td>
                             <form action="/cart/" method="post">
