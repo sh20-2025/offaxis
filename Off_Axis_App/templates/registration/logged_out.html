@@ -1,14 +1,19 @@
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <h1>Logout</h1>
-        <script src="" async defer></script>
-    </body>
-</html>
+{% extends "Off_Axis/base.html"%}
+{% load static%}
+{% block title_block%}
+    Off Axis Gigs - Logout
+{% endblock title_block%}
+{% block import_block%}
+    <link rel="stylesheet" href="{% static "styles/auth.css"%}">
+{% endblock import_block%}
+{% block body_block %}
+    <h1>Logout</h1>
+    <div class ="section">
+        <div class="auth-form">
+            <form method="post" action="{% url 'logout'%}">
+                {% csrf_token %}
+                <input type="submit" value="logout">
+            </form>
+        </div>
+    </div>
+{% endblock body_block%}
