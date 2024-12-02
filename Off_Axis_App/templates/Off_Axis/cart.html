@@ -9,7 +9,7 @@
 {% block body_block %}
     <section class="cart">
         <h1 class="cart__title">Cart</h1>
-        {% if error != "" %}<p class="cart__error">{{ error }}</p>{% endif %}
+        {% if error != "" %}<p class="cart__error">Error: {{ error }}</p>{% endif %}
         <table class="cart__table">
             <thead>
                 <tr>
@@ -23,11 +23,11 @@
             <tbody>
                 {% for item in cart_items %}
                     <tr>
-                        <td>{{ item.gig.artist.user.username }}</td>
+                        <td>{{ item.gig.name }}</td>
                         <td>£{{ item.gig.full_price }}</td>
                         <td>
                             <form action="/cart/" method="post">
-                                {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="sm" min="1" max="100" value=item.quantity %}
+                                {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="sm" min="1" max="10" value=item.quantity %}
                                 {% include "components/button.html" with id="updateButton" type="submit" variant="rainbow" text="Update" size="sm" %}
                                 <input type="hidden" name="gig_id" value="{{ item.gig.id }}">
                                 <input type="hidden" name="action" value="update">
@@ -54,5 +54,10 @@
                 </tr>
             </tfoot>
         </table>
+        <div class="cart__controls">
+            <a href="/checkout/" class="cart__controls__checkout">
+                {% include "components/button.html" with id="checkoutButton" type="button" variant="rainbow" text="Checkout" size="md" %}
+            </a>
+        </div>
     </section>
 {% endblock body_block %}

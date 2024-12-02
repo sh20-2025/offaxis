@@ -76,3 +76,49 @@ def update_product(
         active=is_active,
         default_price=price_id,
     )
+
+
+def get_product(product_id: str) -> stripe.Product:
+    """
+    Get a product from Stripe
+
+    product_id: the id of the product to get
+
+    returns: the product object from Stripe
+    """
+
+    return stripe.Product.retrieve(product_id)
+
+
+class CheckoutProduct:
+    def __init__(self, product_id: str, quantity: int):
+        self.product_id = product_id
+        self.product = get_product(product_id)
+        self.quantity = quantity
+
+
+def create_checkout_session(products: list[CheckoutProduct], customer_email=None):
+    """
+    Create a checkout session in Stripe
+
+    products: a list of product ids to purchase
+    success_url: the url to redirect to on successful purchase
+    cancel_url: the url to redirect to on cancelled purchase
+    customer_email: the email of the customer
+
+    returns: the checkout session object created in Stripe
+    """
+
+    line_items = [
+        {"price": p.product.default_price, "quantity": p.quantity} for p in products
+    ]
+
+    return stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        line_items=line_items,
+        mode="payment",
+        success_url=settings.STRIPE_CHECKOUT_SUCCESS_URL,
+        cancel_url=settings.STRIPE_CHECKOUT_CANCEL_URL,
+        customer_email=customer_email,
+        allow_promotion_codes=settings.STRIPE_CHECKOUT_ALLOW_PROMO_CODES,
+    )

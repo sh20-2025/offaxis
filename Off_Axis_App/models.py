@@ -83,13 +83,26 @@ class Gig(models.Model):
     def full_price(self):
         return self.price + self.booking_fee
 
+    def name(self, upper_artist_name=True, with_city=False, with_date=False):
+        name = self.artist.user.username
+
+        if upper_artist_name:
+            name = name.upper()
+
+        if with_city:
+            name = f"{self.artist.user.username} - {self.venue.address.city}"
+
+        if with_date:
+            name = f"{name} - {self.date.strftime('%d/%m/%Y')}"
+
+        return name
+
     def approve(self):
         self.is_approved = True
 
         if not self.stripe_product_id:
             product = create_product(
-                name=f"{
-                    self.artist.user.username} - {self.venue.address.city} - {self.date.strftime('%d/%m/%Y')}",
+                name=self.name(with_city=True, with_date=True),
                 price=self.full_price(),
                 description=self.description,
             )

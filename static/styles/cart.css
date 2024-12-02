@@ -8,6 +8,16 @@
   margin-bottom: 4rem;
 }
 
+.cart__error {
+  color: var(--oa-pink-light);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  background-color: var(--oa-pink-dark-dark);
+  padding: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--oa-pink);
+}
+
 .cart__table {
   border-collapse: separate;
   width: 100%;
@@ -26,4 +36,13 @@
 
 .cart__table tfoot td {
   border-bottom-width: 0;
+}
+
+.cart__controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  width: 100%;
 }

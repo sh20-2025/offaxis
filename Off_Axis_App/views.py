@@ -6,6 +6,8 @@ from .forms import ClientForm
 from django.http.response import HttpResponseBadRequest, HttpResponseNotAllowed
 from django.http import QueryDict
 from .helpers.cart import get_or_create_cart
+from .helpers.stripe import CheckoutProduct, create_checkout_session
+from django.conf import settings
 
 
 def components(request):
@@ -101,6 +103,10 @@ def cart(request):
     """
     On POST request add a gig to the cart.
 
+    The user can add a maximum of `settings.MAX_CART_ITEMS` items to the cart.
+
+    The user can add a maximum of `min(gig.tickets_available(), settings.MAX_CART_QUANTITY)` tickets to the cart for one gig.
+
     The request body should be:
     {
         "gig_id": <string> (required),
@@ -152,9 +158,21 @@ def cart(request):
             return response()
 
         quantity = int(query_dict.get("quantity") or 0)
-        if quantity < 0 or quantity > gig.tickets_available():
+        if quantity < 0:
+            context["error"] = "Quantity must be greater than or equal to 0"
+            return response()
+
+        if quantity > gig.tickets_available():
             context["error"] = (
-                f"Only {gig.tickets_available()} tickets available for '{gig.artist.name.upper()}'"
+                f"Only {gig.tickets_available()} tickets available for '{
+                    gig.name()}'"
+            )
+            return response()
+
+        if quantity > settings.MAX_CART_QUANTITY:
+            context["error"] = (
+                f"Maximum of {settings.MAX_CART_QUANTITY} tickets can be added to cart for '{
+                    gig.name()}'"
             )
             return response()
 
@@ -166,6 +184,12 @@ def cart(request):
         # validate action with params
         if action == "add" and quantity == 0:
             context["error"] = "Quantity must be greater than 0 to add item to cart"
+            return response()
+
+        if action == "add" and cart_items.count() >= settings.MAX_CART_ITEMS:
+            context["error"] = (
+                f"Maximum of {settings.MAX_CART_ITEMS} items can be added to cart"
+            )
             return response()
 
         existing_cart_item = CartItem.objects.filter(cart=cart, gig=gig).first()
@@ -199,3 +223,40 @@ def cart(request):
         return response()
 
     return render(request, "Off_Axis/cart.html", context)
+
+
+def checkout(request):
+    cart = get_or_create_cart(
+        request.user if request.user.is_authenticated else None,
+        request.COOKIES.get("cart_id"),
+    )
+    cart_items = CartItem.objects.filter(cart=cart)
+
+    if not cart_items.exists():
+        return redirect(reverse("cart") + "?error=Cart is empty")
+
+    products = [
+        CheckoutProduct(item.gig.stripe_product_id, item.quantity)
+        for item in cart_items
+    ]
+    session = create_checkout_session(
+        products, request.user.email if request.user.is_authenticated else None
+    )
+
+    return redirect(session.url)
+
+
+def checkout_completed(request):
+    context = {
+        "status": request.GET.get("status") or "success",
+    }
+
+    # clear cart only if checkout was successful
+    if context["status"] == "success":
+        cart = get_or_create_cart(
+            request.user if request.user.is_authenticated else None,
+            request.COOKIES.get("cart_id"),
+        )
+        CartItem.objects.filter(cart=cart).delete()
+
+    return render(request, "Off_Axis/checkout/completed.html", context)
