@@ -23,7 +23,7 @@ urlpatterns = [
     # path("login-redirect/", views.login_redirect_view, name="login_redirect"),
     # path("logout-redirect/", views.logout_redirect_view, name="logout_redirect"),
     # path("admin/login/", include("django.contrib.auth.urls")),
-    path("admin/logout/", views.admin_logout_view, name="admin_logout"),
+    path("admin/logout/", views.admin_logout_view, name="admin:logout"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("", views.index, name="index"),
