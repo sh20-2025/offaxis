@@ -32,7 +32,10 @@
                             <a href="#">Festivals</a>
                         </li>
                         <li>
-                            <a href="#">Contact</a>
+                            <a href="/contact/">Contact</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'cart' %}">Cart</a>
                         </li>
                         {% if user.is_authenticated %}
                             <li>
@@ -52,9 +55,6 @@
                                 <a href="{% url 'register' %}">Join</a>
                             </li>
                         {% endif %}
-                        <li>
-                            <a href="{% url 'cart' %}">Cart</a>
-                        </li>
                     </ul>
                 </nav>
             </div>
