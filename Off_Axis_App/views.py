@@ -1,6 +1,6 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Artist, Gig, Ticket, ContactInformation
+from .models import Artist, Gig, Ticket, ContactInformation, Festival
 from django.urls import reverse
 from .forms import ClientForm, ContactInformationForm
 from django.core.cache import cache
@@ -101,7 +101,8 @@ def login_redirect_view(request):
 
 def contact(request):
     cooldown_period = 60
-    cache_key = f"contact_form_{request.user.id if request.user.is_authenticated else request.META['REMOTE_ADDR']}"
+    cache_key = f"contact_form_{
+        request.user.id if request.user.is_authenticated else request.META['REMOTE_ADDR']}"
     contact_message_type = [
         {"value": key, "label": label} for key, label in ContactInformation.MESSAGE_TYPE
     ]
@@ -139,3 +140,21 @@ def contact(request):
         "Off_Axis/contact.html",
         {"form": form, "contact_message_type": contact_message_type},
     )
+
+
+def festivals(request):
+    context = {
+        "festivals": Festival.objects.filter(is_active=True),
+    }
+
+    return render(request, "Off_Axis/festivals.html", context)
+
+
+def festival(request, slug):
+    f = Festival.objects.get(slug=slug)
+    context = {
+        "festival": f,
+        "artists": f.artists.all(),
+    }
+
+    return render(request, "Off_Axis/festival.html", context)

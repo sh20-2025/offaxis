@@ -12,4 +12,6 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("components", views.components, name="components"),
     path("contact", views.contact, name="contact"),
+    path("festivals/", views.festivals, name="festivals"),
+    path("festivals/<str:slug>/", views.festival, name="festival"),
 ]

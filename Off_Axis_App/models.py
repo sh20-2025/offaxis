@@ -107,3 +107,20 @@ class Address(models.Model):
     city = models.TextField(max_length=256)
     state_or_province = models.TextField(max_length=256)
     post_code = models.TextField(max_length=64)
+
+
+class Festival(models.Model):
+    name = models.TextField(max_length=256)
+    description = models.TextField(max_length=1024)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    artists = models.ManyToManyField("Artist", blank=True)
+    youtube_video_url = models.URLField(blank=True)
+    slug = models.SlugField(unique=True, default="")
+    is_active = models.BooleanField(default=True)
+    festival_photo_url = models.URLField(blank=True)
+
+    def save(self, *args, **kwargs):
+        # Generate slug from username
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
