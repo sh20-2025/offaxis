@@ -1,12 +1,17 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
+from .models import Artist, Gig, Ticket, GenreTag, ContactInformation
 from django.contrib.auth.decorators import login_required
-from .models import Artist, Gig, Ticket, GenreTag
 from django.urls import reverse
-from .forms import ClientForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .forms import ClientForm, ContactInformationForm
+from django.core.cache import cache
+from django.utils.timezone import now
+import math
+from urllib.parse import urlencode
+from django.contrib.auth import login
 
 
 def components(request):
@@ -52,6 +57,7 @@ def register(request):
         if client_form.is_valid():
             try:
                 client = client_form.save()
+                login(request, client.user)
 
                 if is_artist:
                     artist = Artist(user=client.user)
@@ -161,3 +167,49 @@ def add_genre(request):
         return JsonResponse({"success": True})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+def password_change(request):
+    return render(request, "registration/password_change_form.html")
+
+
+def contact(request):
+    cooldown_period = 60
+    cache_key = f"contact_form_{request.user.id if request.user.is_authenticated else request.META['REMOTE_ADDR']}"
+    contact_message_type = [
+        {"value": key, "label": label} for key, label in ContactInformation.MESSAGE_TYPE
+    ]
+
+    last_submission = cache.get(cache_key)
+    if last_submission:
+        time_remaining = cooldown_period - (now() - last_submission).total_seconds()
+        if time_remaining > 0:
+            return render(
+                request,
+                "Off_Axis/contact.html",
+                {
+                    "form": ContactInformationForm(),
+                    "cooldown": math.ceil(time_remaining),
+                    "contact_message_type": contact_message_type,
+                },
+            )
+
+    if request.method == "POST":
+        form = ContactInformationForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            cache.set(cache_key, now(), timeout=cooldown_period)
+
+            base_url = reverse("contact")
+            query_string = urlencode({"contact_page_submission_value": "success"})
+            return redirect(f"{base_url}?{query_string}")
+
+    else:
+        form = ContactInformationForm()
+
+    return render(
+        request,
+        "Off_Axis/contact.html",
+        {"form": form, "contact_message_type": contact_message_type},
+    )

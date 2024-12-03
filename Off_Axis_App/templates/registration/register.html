@@ -10,10 +10,11 @@
     <section class="register">
         <h1>Registration</h1>
 
-        <div class="auth-form">
-            <form  method="post" action="{% url 'register' %}">
-                <div>
-                    <input type="checkbox" id="isArtist" name="isArtist" value="true"> Register as an Artist!
+        <div>
+            <form  class="auth-form" method="post" action="{% url 'register' %}">
+                <div class ="checkbox-container">
+                    <input type="checkbox" id="isArtist" name="isArtist" value="true">
+                    <label for="isArtist">Register as an Artist!</label>
                 </div>
                 {% csrf_token %}
                 {% if clientForm.username.errors %}
@@ -22,7 +23,7 @@
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
-            {% endif %}
+                {% endif %}
                 {% include "components/input.html" with id="artist-username" name="username" type="text" variant="light" placeholder="Please enter a username..." size="lg" full="true" %}
                 {% include "components/input.html" with id="artist-email" name="email" type="text" variant="light" placeholder="Please enter an email..." size="lg" full="true" %}
                 {% include "components/input.html" with id="artist-passwordInput" name="password" type="password" variant="light" placeholder="Please enter a password..." size="lg" full="true" %}
