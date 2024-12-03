@@ -12,6 +12,7 @@ from django.core.cache import cache
 from django.utils.timezone import now
 import math
 from urllib.parse import urlencode
+from django.contrib.auth import login
 
 
 def components(request):
@@ -56,6 +57,7 @@ def register(request):
         if client_form.is_valid():
             try:
                 client = client_form.save()
+                login(request, client.user)
 
                 if is_artist:
                     artist = Artist(user=client.user)
@@ -269,6 +271,10 @@ def checkout_completed(request):
         CartItem.objects.filter(cart=cart).delete()
 
     return render(request, "Off_Axis/checkout/completed.html", context)
+
+
+def password_change(request):
+    return render(request, "registration/password_change_form.html")
 
 
 def contact(request):

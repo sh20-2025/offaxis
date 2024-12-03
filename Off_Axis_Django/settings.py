@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+import smtplib
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -128,6 +130,8 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+# Login logout redirect
 LOGIN_REDIRECT_URL = "/login-redirect/"
 LOGOUT_REDIRECT_URL = "/"
 
@@ -139,3 +143,12 @@ STRIPE_CURRENCY_CODE = "GBP"
 STRIPE_CHECKOUT_SUCCESS_URL = "http://127.0.0.1:8000/checkout/completed/?status=success"
 STRIPE_CHECKOUT_CANCEL_URL = "http://127.0.0.1:8000/checkout/completed/?status=fail"
 STRIPE_CHECKOUT_ALLOW_PROMO_CODES = True
+
+# Email reset password
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_PASSWORD = ""
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "sh20.team.offaxis@gmail.com"
+EMAIL_HOST_PASSWORD = "valiqjuzlnudbhzl"
