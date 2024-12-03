@@ -8,6 +8,10 @@ from django.utils.timezone import now
 import math
 from urllib.parse import urlencode
 from django.contrib.auth import login
+from django.contrib import admin
+from django.conf import settings
+from django.contrib.auth import logout, authenticate
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 def components(request):
@@ -99,7 +103,16 @@ def login_redirect_view(request):
         return redirect(reverse("artist", args=[request.user.artist.slug]))
     else:
         return redirect("/")
+    
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect("/")
 
+@user_passes_test(lambda u: u.is_staff)
+def admin_logout_view(request):
+    logout(request)
+    return redirect("/admin/login/?next=/admin/")
 
 def password_change(request):
     return render(request, "registration/password_change_form.html")
