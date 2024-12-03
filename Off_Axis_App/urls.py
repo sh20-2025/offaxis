@@ -1,6 +1,5 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.urls import urlpatterns
 from django.contrib import admin
 from . import views
 
@@ -23,7 +22,7 @@ urlpatterns = [
     path("login-redirect/", views.login_redirect_view, name="login_redirect"),
     path("admin/logout/", views.admin_logout_view),
     path("", views.index, name="index"),
-    path("components/", views.components, name="components"),
+    path("components", views.components, name="components"),
     path("cart/", views.cart, name="cart"),
     path("checkout/", views.checkout, name="checkout"),
     path("checkout/completed/", views.checkout_completed, name="checkout_completed"),

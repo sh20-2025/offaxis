@@ -51,22 +51,108 @@ body {
 .container {
   width: 90%;
   margin: 0 auto;
-  max-width: 1200px;
   padding: 20px;
 }
 
+.hamburger-menu {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+
+  .nav ul li {
+    font-size: 0.8em;
+    padding: 0;
+    gap: 0;
+  }
+
+  .header .nav ul {
+    gap: 0;
+  }
+
+  .header-container {
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .header .nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--oa-text-dark);
+    z-index: 2;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .nav.active {
+    display: flex;
+  }
+
+  .nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav ul li {
+    margin: 20px 0;
+  }
+
+  .nav ul li a {
+    color: var(--oa-text-light);
+    font-size: 1.5rem;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .hamburger-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+  }
+}
+
+#hamburgerButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+
 .header {
-  padding: 15px 0;
   position: sticky;
-  top: 0;
-  z-index: 1000;
+  width: 100%;
+  background-color: transparent;
+  transition: top 0.3s ease, background-color 0.3s ease;
+  min-height: 7%;
+  z-index: 3
+}
+
+.header.scrolled {
+  background-color: var(--oa-text-dark);
+  position: fixed;
 }
 
 .header-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  padding: 15px 20px;
 }
 
 .header .logo {
@@ -74,7 +160,7 @@ body {
 }
 
 .logo img {
-  height: 50px;
+  height: 60px;
 }
 
 .nav ul {
@@ -90,17 +176,19 @@ body {
 }
 
 .nav ul li a {
-  color: var(--oa-yellow);
+  color: var(--oa-text-light);
   text-decoration: none;
   font-weight: bold;
+  font-size: 1.2em;
+  padding: 10px 15px;
 }
 
 .nav ul li a:hover {
-  color: var(--oa-yellow-light);
+  color: var(--oa-text-medium-light);
 }
 
 .hero {
-  height: 500px;
+  height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -247,21 +335,15 @@ body {
   background-color: var(--oa-pink-light);
 }
 
-@media (max-width: 768px) {
-  .header .nav ul {
-    flex-direction: column;
-    gap: 10px;
-  }
 
-  .hero-content h1 {
-    font-size: 2em;
-  }
+.hero-content h1 {
+  font-size: 2em;
+}
 
-  .artists-grid {
-    grid-template-columns: 1fr;
-  }
+.artists-grid {
+  grid-template-columns: 1fr;
+}
 
-  .artist-card {
-    margin: 0 auto;
-  }
+.artist-card {
+  margin: 0 auto;
 }

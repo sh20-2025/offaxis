@@ -6,7 +6,6 @@ from django.http.response import HttpResponseBadRequest, HttpResponseNotAllowed
 from django.http import QueryDict
 from .helpers.cart import get_or_create_cart
 from .helpers.stripe import CheckoutProduct, create_checkout_session
-from django.conf import settings
 from django.urls import reverse
 from django.core.cache import cache
 from django.utils.timezone import now
@@ -107,16 +106,19 @@ def login_redirect_view(request):
         return redirect(reverse("artist", args=[request.user.artist.slug]))
     else:
         return redirect("/")
-    
+
+
 @login_required
 def logout_view(request):
     logout(request)
     return redirect("/")
 
+
 @user_passes_test(lambda u: u.is_staff)
 def admin_logout_view(request):
     logout(request)
     return redirect("/admin/login/?next=/admin/")
+
 
 def cart(request):
     """
