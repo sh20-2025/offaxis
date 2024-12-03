@@ -118,14 +118,12 @@ body {
   }
 
   .hamburger-menu {
-    display: block;
-    position: fixed;
-    right: 20px;
-    top: 20px;
-    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
   }
 }
-
 
 #hamburgerButton {
   background: none;
