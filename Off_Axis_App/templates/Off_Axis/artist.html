@@ -7,42 +7,119 @@
 {% endblock %}
 
 {% block import_block %}
-    <link rel = "stylesheet" href="{% static "css/profile.css" %}">
+    <link rel = "stylesheet" href="{% static "styles/profile.css" %}">
+    <link rel="stylesheet" href="{% static "styles/gigs_section.css" %}">
+    <script src="{% static "scripts/profile_upload_image.js" %}" defer></script>
+    <script src="{% static "scripts/profile_edit_info.js" %}" defer></script>
+    <script src="{% static "scripts/profile_add_genres.js" %}" defer></script>
 {% endblock %}
 
 {% block body_block %}
-<h1>{{ artist.user.username }}'s Profile</h1>
-
-    {% if artist.profile_picture_url %}
-      <img src={{ artist.profile_picture_url}}, width=300px, height=300px/>
+    {% if artist.is_approved or user.is_staff or user == artist.user %}
+    <section class="profile">
+    <section class="profile-picture">
+        {% if artist.profile_picture %}
+          <img src="{{ artist.profile_picture.url}}" alt="profile picture" id="profile-picture"/>
+        {% else %}
+          <img src="{% static "icons/image.svg" %}" alt="profile picture" id="profile-picture"/>
+          <p>No Profile Picture Given.</p>
+        {% endif %}
+          {% if user == artist.user or user.is_staff%}  
+          <h5> Upload image? </h5>
+          <div class="upload-container">
+             {% csrf_token %}
+             <input type="file" id="upload-picture" 
+                    name="profile_picture" 
+                    accept="image/*"
+                    data-artist-slug="{{ artist.slug }}">
+          </div>
+          {% endif %}
+        
+    </section>
+    <section class="profile-header">
+        <h1>{{ artist.user.username }}'s Profile</h1>
+    
+        <p class="profile-bio" id="bio-text">{{ artist.bio }}</p>
+    
+        {% if user == artist.user or user.is_staff%}  
+        <button id="edit-bio-button" data-artist-slug="{{ artist.slug }}">Edit</button>
+        <button id="save-bio-button" style="display: none;">Save</button>
+        {% endif %}
+    
+        <p> {{ artist.user.username }}'s Genres: </p>
+        <div class="genre-tags" id="genre-tags">
+            {% for tag in artist.genre_tags.all %}
+              <div class="genre">{{ tag.tag }}</div>
+            {% empty %}
+              <div>No genres available.</div>
+            {% endfor %}
+        </div>
+    
+        {% if user == artist.user or user.is_staff%}
+        <div class="add-genre">
+                <label for="genre">Add Genre:</label>
+                <select id="genre" name="genre" data-artist-slug="{{ artist.slug }}">
+                    {% for genre in genres %}
+                        <option value="{{ genre.tag }}">{{ genre.tag }}</option>
+                    {% endfor %}
+                </select>
+                <button id="add-genre-button" type="submit">Add</button>         
+        </div>
+        {% endif %}
+        
+        
+        
+    </section>
+    
+    <section class="profile-socials">
+        <p> {{ artist.user.username }}'s Socials: </p>
+        <ul>
+          {% for social_link in artist.social_links.all %}
+              <a href={{ social_link.url }}><li>{{ social_link.type }}</li></a>
+          {% empty %}
+              <li>No socials available.</li>
+          {% endfor %}
+        </ul>
+    </section>
+    
+    <section class="profile-gigs">
+    <div class="gigs-section" style="width: 70%; margin-top: 0;">
+    <div class="right" style="width: 100%">
+        {% for gig in artist.gigs.all %}
+          <a class="gig" href="{% url 'gig' gig.artist.slug gig.id %}">
+            <div class="date"><div class="num">{{ gig.date|date:"d" }}</div> {{ gig.date|date:"F" }}</div>
+            <div class="description"><div class="name">{{ artist.user.username }}</div> with - {{ gig.venue.name }} | {{ gig.date|date:"d/m/Y" }}</div>
+            <div class="buy-btn"> Buy Tickets </div>
+          </a>
+        {% empty %}
+          <p> {{ artist.user.username }} currently has no gigs! </p>
+        {% endfor %}
+        </div>
+        </div>
+    </section>
+    
+    </section>
     {% else %}
-      <p>No Profile Picture Given.</p>
+        <div class="unapproved-message">
+        <div class="message">
+            <h1> This artist's profile has not yet been approved.</h1>
+            <h4> Please check back soon. </h4>
+        </div>
+        </div>
     {% endif %}
-
-    {% if artist.gigs %}
-      <p> {{ artist.user.username }}'s Gigs: {{ artist.gigs}} </p>
-    {% else %}
-      <p> {{ artist.user.username }} currently has no gigs! </p>
-    {% endif%}
-
-    <p> {{ artist.user.username }}'s Genres: </p>
-    <ul>
-      {% for tag in artist.genre_tags.all %}
-          <li>{{ tag.tag }}</li>
-      {% empty %}
-          <li>No genres available.</li>
-      {% endfor %}
-    </ul>
-
-    <p>Bio: {{ artist.bio }}</p>
-
-    <p> {{ artist.user.username }}'s Socials: </p>
-    <ul>
-      {% for social_link in artist.social_links.all %}
-          <a href={{ social_link.url }}><li>{{ social_link.type }}</li></a>
-      {% empty %}
-          <li>No socials available.</li>
-      {% endfor %}
-    </ul>
-
+    
+    <section class="approval-section">
+    {% if user == artist.user or user.is_staff%}
+        <h2>Approval Status</h2>
+        <p>{{ artist.user.username }}'s Approval Status: {{ artist.is_approved }}</p>
+        {% if user.is_staff %}
+            <form method="post" action="{% url 'approve_artist' artist.slug %}">
+                {% csrf_token %}
+                <label for="approve">Approve Artist:</label>
+                <input type="checkbox" id="approve" name="approve" {% if artist.is_approved %}checked{% endif %}>
+                <button type="submit">Save</button>
+            </form>
+        {% endif %}
+    {% endif %}
+    </section>
 {% endblock %}

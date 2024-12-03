@@ -7,14 +7,16 @@
             {% block title_block %}{% endblock %}
         </title>
         <link rel="stylesheet" href="{% static "styles/base.css" %}">
-        <link rel="stylesheet" href="{% static "styles/styles.css" %}">
         <link rel="stylesheet" href="{% static "styles/components.css" %}">
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        {% block import_block %}{% endblock %}
+        {% block import_block %}
+        {% endblock %}
+        <script src="{% static 'scripts/navbar.js' %}" data-static-url="{% static '' %}"></script>
+
     </head>
     <body>
-        <header class="header">
+        <header class="header" id="navbar-header-container">
             <div class="container header-container">
                 <div class="logo">
                     <a href="{% url 'index' %}">
@@ -24,23 +26,54 @@
                 <nav class="nav">
                     <ul>
                         <li>
-                            <a href="#">Gigs</a>
+                            <a href={% url 'gigs' %}>Gigs</a>
                         </li>
                         <li>
-                            <a href="#">Artists</a>
+                            <a href="{% url 'artists' %}">Artists</a>
                         </li>
                         <li>
-                            <a href="#">Festivals</a>
+                            <a href="">Festivals</a>
                         </li>
                         <li>
-                            <a href="/register">Join</a>
+                            <a href={% url 'contact' %}>Contact</a>
                         </li>
+
                         <li>
-                            <a href="#">Contact</a>
+                            <a href=""><img src="{% static 'icons/shopping-cart.svg' %}" alt="Shopping Cart" id="shoppingCartIcon"></a>
                         </li>
+
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a href="{% url 'artist' slug=user.artist.slug %}">{{ user.username }}</a>
+                            </li>
+
+
+                            <li>
+                                <form action="{% url 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                    {% include "components/button.html" with id="button3" type="submit" variant="primary" text="Logout" size="sm" %}
+                                </form>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{% url 'login' %}">Login</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'register' %}">Join</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </nav>
+                <div class="hamburger-menu">
+                    <a><button id="hamburgerButton">
+                        <img src="{% static 'icons/hamburger-menu.svg' %}" alt="Hamburger Menu" id="hamburgerMenuSVG">
+                    </button></a>
+
+                </div>
             </div>
+
+
+
         </div>
     </header>
     {% block body_block %}{% endblock %}
@@ -51,9 +84,7 @@
                 <h3>Subscribe to our Newsletter</h3>
                 {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
                 {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="md" required="true" %}
-                <div class="cta-button">
-                    {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
-                </div>
+                {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
             </div>
         </footer>
     </body>
