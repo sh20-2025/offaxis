@@ -16,7 +16,8 @@ import smtplib
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATES_DIR = BASE_DIR / "templates"
+# TEMPLATES_DIR = BASE_DIR / "templates"
+TEMPLATES_DIR = os.path.join(BASE_DIR, "Off_Axis_App/templates/")
 STATIC_DIR = BASE_DIR / "static"
 DB_FILE = BASE_DIR / "db.sqlite3"
 
