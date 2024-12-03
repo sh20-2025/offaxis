@@ -26,20 +26,20 @@
                 <nav class="nav">
                     <ul>
                         <li>
-                            <a href="/gigs/">Gigs</a>
+                            <a href={% url 'gigs' %}>Gigs</a>
                         </li>
                         <li>
                             <a href="{% url 'artists' %}">Artists</a>
                         </li>
                         <li>
-                            <a href="#">Festivals</a>
+                            <a href="">Festivals</a>
                         </li>
                         <li>
-                            <a href="/contact/">Contact</a>
+                            <a href={% url 'contact' %}>Contact</a>
                         </li>
 
                         <li>
-                            <a href="/cart/"><img src="{% static 'icons/shopping-cart.svg' %}" alt="Shopping Cart" id="shoppingCartIcon"></a>
+                            <a href=""><img src="{% static 'icons/shopping-cart.svg' %}" alt="Shopping Cart" id="shoppingCartIcon"></a>
                         </li>
 
                         {% if user.is_authenticated %}

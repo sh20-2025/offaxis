@@ -134,7 +134,7 @@ body {
 
 
 .header {
-  position: fixed;
+  position: sticky;
   width: 100%;
   background-color: transparent;
   transition: top 0.3s ease, background-color 0.3s ease;
@@ -143,7 +143,8 @@ body {
 }
 
 .header.scrolled {
-  background-color: var(--oa-text-dark)
+  background-color: var(--oa-text-dark);
+  position: fixed;
 }
 
 .header-container {
