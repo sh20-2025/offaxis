@@ -6,15 +6,20 @@
 {% block import_block %}
     <link rel="stylesheet" href="{% static "styles/auth.css" %}">
 {% endblock import_block %}
+
 {% block body_block %}
+<section>
     <h1>Login</h1>
-    <div class="section">
-        <div class="auth-form">
-            <form method="post" action="{% url 'login' %}">
-                {% csrf_token %}
-                {{ form.as_p }}
+        <form class="auth-form" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div>
+            {% include "components/input.html" with id="username" name="username" type="text" variant="light" placeholder="Please enter a username..." size="lg" full="true" %}
+            {% include "components/input.html" with id="password" name="password" type="password" variant="light" placeholder="Please enter a password..." size="lg" full="true" %}
+            </div>
+            <div class="button-group">
                 {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Login" size="lg" %}
-            </form>
-        </div>
-    </div>
+                <a href="{% url 'password_reset' %}">{% include "components/button.html" with id="" type="button" variant="primary" text="Forgot Password" size="lg" %}</a>
+            </div>
+        </form>
+</section>
 {% endblock body_block %}
