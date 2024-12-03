@@ -1,0 +1,22 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}
+    Off Axis Gigs - Checkout Complete
+{% endblock title_block %}
+{% block import_block %}
+    <link rel="stylesheet" href="{% static "styles/checkout-complete.css" %}">
+{% endblock import_block %}
+{% block body_block %}
+    <section class="checkout-complete">
+        {% if status == "success" %}
+            <h1 class="checkout-complete__title">Thank you for your purchase!</h1>
+            <p class="checkout-complete__error">If you have any questions about your purchase please contact support.</p>
+        {% elif status == "fail" %}
+            <h1 class="checkout-complete__title">Sorry, we couldn't complete your purchase!</h1>
+            <p class="checkout-complete__error">Please try again and if the issue still occurs contact support.</p>
+        {% endif %}
+        <a href="/gigs/" class="checkout-complete__link">
+            {% include "components/button.html" with type="button" variant="rainbow" text="Back To Gigs" size="md" %}
+        </a>
+    </section>
+{% endblock body_block %}

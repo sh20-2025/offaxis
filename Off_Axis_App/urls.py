@@ -11,8 +11,11 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("login-redirect/", views.login_redirect_view, name="login_redirect"),
     path("", views.index, name="index"),
-    path("components", views.components, name="components"),
-    path("contact", views.contact, name="contact"),
+    path("components/", views.components, name="components"),
+    path("cart/", views.cart, name="cart"),
+    path("checkout/", views.checkout, name="checkout"),
+    path("checkout/completed/", views.checkout_completed, name="checkout_completed"),
+    path("contact/", views.contact, name="contact"),
     # have not implemented password change for artist and clients for now, will do so later for next sprint
     path(
         "password_reset/",
