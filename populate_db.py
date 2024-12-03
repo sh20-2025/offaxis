@@ -15,6 +15,17 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def populate():
+    add_genre_tag("Rock")
+    add_genre_tag("Pop")
+    add_genre_tag("Rap")
+    add_genre_tag("Country")
+    add_genre_tag("Jazz")
+    add_genre_tag("Soul")
+    add_genre_tag("Blues")
+    add_genre_tag("Folk")
+    add_genre_tag("Indie")
+    add_genre_tag("Punk")
+
     a1 = add_artist("Ed Armeson", "I am a musician", True)
     a2 = add_artist("Precious Ink", "I am a musician", True)
     a3 = add_artist("Sub Violet", "I am a musician", True)
@@ -152,6 +163,10 @@ def add_gig(
         g.approve()
 
     return g
+
+
+def add_genre_tag(tag):
+    return GenreTag.objects.get_or_create(tag=tag)[0]
 
 
 # Start execution here!

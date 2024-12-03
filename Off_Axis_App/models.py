@@ -21,11 +21,11 @@ class Client(models.Model):
 
 # Artist will be made if a user decides then will have to be approved by an admin.
 class Artist(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="artist")
     cart = models.OneToOneField("Cart", null=True, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     is_approved = models.BooleanField(default=False)
-    profile_picture_url = models.URLField(blank=True)
+    profile_picture = models.ImageField(upload_to="profile_pictures/", blank=True)
     social_links = models.ManyToManyField("SocialLink", blank=True)
     genre_tags = models.ManyToManyField("GenreTag", blank=True)
     slug = models.SlugField(unique=True, default="default-slug")
@@ -76,7 +76,7 @@ class ContactInformation(models.Model):
 
 
 class Gig(models.Model):
-    artist = models.ForeignKey("Artist", on_delete=models.CASCADE)
+    artist = models.ForeignKey("Artist", on_delete=models.CASCADE, related_name="gigs")
     venue = models.ForeignKey("Venue", on_delete=models.CASCADE)
     supporting_artists = models.ManyToManyField(
         "Artist", blank=True, related_name="supporting_artists"
