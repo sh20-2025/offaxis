@@ -13,8 +13,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("components", views.components, name="components"),
     path("contact", views.contact, name="contact"),
-    # path("password_change/", views.password_change, name="password_change"),
-    # path("password_change/done/", views.PasswordChangeDoneView.as_view(),name="password_change_done",),
+    # have not implemented password change for artist and clients for now, will do so later for next sprint
     path(
         "password_reset/",
         auth_views.PasswordResetView.as_view(
