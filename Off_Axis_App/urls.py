@@ -1,6 +1,16 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.contrib import admin
 from . import views
+
+admin.site.site_header = "Off Axis Administration"
+admin.site.index_title = "Admin Dashboard"
+admin.site.site_title = "Off Axis Admin Portal"
+admin.site.site_url = "/"
+admin.site.enable_nav_sidebar = True
+admin.site.empty_value_display = "-"
+admin.site.login_url = "/admin/login/"
+admin.site.logout_url = "/admin/logout"
 
 urlpatterns = [
     path("artists/", views.artists_view, name="artists"),
@@ -10,6 +20,7 @@ urlpatterns = [
     path("gigs/<str:artist>/<int:id>/", views.gig, name="gig"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("login-redirect/", views.login_redirect_view, name="login_redirect"),
+    path("admin/logout/", views.admin_logout_view),
     path("", views.index, name="index"),
     path("components", views.components, name="components"),
     path("approve_artist/<slug:slug>/", views.approve_artist, name="approve_artist"),
@@ -21,6 +32,10 @@ urlpatterns = [
     path("update_text/", views.update_text, name="update_text"),
     path("add_genre/", views.add_genre, name="add_genre"),
     path("contact", views.contact, name="contact"),
+    path("cart/", views.cart, name="cart"),
+    path("checkout/", views.checkout, name="checkout"),
+    path("checkout/completed/", views.checkout_completed, name="checkout_completed"),
+    path("contact/", views.contact, name="contact"),
     # have not implemented password change for artist and clients for now, will do so later for next sprint
     path(
         "password_reset/",

@@ -1,19 +1,17 @@
 import os
 import django
-
-from Off_Axis_App.models import (
-    Artist,
-    Client,
-    User,
-    Gig,
-    Venue,
-    SocialLink,
-    GenreTag,
-    Address,
-)
+import stripe
+from django.utils.dateparse import parse_datetime
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
 django.setup()
+
+# fmt: off
+from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address)  # noqa: E402
+from django.conf import settings  # noqa: E402
+# fmt: on
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def populate():
@@ -51,6 +49,16 @@ def populate():
         "A venue in Glasgow, Scotland",
         "https://www.glasgowworld.com/jpim-static/image/2024/03/12/9/06/GettyImages-464461345.jpg.jpg?crop=3:2,smart&trim=&width=1200&auto=webp&quality=75",
     )
+
+    gigs = Gig.objects.all()
+    for gig in gigs:
+        if gig.stripe_product_id is not None:
+            try:
+                stripe.Product.modify(gig.stripe_product_id, active=False)
+            except Exception as e:
+                print("Failed to archive product", gig.stripe_product_id)
+                print(e)
+                pass
 
     Gig.objects.all().delete()
 
@@ -137,16 +145,23 @@ def add_venue(name, description, venue_photo_url):
     return v
 
 
-def add_gig(artist, venue, date, price, capacity, description, gig_photo_url):
+def add_gig(
+    artist, venue, date, price, capacity, description, gig_photo_url, is_approved=True
+):
     g = Gig.objects.get_or_create(
         artist=artist,
         venue=venue,
-        date=date,
+        date=parse_datetime(date),
         price=price,
         capacity=capacity,
         description=description,
         gig_photo_url=gig_photo_url,
+        is_approved=is_approved,
     )[0]
+
+    if is_approved:
+        g.approve()
+
     return g
 
 

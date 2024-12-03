@@ -16,6 +16,7 @@ props:
     htmlsize?: The size of the input
     required?: Whether the input is required (true, false)
     options?: The options for the select input (for select inputs, list of { label: string, value: string } objects)
+    value?: The initial value of the input
 {% endcomment %}
 {% if type == 'password' %}
     <div class="input-password-container">
@@ -29,7 +30,8 @@ props:
                max="{{ max|default:"" }}"
                minlength="{{ minlength|default:"" }}"
                maxlength="{{ maxlength|default:"" }}"
-               required="{{ required|default:"false" }}">
+               required="{{ required|default:"false" }}"
+               value="{{ value|default:"" }}">
         <button class="input-password-toggle input-password-toggle-{{ size|default:"md" }} input-password-toggle-{{ variant|default:"light" }} input-password-toggle-off"
                 type="button"></button>
         <script>
@@ -55,7 +57,8 @@ props:
             id="{{ id|default:"" }}"
             name="{{ name|default:"" }}"
             size="{{ htmlsize|default:"" }}"
-            required="{{ required|default:"false" }}">
+            required="{{ required|default:"false" }}"
+            value="{{ value|default:"" }}">
         {% for option in options %}<option value="{{ option.value }}">{{ option.label }}</option>{% endfor %}
     </select>
 
@@ -82,5 +85,6 @@ props:
            max="{{ max|default:"" }}"
            minlength="{{ minlength|default:"" }}"
            maxlength="{{ maxlength|default:"" }}"
-           required="{{ required|default:"false" }}">
+           required="{{ required|default:"false" }}"
+           value="{{ value|default:"" }}">
 {% endif %}

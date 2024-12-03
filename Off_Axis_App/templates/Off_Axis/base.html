@@ -10,10 +10,13 @@
         <link rel="stylesheet" href="{% static "styles/components.css" %}">
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        {% block import_block %}{% endblock %}
+        {% block import_block %}
+        {% endblock %}
+        <script src="{% static 'scripts/navbar.js' %}" data-static-url="{% static '' %}"></script>
+
     </head>
     <body>
-        <header class="header">
+        <header class="header" id="navbar-header-container">
             <div class="container header-container">
                 <div class="logo">
                     <a href="{% url 'index' %}">
@@ -23,21 +26,28 @@
                 <nav class="nav">
                     <ul>
                         <li>
-                            <a href="/gigs/">Gigs</a>
+                            <a href={% url 'gigs' %}>Gigs</a>
                         </li>
                         <li>
                             <a href="{% url 'artists' %}">Artists</a>
                         </li>
                         <li>
-                            <a href="#">Festivals</a>
+                            <a href="">Festivals</a>
                         </li>
                         <li>
-                            <a href="#">Contact</a>
+                            <a href={% url 'contact' %}>Contact</a>
                         </li>
+
+                        <li>
+                            <a href=""><img src="{% static 'icons/shopping-cart.svg' %}" alt="Shopping Cart" id="shoppingCartIcon"></a>
+                        </li>
+
                         {% if user.is_authenticated %}
                             <li>
-                                <a>{{ user.username }}</a>
+                                <a href="{% url 'artist' slug=user.artist.slug %}">{{ user.username }}</a>
                             </li>
+
+
                             <li>
                                 <form action="{% url 'logout' %}" method="post">
                                     {% csrf_token %}
@@ -54,7 +64,16 @@
                         {% endif %}
                     </ul>
                 </nav>
+                <div class="hamburger-menu">
+                    <a><button id="hamburgerButton">
+                        <img src="{% static 'icons/hamburger-menu.svg' %}" alt="Hamburger Menu" id="hamburgerMenuSVG">
+                    </button></a>
+
+                </div>
             </div>
+
+
+
         </div>
     </header>
     {% block body_block %}{% endblock %}
