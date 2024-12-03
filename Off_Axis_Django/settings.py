@@ -136,6 +136,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = "/login-redirect/"
 LOGOUT_REDIRECT_URL = "/"
 
+MAX_CART_ITEMS = 20
+MAX_CART_QUANTITY = 10
+
+STRIPE_SECRET_KEY = "sk_test_51QPliWJihsZ3xOnk9DF31FrgVFMPxynG0OjhhuVpSaQFNJE9hoP6xQ930sN8Ff61Ut8SRafc4huJPQKkfFIdPeX100xRuhXhrw"
+STRIPE_CURRENCY_CODE = "GBP"
+STRIPE_CHECKOUT_SUCCESS_URL = "http://127.0.0.1:8000/checkout/completed/?status=success"
+STRIPE_CHECKOUT_CANCEL_URL = "http://127.0.0.1:8000/checkout/completed/?status=fail"
+STRIPE_CHECKOUT_ALLOW_PROMO_CODES = True
+
 # Email reset password
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"

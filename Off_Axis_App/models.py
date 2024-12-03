@@ -1,11 +1,14 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from .helpers.stripe import create_product
 
 
 # Client will always be made when a user is made.
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cart = models.OneToOneField("Cart", null=True, on_delete=models.CASCADE)
     billing_info = models.CharField(
         max_length=100, blank=True
     )  # This will need to change to link to a billing model.
@@ -19,6 +22,7 @@ class Client(models.Model):
 # Artist will be made if a user decides then will have to be approved by an admin.
 class Artist(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cart = models.OneToOneField("Cart", null=True, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     is_approved = models.BooleanField(default=False)
     profile_picture_url = models.URLField(blank=True)
@@ -32,7 +36,6 @@ class Artist(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-
         return self.user.username
 
 
@@ -84,6 +87,47 @@ class Gig(models.Model):
     capacity = models.IntegerField()
     description = models.TextField(max_length=500)
     gig_photo_url = models.TextField(max_length=2048)
+    is_approved = models.BooleanField(default=False)
+    stripe_product_id = models.TextField(max_length=256, null=True, blank=True)
+
+    def tickets(self):
+        return Ticket.objects.filter(gig=self.id)
+
+    def tickets_sold(self):
+        return self.tickets().count()
+
+    def tickets_available(self):
+        return max(0, self.capacity - self.tickets_sold())
+
+    def full_price(self):
+        return self.price + self.booking_fee
+
+    def name(self, upper_artist_name=True, with_city=False, with_date=False):
+        name = self.artist.user.username
+
+        if upper_artist_name:
+            name = name.upper()
+
+        if with_city:
+            name = f"{self.artist.user.username} - {self.venue.address.city}"
+
+        if with_date:
+            name = f"{name} - {self.date.strftime('%d/%m/%Y')}"
+
+        return name
+
+    def approve(self):
+        self.is_approved = True
+
+        if not self.stripe_product_id:
+            product = create_product(
+                name=self.name(with_city=True, with_date=True),
+                price=self.full_price(),
+                description=self.description,
+            )
+            self.stripe_product_id = product.id
+
+        self.save()
 
 
 class Venue(models.Model):
@@ -107,3 +151,14 @@ class Address(models.Model):
     city = models.TextField(max_length=256)
     state_or_province = models.TextField(max_length=256)
     post_code = models.TextField(max_length=64)
+
+
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey("Cart", on_delete=models.CASCADE)
+    gig = models.ForeignKey("Gig", on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    total_price = models.DecimalField(max_digits=19, decimal_places=2)
