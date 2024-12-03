@@ -1,4 +1,5 @@
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -14,4 +15,33 @@ urlpatterns = [
     path("contact", views.contact, name="contact"),
     path("festivals/", views.festivals, name="festivals"),
     path("festivals/<str:slug>/", views.festival, name="festival"),
+    # have not implemented password change for artist and clients for now, will do so later for next sprint
+    path(
+        "password_reset/",
+        auth_views.PasswordResetView.as_view(
+            template_name="registration/password_reset.html"
+        ),
+        name="password_reset",
+    ),
+    path(
+        "password_reset/done/",
+        auth_views.PasswordResetDoneView.as_view(
+            template_name="registration/password_reset_sent.html"
+        ),
+        name="password_reset_done",
+    ),
+    path(
+        "reset/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name="registration/password_reset_confirmation.html"
+        ),
+        name="password_reset_confirm",
+    ),
+    path(
+        "reset/done/",
+        auth_views.PasswordResetCompleteView.as_view(
+            template_name="registration/password_reset_successful.html"
+        ),
+        name="password_reset_complete",
+    ),
 ]
