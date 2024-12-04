@@ -1,0 +1,63 @@
+.festivals {
+  display: flex;
+  padding: 4rem 10%;
+  flex-direction: column;
+}
+
+.festivals__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 3rem;
+}
+
+.festivals__title {
+  font-size: 3.25rem;
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.festival {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  aspect-ratio: 1/1;
+  text-decoration: none;
+}
+
+.festival__image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.festival__label {
+  padding: 0.5rem 0.35rem;
+  background-color: var(--oa-pink);
+  color: var(--oa-text-light);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.festival__label h2 {
+  font-size: 1.5rem;
+}
+
+.festival:nth-child(5n) .festival__label {
+  background-color: var(--oa-orange);
+}
+
+.festival:nth-child(5n + 1) .festival__label {
+  background-color: var(--oa-pink);
+}
+
+.festival:nth-child(5n + 2) .festival__label {
+  background-color: var(--oa-yellow);
+}
+
+.festival:nth-child(5n + 3) .festival__label {
+  background-color: var(--oa-blue);
+}
+
+.festival:nth-child(5n + 4) .festival__label {
+  background-color: var(--oa-green);
+}

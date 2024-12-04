@@ -36,6 +36,8 @@ urlpatterns = [
     path("checkout/", views.checkout, name="checkout"),
     path("checkout/completed/", views.checkout_completed, name="checkout_completed"),
     path("contact/", views.contact, name="contact"),
+    path("festivals/", views.festivals, name="festivals"),
+    path("festivals/<str:slug>/", views.festival, name="festival"),
     # have not implemented password change for artist and clients for now, will do so later for next sprint
     path(
         "password_reset/",
