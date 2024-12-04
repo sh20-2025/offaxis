@@ -3,6 +3,22 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 98.8vw;
+  height: 100vh;
+  border-style: solid;
+  border-width: 5px;
+  border-color: var(--oa-pink) var(--oa-yellow) var(--oa-green) var(--oa-blue);
+  pointer-events: none;
+  box-sizing: border-box;
+  z-index: 100;
 }
 
 :root {
@@ -59,7 +75,6 @@ body {
 }
 
 @media (max-width: 1200px) {
-
   .nav ul li {
     font-size: 0.8em;
     padding: 0;
@@ -76,7 +91,6 @@ body {
 }
 
 @media (max-width: 768px) {
-
   .header .nav ul {
     flex-direction: column;
     gap: 10px;
@@ -85,9 +99,6 @@ body {
   .nav {
     display: none;
     flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100vw;
     height: 100vh;
     background-color: var(--oa-text-dark);
@@ -133,19 +144,27 @@ body {
   cursor: pointer;
 }
 
-
 .header {
-  position: sticky;
   width: 100%;
   background-color: transparent;
   transition: top 0.3s ease, background-color 0.3s ease;
   min-height: 7%;
-  z-index: 3
+  z-index: 3;
 }
 
 .header.scrolled {
   background-color: var(--oa-text-dark);
   position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.header-scroll-placeholder {
+  display: none;
+}
+
+.header-scroll-placeholder.scrolled {
+  display: block;
 }
 
 .header-container {
@@ -334,7 +353,6 @@ body {
 .footer .sign-up-form .cta-button button:hover {
   background-color: var(--oa-pink-light);
 }
-
 
 .hero-content h1 {
   font-size: 2em;
