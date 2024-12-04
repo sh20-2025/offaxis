@@ -7,25 +7,25 @@
     <link rel="stylesheet" href="{% static "styles/gig.css" %}">
 {% endblock import_block %}
 {% block body_block %}
-    <section class="gig">
+    <section class="gig-page">
         <img src="{{ gig.gig_photo_url }}"
              width="500"
              height="500"
              alt="{{ gig.artist.user.username }}'s gig"
-             class="gig__image">
-        <div class="gig__details">
-            <h1 class="gig__title">{{ gig.artist.user.username }}</h1>
-            <div class="gig__info">
+             class="gig-page__image">
+        <div class="gig-page__details">
+            <h1 class="gig-page__title">{{ gig.artist.user.username }}</h1>
+            <div class="gig-page__info">
                 <p>{{ gig.date|date:"d/m/Y" }}</p>
                 <p>Start time - {{ gig.date|date:"H:i" }}</p>
                 <p>{{ gig.venue.name }}, {{ gig.venue.address.city }}</p>
             </div>
-            <div class="gig__price">
+            <div class="gig-page__price">
                 <h2>
                     Ticket Price <span>£{{ gig.price }}</span>
                 </h2>
             </div>
-            <p class="gig__tickets-status">
+            <p class="gig-page__tickets-status">
                 {% if tickets_sold >= capacity %}
                     Sold Out!
                 {% elif tickets_sold >= capacity_last_few %}
@@ -34,7 +34,7 @@
                     Tickets Available!
                 {% endif %}
             </p>
-            <table class="gig__price-table">
+            <table class="gig-page__price-table">
                 <tr>
                     <td>Booking Fee Per Ticket</td>
                     <td>£{{ gig.booking_fee }}</td>
@@ -44,8 +44,8 @@
                     <td>£{{ gig.full_price }}</td>
                 </tr>
             </table>
-            <form class="gig__form" action="/cart/" method="post">
-                <div class="gig__form__quantity">
+            <form class="gig-page__form" action="/cart/" method="post">
+                <div class="gig-page__form__quantity">
                     {% include "components/label.html" with variant="dark" required="true" for="quantity" size="lg" text="Quantity" %}
                     {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="lg" full="true" %}
                 </div>
@@ -54,7 +54,7 @@
                 <input type="hidden" name="action" value="add">
                 {% csrf_token %}
             </form>
-            <p class="gig__description">{{ gig.description }}</p>
+            <p class="gig-page__description">{{ gig.description }}</p>
         </div>
     </section>
     <script>document.getElementById("quantityInput").value = 1;</script>

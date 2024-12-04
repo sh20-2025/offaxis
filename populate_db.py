@@ -2,6 +2,7 @@ import os
 import django
 import stripe
 from django.utils.dateparse import parse_datetime
+from django.core.files.images import ImageFile
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
 django.setup()
@@ -152,12 +153,12 @@ def populate():
 
 def add_artist(name, bio, is_approved):
     u = User.objects.get_or_create(username=name)[0]
-    a = Artist.objects.get_or_create(
-        user=u,
-        bio=bio,
-        is_approved=is_approved,
-    )[0]
-    return a
+
+    with open("./static/images/gig-placeholder.png", "rb") as f:
+        a = Artist.objects.get_or_create(
+            user=u, bio=bio, is_approved=is_approved, profile_picture=ImageFile(f)
+        )[0]
+        return a
 
 
 def add_client(name, phone_number):
