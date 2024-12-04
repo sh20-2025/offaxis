@@ -9,7 +9,7 @@
         <h1 class="artists__title">Artists</h1>
         <div class="artists__list">
             {% for artist in artists %}
-                {% if artist.is_approved %}
+                {% if artist.is_approved or user.is_staff %}
                     {% include 'components/artist.html' with artist=artist %}
                 {% endif %}
             {% endfor %}
