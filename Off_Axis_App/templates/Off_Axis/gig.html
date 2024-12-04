@@ -47,7 +47,7 @@
             <form class="gig-page__form" action="/cart/" method="post">
                 <div class="gig-page__form__quantity">
                     {% include "components/label.html" with variant="dark" required="true" for="quantity" size="lg" text="Quantity" %}
-                    {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="lg" full="true" %}
+                    {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="lg" full="true" value="1" %}
                 </div>
                 {% include "components/button.html" with id="submitButton" type="submit" variant="rainbow" text="Add to cart" size="lg" %}
                 <input type="hidden" name="gig_id" value="{{ gig.id }}">
@@ -57,5 +57,4 @@
             <p class="gig-page__description">{{ gig.description }}</p>
         </div>
     </section>
-    <script>document.getElementById("quantityInput").value = 1;</script>
 {% endblock body_block %}
