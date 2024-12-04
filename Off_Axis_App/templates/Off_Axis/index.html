@@ -1,97 +1,113 @@
 {% extends "Off_Axis/base.html" %}
 {% load static %}
-{% block title_block %}
-    Off Axis Gigs - Landing Page
-{% endblock %}
-
+{% block title_block %}Off Axis Gigs - Landing Page{% endblock %}
 {% block import_block %}
     <link rel="stylesheet" href="{% static "styles/landing_page.css" %}">
+    <link rel="stylesheet" href="{% static "styles/gigs_section.css" %}">
     <script src="{% static "scripts/landing_page.js" %}"></script>
 {% endblock %}
-
 {% block body_block %}
     <section class="hero">
-    
-    <div class="hero-circles">
-        <div class="hero-circle" style="background-color: var(--oa-pink)">
-            <img src="{% static "images/stock_wo_man.jpg" %}" alt="rock man">
-            <h4>Flair |Glasgow</h4>
-        </div>
-        <div class="hero-circle" style="background-color: var(--oa-yellow)">
-            <img src="{% static "images/stock_music_man.jpg" %}" alt="rock man">
-            <h4>Scarlet Cavaliers |Belfast</h4>
-        </div>
-        <div class="hero-circle" style="background-color: var(--oa-green)">
-            <img src="{% static "images/stock_rock_man.jpg" %}" alt="rock man">
-            <h4>Howling Home |Glasgow</h4>
-        </div>
-        <div class="hero-circle" style="background-color: var(--oa-blue)">
-            <img src="{% static "images/stock_older_man.jpg" %}" alt="rock man">
-            <h4>Sonnet |Aberdeen</h4>
-        </div>
-    </div>
-       
-    </section>
-    
-    <section class="gigs-section">
-    <div class="left">
-        <div class="gigs-section-media">
-            
-        </div>
-    </div>
-    <div class="right">
-        <div class="gig">
-            <div class="date"><div class="num">20</div> November</div>
-            <div class="description"><div class="name">Ed Armeson </div> with - The DemographicUnit IVNed Ashcroft | 20/11/2024</div>
-            <div class="buy-btn"> Buy Tickets </div>
-        </div>
-        <div class="gig">
-            <div class="date"><div class="num">21</div> November</div>
-            <div class="description"><div class="name"> Precious INK </div> with - The Demographic Rascal Frogeggs | 21/11/2024</div>
-            <div class="buy-btn"> Buy Tickets </div>
-        </div>
-        <div class="gig">
-            <div class="date"><div class="num">23</div> November</div>
-            <div class="description"><div class="name">Deltamanic </div> with- The Demographic Pommes Frites | 23/11/2024</div>
-            <div class="buy-btn"> Buy Tickets </div>
-        </div>
-        <div class="gig">
-            <div class="date"><div class="num">25</div> November</div>
-            <div class="description"><div class="name">Sub Violet </div> with - Precious INKCRASHKID | 23/11/2024</div>
-            <div class="buy-btn"> Buy Tickets </div>
-        </div>
-    </div>
-    
-    </section>
-    <div class="all-gigs-btn">
-    <a href='#'>
-        {% include "components/button.html" with id="button7" type="button" variant="rainbow" text="View All Gigs!" size="lg" %}
-    </a>
-    </div>
-    
-    <section class="artist-of-the-week">
-    <div class="left">
-        <div class="artist-of-the-week-media">
-            
-        </div>
-    </div>
-    <div class="right">
-        <div class="artist-of-the-week-info">
-            <h2>Artist of the Week</h2>
-            <h3>Flair</h3>
-            <p>Flair is a Glasgow-based band that has been making waves in the music scene with their unique sound and energetic live performances. Their music is a blend of indie rock and pop, with catchy hooks and infectious melodies that will have you dancing all night long. Check out their latest single "Electric Dreams" and catch them live at a venue near you!</p>
-            <div class="artist-of-the-week-button">
-                <a href="#">
-                {% include "components/button.html" with id="button9" type="button" variant="rainbow" text="Read More" size="sm" %}
-                </a>
+        <div class="hero-circles">
+            <div class="hero-circle" style="background-color: var(--oa-pink)">
+                <img src="{% static "images/stock_wo_man.jpg" %}" alt="rock man">
+                <h4>Flair |Glasgow</h4>
+            </div>
+            <div class="hero-circle" style="background-color: var(--oa-yellow)">
+                <img src="{% static "images/stock_music_man.jpg" %}" alt="rock man">
+                <h4>Scarlet Cavaliers |Belfast</h4>
+            </div>
+            <div class="hero-circle" style="background-color: var(--oa-green)">
+                <img src="{% static "images/stock_rock_man.jpg" %}" alt="rock man">
+                <h4>Howling Home |Glasgow</h4>
+            </div>
+            <div class="hero-circle" style="background-color: var(--oa-blue)">
+                <img src="{% static "images/stock_older_man.jpg" %}" alt="rock man">
+                <h4>Sonnet |Aberdeen</h4>
             </div>
         </div>
+    </section>
+    <section class="gigs-section">
+        <div class="left">
+            <div class="gigs-section-media"></div>
+        </div>
+        <div class="right">
+            <div class="gig">
+                <div class="date">
+                    <div class="num">20</div>
+                    November
+                </div>
+                <div class="description">
+                    <div class="name">Ed Armeson</div>
+                    with - The Demographic, Unit IV, Ned Ashcroft | 20/11/2024
+                </div>
+                <div class="buy-btn">Buy Tickets</div>
+            </div>
+            <div class="gig">
+                <div class="date">
+                    <div class="num">21</div>
+                    November
+                </div>
+                <div class="description">
+                    <div class="name">Precious INK</div>
+                    with - The Demographic, Rascal, Frogeggs | 21/11/2024
+                </div>
+                <div class="buy-btn">Buy Tickets</div>
+            </div>
+            <div class="gig">
+                <div class="date">
+                    <div class="num">23</div>
+                    November
+                </div>
+                <div class="description">
+                    <div class="name">Deltamanic</div>
+                    with- The Demographic, Pommes Frites | 23/11/2024
+                </div>
+                <div class="buy-btn">Buy Tickets</div>
+            </div>
+            <div class="gig">
+                <div class="date">
+                    <div class="num">25</div>
+                    November
+                </div>
+                <div class="description">
+                    <div class="name">Sub Violet</div>
+                    with - Precious, INKCRASHKID | 23/11/2024
+                </div>
+                <div class="buy-btn">Buy Tickets</div>
+            </div>
+        </div>
+    </section>
+    <div class="all-gigs-btn">
+        <a href='#'>
+            {% include "components/button.html" with id="button7" type="button" variant="rainbow" text="View All Gigs!" size="lg" %}
+        </a>
     </div>
+    <section class="artist-of-the-week">
+        <div class="left">
+            <div class="artist-of-the-week-media"></div>
+        </div>
+        <div class="right">
+            <div class="artist-of-the-week-info">
+                <h2>Artist of the Week</h2>
+                <h3>Flair</h3>
+                <p>
+                    Flair is a Glasgow-based band that has been making waves in the music scene with their unique sound and energetic live performances. Their music is a blend of indie rock and pop, with catchy hooks and infectious melodies that will have you dancing all night long. Check out their latest single "Electric Dreams" and catch them live at a venue near you!
+                </p>
+                <div class="artist-of-the-week-button">
+                    <a href="#">
+                        {% include "components/button.html" with id="button9" type="button" variant="rainbow" text="Read More" size="sm" %}
+                    </a>
+                </div>
+            </div>
+        </div>
     </section>
     <section class="offaxis-socials">
-    <div class="socials">
-        <h2> <a href="https://www.instagram.com/offaxisgigs/"> @offaxisgigs </a> On Instagram</h2>
-    </div>
+        <div class="socials">
+            <h2>
+                <a href="https://www.instagram.com/offaxisgigs/">@offaxisgigs</a> On Instagram
+            </h2>
+        </div>
     </section>
     <section class="extra-features">
         <div class="media-feature"></div>
@@ -103,9 +119,8 @@
         <div class="media-feature"></div>
         <div class="media-feature"></div>
     </section>
-    
     <section class="bottom-info-section">
-        <h3> Our Partners </h3>
+        <h3>Our Partners</h3>
         <div class="our-partners">
             <div class="partner"></div>
             <div class="partner"></div>
@@ -113,11 +128,10 @@
             <div class="partner"></div>
         </div>
         <div class="info-text">
-            <h4> My account | Terms & Conditions | Privacy Policy </h4>
-            <h4> OFF AXIS Tours CIC © 2024 | Website built by Glasgow University team SH20</h4>
+            <h4>My account | Terms & Conditions | Privacy Policy</h4>
+            <h4>OFF AXIS Tours CIC © 2024 | Website built by Glasgow University team SH20</h4>
         </div>
     </section>
     <section class="cta-section">
-    
     </section>
 {% endblock %}

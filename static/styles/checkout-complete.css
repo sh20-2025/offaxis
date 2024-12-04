@@ -1,0 +1,21 @@
+.checkout-complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  padding: 4rem 10%;
+}
+
+.checkout-complete h1 {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.checkout-complete p {
+  font-size: 1.25rem;
+  text-align: center;
+  opacity: 0.7;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
