@@ -45,7 +45,11 @@
                         </li>
                         {% if user.is_authenticated %}
                             <li>
-                                <a href="{% url 'artist' slug=user.artist.slug %}">{{ user.username }}</a>
+                                {% if user.is_artist %}
+                                    <a href="{% url 'artist' slug=user.artist.slug %}">{{ user.username }}</a>
+                                {% else %}
+                                    <a>{{ user.username }}</a>
+                                {% endif %}
                             </li>
                             <li>
                                 <form action="{% url 'logout' %}" method="post">
