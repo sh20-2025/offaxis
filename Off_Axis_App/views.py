@@ -1,6 +1,15 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Artist, Gig, Ticket, GenreTag, Cart, CartItem, ContactInformation
+from .models import (
+    Artist,
+    Gig,
+    Ticket,
+    GenreTag,
+    Cart,
+    CartItem,
+    ContactInformation,
+    Festival,
+)
 from .forms import ClientForm, ContactInformationForm
 from django.http.response import HttpResponseBadRequest, HttpResponseNotAllowed
 from django.http import QueryDict
@@ -399,3 +408,21 @@ def contact(request):
         "Off_Axis/contact.html",
         {"form": form, "contact_message_type": contact_message_type},
     )
+
+
+def festivals(request):
+    context = {
+        "festivals": Festival.objects.filter(is_active=True),
+    }
+
+    return render(request, "Off_Axis/festivals.html", context)
+
+
+def festival(request, slug):
+    f = Festival.objects.get(slug=slug)
+    context = {
+        "festival": f,
+        "artists": f.artists.all(),
+    }
+
+    return render(request, "Off_Axis/festival.html", context)

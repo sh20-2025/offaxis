@@ -2,12 +2,13 @@ import os
 import django
 import stripe
 from django.utils.dateparse import parse_datetime
+from django.core.files.images import ImageFile
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
 django.setup()
 
 # fmt: off
-from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address)  # noqa: E402
+from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address, Festival,)  # noqa: E402
 from django.conf import settings  # noqa: E402
 # fmt: on
 
@@ -15,6 +16,8 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def populate():
+    Artist.objects.all().delete()
+
     add_genre_tag("Rock")
     add_genre_tag("Pop")
     add_genre_tag("Rap")
@@ -117,11 +120,45 @@ def populate():
         "/static/images/gig-placeholder.png",
     )
 
+    Festival.objects.all().delete()
+
+    add_festival(
+        "Sound Of Belfast",
+        "Sound of Belfast is an annual festival celebrating new music talent and creativity from across Northern Ireland.",
+        "2024-11-25",
+        "2024-11-01",
+        [a1, a2, a3],
+        "/static/images/festival-placeholder.png",
+        "https://www.youtube.com/embed/wtOvDo1Mrh8?si=wFSIWqES72Fi3Fi0",
+    )
+    add_festival(
+        "Output",
+        "Output festival is Ireland’s biggest one-day music conference, taking place on Tuesday 12 November 2024 to coincide with",
+        "2024-11-10",
+        "2024-11-20",
+        [a1, a3, a4],
+        "/static/images/festival-placeholder.png",
+        "https://www.youtube.com/embed/wtOvDo1Mrh8?si=wFSIWqES72Fi3Fi0",
+    )
+    add_festival(
+        "Unconvention",
+        "ounded in 2008, Un-Convention is a series of music conferences, showcases and events",
+        "2024-10-05",
+        "2024-10-16",
+        [a2, a4, a5],
+        "/static/images/festival-placeholder.png",
+        "https://www.youtube.com/embed/wtOvDo1Mrh8?si=wFSIWqES72Fi3Fi0",
+    )
+
 
 def add_artist(name, bio, is_approved):
     u = User.objects.get_or_create(username=name)[0]
-    a = Artist.objects.get_or_create(user=u, bio=bio, is_approved=is_approved)[0]
-    return a
+
+    with open("./static/images/gig-placeholder.png", "rb") as f:
+        a = Artist.objects.get_or_create(
+            user=u, bio=bio, is_approved=is_approved, profile_picture=ImageFile(f)
+        )[0]
+        return a
 
 
 def add_client(name, phone_number):
@@ -167,6 +204,27 @@ def add_gig(
 
 def add_genre_tag(tag):
     return GenreTag.objects.get_or_create(tag=tag)[0]
+
+
+def add_festival(
+    name,
+    description,
+    start_date,
+    end_date,
+    artists,
+    festival_photo_url,
+    youtube_video_url,
+):
+    f = Festival.objects.get_or_create(
+        name=name,
+        description=description,
+        start_date=start_date,
+        end_date=end_date,
+        festival_photo_url=festival_photo_url,
+        youtube_video_url=youtube_video_url,
+    )[0]
+    f.artists.add(*artists)
+    return f
 
 
 # Start execution here!
