@@ -46,7 +46,7 @@
                         </li>
                         {% if user.is_authenticated %}
                             <li>
-                                {% if user.is_artist %}
+                                {% if user.artist %}
                                     <a href="{% url 'artist' slug=user.artist.slug %}">{{ user.username }}</a>
                                 {% else %}
                                     <a>{{ user.username }}</a>
