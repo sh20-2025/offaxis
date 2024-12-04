@@ -156,7 +156,6 @@ def add_artist(name, bio, is_approved):
         user=u,
         bio=bio,
         is_approved=is_approved,
-        profile_picture_url="/static/images/gig-placeholder.png",
     )[0]
     return a
 
