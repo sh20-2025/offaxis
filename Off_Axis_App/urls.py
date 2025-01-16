@@ -31,6 +31,7 @@ urlpatterns = [
     ),
     path("update_text/", views.update_text, name="update_text"),
     path("add_genre/", views.add_genre, name="add_genre"),
+    path('add_social_link/', views.add_social_link, name='add_social_link'),
     path("contact", views.contact, name="contact"),
     path("cart/", views.cart, name="cart"),
     path("checkout/", views.checkout, name="checkout"),
