@@ -12,6 +12,7 @@
     <script src="{% static "scripts/profile_upload_image.js" %}" defer></script>
     <script src="{% static "scripts/profile_edit_info.js" %}" defer></script>
     <script src="{% static "scripts/profile_add_genres.js" %}" defer></script>
+    <script src="{% static "scripts/profile_add_social_links.js" %}" defer></script>
 {% endblock %}
 
 {% block body_block %}
@@ -72,15 +73,31 @@
     </section>
     
     <section class="profile-socials">
-        <p> {{ artist.user.username }}'s Socials: </p>
-        <ul>
-          {% for social_link in artist.social_links.all %}
-              <a href={{ social_link.url }}><li>{{ social_link.type }}</li></a>
-          {% empty %}
-              <li>No socials available.</li>
-          {% endfor %}
-        </ul>
-    </section>
+    <p> {{ artist.user.username }}'s Socials: </p>
+    <ul id="link-container">
+      {% for social_link in artist.social_links.all %}
+          <li>
+          <a href="{{ social_link.url }}">{{ social_link.type }}</a>
+          </li>
+      {% empty %}
+          <li id="empty-message">No socials available.</li>
+      {% endfor %}
+    </ul>
+
+    {% if user == artist.user or user.is_staff %}
+    <div class="add-social-link">
+        <label for="social-type">Add Social Link:</label>
+        <select id="social-type" name="social-type" data-artist-slug="{{ artist.slug }}">
+            <option value="Spotify">Spotify</option>
+            <option value="Instagram">Instagram</option>
+            <option value="Facebook">Facebook</option>
+            <option value="YouTube">YouTube</option>
+        </select>
+        <label for="social-url"></label><input type="url" id="social-url" name="social-url" placeholder="Enter URL">
+        <button id="add-social-link-button" type="submit">Add</button>
+    </div>
+    {% endif %}
+</section>
     
     <section class="profile-gigs">
     <div class="gigs-section" style="width: 70%; margin-top: 0;">
