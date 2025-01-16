@@ -1,5 +1,6 @@
 section {
   display: flex;
+  height: 100%;
   width: 100%;
   flex-direction: column;
   justify-content: center;
@@ -11,11 +12,23 @@ h1 {
   margin-bottom: 1rem;
 }
 
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem 2rem;
+}
+
+.button-group {
+  gap: 1rem;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-width: 100%;
+  max-width: 500px;
   width: 100%;
   margin: 0 auto;
   align-items: center;

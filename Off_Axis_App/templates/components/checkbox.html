@@ -1,0 +1,18 @@
+{% comment %}
+This is a simple reusable checkbox component that can be used in any template.
+
+props:
+    id?: The id of the checkbox
+    name?: The name of the checkbox
+    checked?: Whether the checkbox is checked (true, false)
+    size?: The size of the checkbox (sm, md, lg)
+    label?: The label of the checkbox
+{% endcomment %}
+<div class="checkbox-container">
+    <input type="checkbox" id="{{ id|default:"" }}" name="{{ name|default:"" }}" {% if checked %}checked{% endif %}>
+    <label for="{{ id|default:"" }}" class="checkbox-label checkbox-label-{{ size|default:"md" }}">
+        <span class="custom-checkbox custom-checkbox-{{ size|default:"md" }}"></span>
+        <span class="checkbox-text">{{ label|default:"" }}</span>
+    </label>
+</div>
+

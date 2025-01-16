@@ -4,6 +4,8 @@ body {
   margin: 0;
   padding: 0;
   position: relative;
+  /* display: flex;
+  flex-direction: column; */
 }
 
 body::before {
@@ -56,6 +58,10 @@ body::before {
   background: url("../images/background_static.png") repeat;
   background-size: cover;
   color: white;
+}
+
+html, body {
+  height: 100%;
 }
 
 * {
@@ -313,6 +319,9 @@ body::before {
 }
 
 .footer {
+  /* margin-top: auto;
+  position: sticky;
+  bottom: 0; */
   background: var(--oa-text-dark);
   color: var(--oa-text-light);
   padding: 20px 0;
