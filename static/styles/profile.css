@@ -52,3 +52,15 @@ a {
 .delete-social-link {
   cursor: pointer;
 }
+
+.link-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+#upload-picture {
+    display: none;
+}

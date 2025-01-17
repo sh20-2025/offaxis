@@ -33,6 +33,7 @@
                     name="profile_picture"
                     accept="image/*"
                     data-artist-slug="{{ artist.slug }}">
+                 {% include "components/button.html" with id="custom-upload-button" type="button" variant="primary" text="Upload Image" size="sm" %}
           </div>
           {% endif %}
 
@@ -64,7 +65,7 @@
                         <option value="{{ genre.tag }}">{{ genre.tag }}</option>
                     {% endfor %}
                 </select>
-                <button id="add-genre-button" type="submit">Add</button>
+                {% include "components/button.html" with id="add-genre-button" type="submit" variant="primary" text="Add" size="sm" %}
         </div>
         {% endif %}
 
@@ -76,8 +77,8 @@
     <p> {{ artist.user.username }}'s Socials: </p>
     <ul id="link-container">
       {% for social_link in artist.social_links.all %}
-          <li>
-          <a href="{{ social_link.url }}">{{ social_link.type }}</a>
+          <li class="link-item">
+          <a href="{{ social_link.url }}">{% include "components/button.html" with id="button9" type="button" variant="rainbow" text=social_link.type size="md" %}</a>
           {% if user == artist.user or user.is_staff %}
             <div class="delete-social-link" data-social-link-id="{{ social_link.id }}">
                 <img src="{% static 'icons/trash.svg' %}" alt="Delete" class="delete-icon">
@@ -99,7 +100,7 @@
             <option value="YouTube">YouTube</option>
         </select>
         <label for="social-url"></label><input type="url" id="social-url" name="social-url" placeholder="Enter URL">
-        <button id="add-social-link-button" type="submit">Add</button>
+        {% include "components/button.html" with id="add-social-link-button" type="submit" variant="primary" text="Add" size="sm" %}
     </div>
     {% endif %}
 </section>
@@ -139,7 +140,7 @@
                 {% csrf_token %}
                 <label for="approve">Approve Artist:</label>
                 <input type="checkbox" id="approve" name="approve" {% if artist.is_approved %}checked{% endif %}>
-                <button type="submit">Save</button>
+                {% include "components/button.html" with id="button3" type="submit" variant="primary" text="Save" size="sm" %}
             </form>
         {% endif %}
     {% endif %}
