@@ -28,6 +28,7 @@ from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 import json
+from .api.spotify_utils import get_artist_top_track
 
 
 def components(request):
@@ -56,11 +57,19 @@ def artists_view(request):
 
 
 def artist_view(request, slug):
-    context = {}
-    artist = Artist.objects.get(slug=slug)
-    genres = GenreTag.objects.all()
-    context["artist"] = artist
-    context["genres"] = genres
+    artist = get_object_or_404(Artist, slug=slug)
+
+    # Get Spotify top track if artist has Spotify link
+    top_track = None
+    spotify_link = artist.social_links.filter(type="Spotify").first()
+    if spotify_link:
+        top_track = get_artist_top_track(spotify_link.url)
+
+    context = {
+        "artist": artist,
+        "genres": GenreTag.objects.all(),
+        "top_track": top_track,
+    }
     return render(request, "Off_Axis/artist.html", context)
 
 
@@ -430,16 +439,18 @@ def festival(request, slug):
 
 
 def add_social_link(request):
-    if request.method == 'POST':
-        artist_slug = request.POST.get('artist_slug')
-        social_type = request.POST.get('type')
-        social_url = request.POST.get('url')
+    if request.method == "POST":
+        artist_slug = request.POST.get("artist_slug")
+        social_type = request.POST.get("type")
+        social_url = request.POST.get("url")
 
         artist = get_object_or_404(Artist, slug=artist_slug)
-        social_link = SocialLink.objects.create(artist=artist, type=social_type, url=social_url)
+        social_link = SocialLink.objects.create(
+            artist=artist, type=social_type, url=social_url
+        )
         social_link.save()
         artist.social_links.add(social_link)
         artist.save()
 
-        return JsonResponse({'success': True})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+        return JsonResponse({"success": True})
+    return JsonResponse({"error": "Invalid request"}, status=400)

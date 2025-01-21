@@ -103,6 +103,30 @@
         {% include "components/button.html" with id="add-social-link-button" type="submit" variant="primary" text="Add" size="sm" %}
     </div>
     {% endif %}
+
+    {% if top_track %}
+    <section class="profile-top-track">
+        <h3>Top Track on Spotify</h3>
+        <div class="top-track-container">
+            <img src="{{ top_track.album_image }}" alt="Album artwork" class="album-artwork">
+            <div class="track-details">
+                <h4>{{ top_track.name }}</h4>
+                <p>From: {{ top_track.album_name }}</p>
+                {% if top_track.preview_url %}
+                    <h4> preview found </h4>
+                    <audio controls>
+                        <source src="{{ top_track.preview_url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                {% endif %}
+                <a href="{{ top_track.external_url }}" target="_blank" class="spotify-link">
+                    {% include "components/button.html" with type="button" variant="rainbow" text="Listen on Spotify" size="sm" %}
+                </a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
 </section>
 
     <section class="profile-gigs">
