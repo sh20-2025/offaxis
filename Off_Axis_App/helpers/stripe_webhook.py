@@ -1,5 +1,8 @@
 from Off_Axis_App.models import Gig, Ticket, User, Client
 import stripe
+import qrcode
+from django.core.files.base import ContentFile
+from io import BytesIO
 
 
 def handle_checkout_session_completed(event):
@@ -33,4 +36,14 @@ def handle_checkout_session_completed(event):
 
         for _ in range(item.quantity):
             ticket = Ticket.objects.create(gig=gig, user=user, checkout_email=email)
+
+            qr_img = qrcode.make(ticket.qr_code_data)
+            img_io = BytesIO()
+            qr_img.save(img_io, format="JPEG")
+
+            ticket.qr_code.save(
+                f"{ticket.qr_code_data}.jpg", ContentFile(img_io.getvalue())
+            )
+            ticket.save()
+
             print("Created ticket", ticket.id, "for", email, "for gig", gig.id)

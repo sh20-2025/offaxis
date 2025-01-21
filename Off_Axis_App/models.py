@@ -143,6 +143,8 @@ class Ticket(models.Model):
     checkout_email = models.EmailField()
     discount_used = models.TextField(max_length=256, blank=True)
     is_used = models.BooleanField(default=False)
+    qr_code = models.ImageField(upload_to="ticket-qr-codes/", blank=True)
+    qr_code_data = models.UUIDField(default=uuid.uuid4, editable=False)
 
 
 class Address(models.Model):
