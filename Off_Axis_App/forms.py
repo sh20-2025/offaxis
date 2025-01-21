@@ -4,6 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.text import slugify
 import re
 
+
 class ClientForm(forms.ModelForm):
     username = forms.CharField(max_length=100)
     email = forms.EmailField()
@@ -29,16 +30,16 @@ class ClientForm(forms.ModelForm):
         email = cleaned_data.get("email")
 
         if password and confirm_password and password != confirm_password:
-            self.add_error('confirm_password', "Passwords do not match")
+            self.add_error("confirm_password", "Passwords do not match")
 
         if User.objects.filter(email=email).exists():
-            self.add_error('email', "Email already exists")
+            self.add_error("email", "Email already exists")
 
         if password:
             try:
                 validate_password(password)
             except forms.ValidationError as e:
-                self.add_error('password', e)
+                self.add_error("password", e)
 
         return cleaned_data
 
@@ -73,4 +74,3 @@ class ContactInformationForm(forms.ModelForm):
     class Meta:
         model = ContactInformation
         fields = ("first_name", "last_name", "email", "message_content", "message_type")
-
