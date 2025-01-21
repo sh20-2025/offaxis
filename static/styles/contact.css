@@ -1,0 +1,185 @@
+#contactFormDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: 5% 25% 10%;
+    border-radius: 20px;
+    background-color: transparent;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid transparent;
+    margin-left: 30%;
+}
+
+.auth-form {
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px 20px;
+    align-items: center;
+    width: 100%;
+}
+
+.form-row {
+    display: contents;
+    margin-bottom: 15px;
+}
+
+.contactLabels {
+    grid-column: 1;
+    justify-self: end;
+    text-align: right;
+    display: block;
+    padding-right: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+    line-height: normal;
+    height: auto;
+    margin: 0;
+    position: relative;
+    top: 0.9em;
+}
+
+.contactLabelsSmall {
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 5px;
+}
+
+.inline-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 45%;
+}
+
+.contactLabelsAbove {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    text-align: left;
+}
+
+#contactLastNameLabel,
+#contactFirstNameLabel {
+    transform: translateY(-10px);
+}
+
+#contactEmailLabel,
+#contactFullNameLabel,
+#contactMessageTypeLabel {
+    justify-self: end;
+    text-align: right;
+    display: block;
+    padding-right: 10px;
+}
+
+#contactEmailLabel,
+#contactMessageTypeLabel {
+    transform: translateY(-10px);
+}
+
+#contactMessageInfoLabel {
+    transform: translateY(-12px);
+}
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    line-height: normal;
+    margin: 0;
+    transform: translateY(-10px);
+}
+
+.contactLabels,
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    line-height: 1.5;
+    padding: 10px;
+    font-size: 14px;
+}
+
+select {
+    height: auto;
+}
+
+textarea {
+    height: 100px;
+    resize: none;
+    background-color: #fff;
+}
+
+#contactSubmitButton {
+    border: none;
+    border-radius: 25px;
+    padding: 10px 30px;
+    color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#contactSubmitButton:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(255, 117, 140, 0.4);
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--oa-pink-dark);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.label-required-true::after {
+    content: "";
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    #contactFormDiv {
+        margin: 5%;
+        padding: 15px;
+    }
+
+    .form-content {
+        grid-template-columns: 1fr;
+    }
+
+    .inline-inputs {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
