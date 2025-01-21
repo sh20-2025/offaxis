@@ -1,48 +1,48 @@
-{% extends "Off_Axis/base.html" %}
+{% extends 'Off_Axis/base.html' %}
 {% load static %}
 {% block title_block %}
-    Off Axis Gigs - Register
-{% endblock title_block %}
+  Off Axis Gigs - Register
+{% endblock %}
 {% block import_block %}
-    <link rel="stylesheet" href="{% static "styles/auth.css" %}">
-{% endblock import_block %}
+  <link rel="stylesheet" href="{% static 'styles/auth.css' %}" />
+{% endblock %}
 {% block body_block %}
-    <section class="register">
-        <h1>Registration</h1>
+  <section class="register">
+    <h1>Registration</h1>
 
-        <div>
-            <form  class="auth-form" method="post" action="{% url 'register' %}">
-                <div class ="checkbox-container">
-                    <input type="checkbox" id="isArtist" name="isArtist" value="true">
-                    <label for="isArtist">Register as an Artist!</label>
-                </div>
-                {% csrf_token %}
+    <div>
+      <form class="auth-form" method="post" action="{% url 'register' %}">
+        {% csrf_token %}
 
-                <div class="input-group">
-                {% if clientForm.username.errors %}
-                <div class="error">
-                    {% for error in clientForm.username.errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                {% include "components/input.html" with id="artist-username" name="username" type="text" variant="light" placeholder="Please enter a username..." size="lg" full="true" %}
-                {% include "components/input.html" with id="artist-email" name="email" type="text" variant="light" placeholder="Please enter an email..." size="lg" full="true" %}
-                {% include "components/input.html" with id="artist-passwordInput" name="password" type="password" variant="light" placeholder="Please enter a password..." size="lg" full="true" %}
-                {% if clientForm.non_field_errors %}
-                    <div class="alert alert-danger" role="alert">
-                        {% for error in clientForm.non_field_errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                {% include "components/input.html" with id="artist-confirmPasswordInput" name="confirm_password" type="password" variant="light" placeholder="Please enter password again..." size="lg" full="true" %}
-                </div>
-
-                <div class="button-group">
-                {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Register" size="lg" %}
-                </div>
-            </form>
+        <div class="checkbox">
+          {% include 'components/checkbox.html' with id='isArtist' name='isArtist' checked=False value='Artist' size='lg' label='Register as an Artist!' %}
         </div>
-    </section>
-{% endblock body_block %}
+
+        <div class="input-group">
+          {% if clientForm.username.errors %}
+            <div class="error">
+              {% for error in clientForm.username.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% include 'components/input.html' with id='artist-username' name='username' type='text' variant='light' placeholder='Please enter a username...' size='lg' full='true' %}
+          {% include 'components/input.html' with id='artist-email' name='email' type='text' variant='light' placeholder='Please enter an email...' size='lg' full='true' %}
+          {% include 'components/input.html' with id='artist-passwordInput' name='password' type='password' variant='light' placeholder='Please enter a password...' size='lg' full='true' %}
+          {% if clientForm.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {% for error in clientForm.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% include 'components/input.html' with id='artist-confirmPasswordInput' name='confirm_password' type='password' variant='light' placeholder='Please enter password again...' size='lg' full='true' %}
+        </div>
+
+        <div class="button-group">
+          {% include 'components/button.html' with id='submitButton' type='submit' variant='primary' text='Register' size='lg' %}
+        </div>
+      </form>
+    </div>
+  </section>
+{% endblock %}

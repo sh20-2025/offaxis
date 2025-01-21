@@ -65,7 +65,7 @@ def artist_view(request, slug):
 
 def register(request):
     client_form = ClientForm()
-    is_artist = request.POST.get("isArtist") == "true"
+    is_artist = request.POST.get("isArtist") == "Artist"
 
     if request.method == "POST":
         client_form = ClientForm(request.POST)
@@ -85,7 +85,7 @@ def register(request):
                 return render(
                     request,
                     "registration/register.html",
-                    {"error": "Username already exists"},
+                    {"error": "Username already exists", "clientForm": client_form},
                 )
 
     return render(
