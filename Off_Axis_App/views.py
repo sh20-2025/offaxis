@@ -29,6 +29,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 import json
 from .api.spotify_utils import get_artist_top_track
+from django.views.decorators.http import require_POST
 
 
 def components(request):
@@ -454,3 +455,10 @@ def add_social_link(request):
 
         return JsonResponse({"success": True})
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@require_POST
+def delete_social_link(request, social_link_id):
+    social_link = get_object_or_404(SocialLink, id=social_link_id)
+    social_link.delete()
+    return JsonResponse({"success": True})
