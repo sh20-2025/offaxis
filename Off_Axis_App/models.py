@@ -139,7 +139,8 @@ class Venue(models.Model):
 
 class Ticket(models.Model):
     gig = models.ForeignKey("Gig", on_delete=models.CASCADE)
-    user = models.ForeignKey("Client", on_delete=models.CASCADE)
+    user = models.ForeignKey("Client", on_delete=models.CASCADE, null=True)
+    checkout_email = models.EmailField()
     discount_used = models.TextField(max_length=256, blank=True)
     is_used = models.BooleanField(default=False)
 

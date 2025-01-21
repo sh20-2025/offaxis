@@ -15,6 +15,7 @@ from django.http.response import HttpResponseBadRequest, HttpResponseNotAllowed
 from django.http import QueryDict
 from .helpers.cart import get_or_create_cart
 from .helpers.stripe import CheckoutProduct, create_checkout_session
+from .helpers.stripe_webhook import handle_checkout_session_completed
 from django.urls import reverse
 from django.core.cache import cache
 from django.utils.timezone import now
@@ -25,8 +26,10 @@ from django.contrib import admin
 from django.conf import settings
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 import json
+import stripe
 
 
 def components(request):
@@ -426,3 +429,28 @@ def festival(request, slug):
     }
 
     return render(request, "Off_Axis/festival.html", context)
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    payload = request.body
+
+    try:
+        sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except stripe.error.SignatureVerificationError:
+        return HttpResponseBadRequest(status=400)
+
+    # Handle the event
+    if not event:
+        return HttpResponseBadRequest(status=400)
+
+    if event["type"] == "checkout.session.completed":
+        handle_checkout_session_completed(event)
+
+    return HttpResponse(status=200)

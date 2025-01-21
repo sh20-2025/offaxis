@@ -120,5 +120,6 @@ def create_checkout_session(products: list[CheckoutProduct], customer_email=None
         success_url=settings.STRIPE_CHECKOUT_SUCCESS_URL,
         cancel_url=settings.STRIPE_CHECKOUT_CANCEL_URL,
         customer_email=customer_email,
+        customer_creation="always",
         allow_promotion_codes=settings.STRIPE_CHECKOUT_ALLOW_PROMO_CODES,
     )

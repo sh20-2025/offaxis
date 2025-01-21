@@ -67,4 +67,5 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
+    path("stripe/webhook/", views.stripe_webhook, name="stripe_webhook"),
 ]
