@@ -68,7 +68,7 @@ a {
 .profile-top-track {
     margin: 2rem 0;
     padding: 1.5rem;
-    background: var(--oa-text-medium-light);
+    background: var(--oa-text-dark);
     border-radius: 8px;
 }
 
@@ -77,11 +77,12 @@ a {
     gap: 1.5rem;
     align-items: center;
     margin-top: 1rem;
+    flex-direction: row;
 }
 
 .album-artwork {
-    width: 150px;
-    height: 150px;
+    width: 5rem;
+    height: 5rem;
     object-fit: cover;
     border-radius: 4px;
 }

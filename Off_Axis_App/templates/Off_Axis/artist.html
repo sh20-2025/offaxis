@@ -113,7 +113,6 @@
                 <h4>{{ top_track.name }}</h4>
                 <p>From: {{ top_track.album_name }}</p>
                 {% if top_track.preview_url %}
-                    <h4> preview found </h4>
                     <audio controls>
                         <source src="{{ top_track.preview_url }}" type="audio/mpeg">
                         Your browser does not support the audio element.
