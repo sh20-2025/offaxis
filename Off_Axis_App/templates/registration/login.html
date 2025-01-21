@@ -8,7 +8,16 @@
     <form class="auth-form" method="post" action="{% url 'login' %}">
       {% csrf_token %}
       <div class="input-group">
-        {% include 'components/input.html' with id='username' name='username' type='text' variant='light' placeholder='Please enter a username...' size='lg' full='true' %} 
+        {% if form.errors %}
+          <div class="error">
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% include 'components/input.html' with id='username' name='username' type='text' variant='light' placeholder='Please enter a username...' size='lg' full='true' %}
         {% include 'components/input.html' with id='password' name='password' type='password' variant='light' placeholder='Please enter a password...' size='lg' full='true' %}
       </div>
       <div class="button-group">

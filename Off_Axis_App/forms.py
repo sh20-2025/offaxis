@@ -1,7 +1,8 @@
 from django import forms
-from .models import Client, User, ContactInformation, Artist, SocialLink, GenreTag
+from .models import Client, User, ContactInformation
+from django.contrib.auth.password_validation import validate_password
 from django.utils.text import slugify
-
+import re
 
 class ClientForm(forms.ModelForm):
     username = forms.CharField(max_length=100)
@@ -10,7 +11,6 @@ class ClientForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
-
         model = User
         fields = ("username", "email", "password")
 
@@ -26,10 +26,19 @@ class ClientForm(forms.ModelForm):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
-        print(password, confirm_password)
+        email = cleaned_data.get("email")
 
         if password and confirm_password and password != confirm_password:
-            raise forms.ValidationError("Passwords do not match")
+            self.add_error('confirm_password', "Passwords do not match")
+
+        if User.objects.filter(email=email).exists():
+            self.add_error('email', "Email already exists")
+
+        if password:
+            try:
+                validate_password(password)
+            except forms.ValidationError as e:
+                self.add_error('password', e)
 
         return cleaned_data
 
@@ -38,6 +47,12 @@ class ClientForm(forms.ModelForm):
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError("Username already exists")
         return username
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email already exists")
+        return email
 
     def save(self, commit=True):
         client = super().save(commit=False)
@@ -58,3 +73,4 @@ class ContactInformationForm(forms.ModelForm):
     class Meta:
         model = ContactInformation
         fields = ("first_name", "last_name", "email", "message_content", "message_type")
+
