@@ -3,6 +3,7 @@ import stripe
 import qrcode
 from django.core.files.base import ContentFile
 from io import BytesIO
+from Off_Axis_App.helpers.emails import send_ticket_email
 
 
 def handle_checkout_session_completed(event):
@@ -15,8 +16,8 @@ def handle_checkout_session_completed(event):
         else checkout_session.customer_details.email
     )
 
-    print(checkout_session)
-    print(line_items)
+    # print(checkout_session)
+    # print(line_items)
 
     print("Checkout session completed", checkout_session.id, "for", email)
 
@@ -47,3 +48,6 @@ def handle_checkout_session_completed(event):
             ticket.save()
 
             print("Created ticket", ticket.id, "for", email, "for gig", gig.id)
+
+            send_ticket_email(ticket)
+            print("Sent ticket email to", email)
