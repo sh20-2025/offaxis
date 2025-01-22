@@ -11,10 +11,15 @@ from .models import (
     Festival,
 )
 from .forms import ClientForm, ContactInformationForm
-from django.http.response import HttpResponseBadRequest, HttpResponseNotAllowed
+from django.http.response import (
+    HttpResponseBadRequest,
+    HttpResponseNotAllowed,
+    HttpResponseForbidden,
+)
 from django.http import QueryDict
 from .helpers.cart import get_or_create_cart
 from .helpers.stripe import CheckoutProduct, create_checkout_session
+from .helpers.stripe_webhook import handle_checkout_session_completed
 from django.urls import reverse
 from django.core.cache import cache
 from django.utils.timezone import now
@@ -25,8 +30,10 @@ from django.contrib import admin
 from django.conf import settings
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 import json
+import stripe
 
 
 def components(request):
@@ -65,7 +72,7 @@ def artist_view(request, slug):
 
 def register(request):
     client_form = ClientForm()
-    is_artist = request.POST.get("isArtist") == "true"
+    is_artist = request.POST.get("isArtist") == "Artist"
 
     if request.method == "POST":
         client_form = ClientForm(request.POST)
@@ -85,7 +92,7 @@ def register(request):
                 return render(
                     request,
                     "registration/register.html",
-                    {"error": "Username already exists"},
+                    {"error": "Username already exists", "clientForm": client_form},
                 )
 
     return render(
@@ -426,3 +433,74 @@ def festival(request, slug):
     }
 
     return render(request, "Off_Axis/festival.html", context)
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    payload = request.body
+
+    try:
+        sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except stripe.error.SignatureVerificationError:
+        return HttpResponseBadRequest(status=400)
+
+    # Handle the event
+    if not event:
+        return HttpResponseBadRequest(status=400)
+
+    if event["type"] == "checkout.session.completed":
+        handle_checkout_session_completed(event)
+
+    return HttpResponse(status=200)
+
+
+def scan_tickets(request):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    context = {
+        # "gigs": Gig.objects.filter(artist=request.user.artist)
+        "gigs": Gig.objects.all()
+    }
+
+    return render(request, "Off_Axis/scan_tickets.html", context)
+
+
+def ticket_scanner(request, id):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    # gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
+    gig = Gig.objects.filter(id=id).first()
+    if not gig:
+        return HttpResponseForbidden()
+
+    context = {"gig": gig}
+
+    return render(request, "Off_Axis/ticket_scanner.html", context)
+
+
+@csrf_exempt
+def scan_ticket_api(request, code):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    ticket = Ticket.objects.filter(qr_code_data=code).first()
+    if not ticket:
+        return HttpResponseBadRequest()
+
+    ticket.is_used = True
+    ticket.save()
+
+    print("Ticket scanned for code ", code)
+
+    return HttpResponse(status=200)

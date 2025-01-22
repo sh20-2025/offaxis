@@ -1,0 +1,15 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}
+    Off Axis Gigs - Ticket Scanner
+{% endblock title_block %}
+{% block import_block %}
+    <link rel="stylesheet" href="{% static "styles/ticket_scanner.css" %}">
+    <script src="{% static "scripts/ticket_scanner.js" %}" defer type="module"></script>
+{% endblock import_block %}
+{% block body_block %}
+    <section class="ticket-scanner">
+        <video id="cameraView" width="640" height="480" autoplay>
+        </video>
+    </section>
+{% endblock body_block %}

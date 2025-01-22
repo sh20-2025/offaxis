@@ -42,14 +42,17 @@ urlpatterns = [
     path(
         "password_reset/",
         auth_views.PasswordResetView.as_view(
-            template_name="registration/password_reset.html"
+            template_name="registration/password_reset.html",
+            email_template_name="registration/password_reset_email.html",
+            html_email_template_name="registration/password_reset_email.html",
+            subject_template_name="registration/password_reset_subject.txt",
         ),
         name="password_reset",
     ),
     path(
         "password_reset/done/",
         auth_views.PasswordResetDoneView.as_view(
-            template_name="registration/password_reset_sent.html"
+            template_name="registration/password_reset_sent.html",
         ),
         name="password_reset_done",
     ),
@@ -67,4 +70,8 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
+    path("stripe/webhook/", views.stripe_webhook, name="stripe_webhook"),
+    path("scan-tickets/", views.scan_tickets, name="scan_tickets"),
+    path("scan-tickets/<int:id>", views.ticket_scanner, name="ticket_scanner"),
+    path("scan-tickets-api/<str:code>", views.scan_ticket_api, name="scan_ticket_api"),
 ]

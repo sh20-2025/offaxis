@@ -18,6 +18,13 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 def populate():
     Artist.objects.all().delete()
 
+    if not User.objects.filter(username="admin").exists():
+        admin_user = User.objects.create_superuser(
+            "admin", "sh20.team.offaxis@gmail.com", "BespokePassword"
+        )
+        Client.objects.create(user=admin_user, phone_number="+447123456789")
+        Artist.objects.create(user=admin_user, bio="I am the admin", is_approved=False)
+
     add_genre_tag("Rock")
     add_genre_tag("Pop")
     add_genre_tag("Rap")

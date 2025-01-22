@@ -40,8 +40,8 @@
                         <li>
                             <a href="{% url 'cart' %}">
                                 <img src="{% static 'icons/shopping-cart.svg' %}"
-                                     alt="Shopping Cart"
-                                     id="shoppingCartIcon">
+                                        alt="Shopping Cart"
+                                        id="shoppingCartIcon">
                             </a>
                         </li>
                         {% if user.is_authenticated %}
@@ -58,6 +58,11 @@
                                     {% include "components/button.html" with id="button3" type="submit" variant="primary" text="Logout" size="sm" %}
                                 </form>
                             </li>
+                            {% if user.artist %}
+                                <li>
+                                    <a href="{% url 'scan_tickets' %}">Scan Tickets</a>
+                                </li>
+                            {% endif %}
                         {% else %}
                             <li>
                                 <a href="{% url 'login' %}">Login</a>
@@ -72,23 +77,24 @@
                     <a>
                         <button id="hamburgerButton">
                             <img src="{% static 'icons/hamburger-menu.svg' %}"
-                                 alt="Hamburger Menu"
-                                 id="hamburgerMenuSVG">
+                                    alt="Hamburger Menu"
+                                    id="hamburgerMenuSVG">
                         </button>
                     </a>
                 </div>
             </div>
-        </div>
-    </header>
-    {% block body_block %}{% endblock %}
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Off Axis Gigs. All rights reserved.</p>
-            <div class="sign-up-form">
-                <h3>Subscribe to our Newsletter</h3>
-                {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
-                {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="md" required="true" %}
-                {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
+        </header>
+            {% block body_block %}
+            {% endblock %}
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2024 Off Axis Gigs. All rights reserved.</p>
+                <div class="sign-up-form">
+                    <h3>Subscribe to our Newsletter</h3>
+                    {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
+                    {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="md" required="true" %}
+                    {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
+                </div>
             </div>
         </footer>
     </body>

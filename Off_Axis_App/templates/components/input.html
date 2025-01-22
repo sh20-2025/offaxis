@@ -63,15 +63,16 @@ props:
     </select>
 
 {% elif type == 'textarea' %}
-    <textarea class="input input-{{ variant|default:"light" }} textarea-{{ size|default:"md" }} textarea-full-{{ full|default:"false" }}"
-            id="{{ id|default:"" }}"
-            name="{{ name|default:"" }}"
-            size="{{ htmlsize|default:"" }}"
-            placeholder="{{ placeholder|default:"" }}"
-            minlength="{{ minlength|default:"" }}"
-            maxlength="{{ maxlength|default:"" }}"
-            required="{{ required|default:"false" }}">
-    </textarea>
+<textarea class="input input-{{ variant|default:"light" }} textarea-{{ size|default:"md" }} textarea-full-{{ full|default:"false" }}"
+id="{{ id|default:"" }}"
+    name="{{ name|default:"" }}"
+    size="{{ htmlsize|default:"" }}"
+    placeholder="{{ placeholder|default:"" }}"
+    minlength="{{ minlength|default:"" }}"
+    maxlength="{{ maxlength|default:"" }}"
+    required="{{ required|default:"false" }}">
+</textarea>
+
 
 
 {% else %}

@@ -263,3 +263,104 @@ select.input {
   line-height: 1.5rem;
   font-size: 1.5rem;
 }
+
+/* CHECKBOX */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-container input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkbox-text {
+  margin-left: 1rem; 
+}
+
+.checkbox-label-sm .checkbox-text {
+  font-size: 0.8rem;
+}
+
+.checkbox-label-md .checkbox-text {
+  font-size: 1rem;
+}
+
+.checkbox-label-lg .checkbox-text {
+  font-size: 1.2rem;
+}
+
+.custom-checkbox {
+  position: relative;
+  background-color: #eee;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.custom-checkbox-sm {
+  height: 15px;
+  width: 15px;
+}
+
+.custom-checkbox-md {
+  height: 20px;
+  width: 20px;
+}
+
+.custom-checkbox-lg {
+  height: 25px;
+  width: 25px;
+}
+
+.checkbox-container input[type="checkbox"]:checked + .checkbox-label .custom-checkbox {
+  background-color: #2196F3;
+}
+
+.custom-checkbox::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-container input[type="checkbox"]:checked + .checkbox-label .custom-checkbox::after {
+  display: block;
+}
+
+.custom-checkbox-sm::after {
+  left: 4px;
+  top: 2px;
+  width: 3px;
+  height: 6px;
+}
+
+.custom-checkbox-md::after {
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+}
+
+.custom-checkbox-lg::after {
+  left: 9px;
+  top: 4px;
+  width: 7px;
+  height: 14px;
+}

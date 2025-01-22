@@ -1,25 +1,29 @@
-{% extends "Off_Axis/base.html" %}
-{% load static %}
-{% block title_block %}
-    Off Axis Gigs - Login
-{% endblock title_block %}
-{% block import_block %}
-    <link rel="stylesheet" href="{% static "styles/auth.css" %}">
-{% endblock import_block %}
-
-{% block body_block %}
-<section>
+{% extends 'Off_Axis/base.html' %} {% load static %} {% block title_block %}
+  Off Axis Gigs - Login
+{% endblock %} {% block import_block %}
+  <link rel="stylesheet" href="{% static 'styles/auth.css' %}" />
+{% endblock %} {% block body_block %}
+  <section class="login">
     <h1>Login</h1>
-        <form class="auth-form" method="post" action="{% url 'login' %}">
-            {% csrf_token %}
-            <div>
-            {% include "components/input.html" with id="username" name="username" type="text" variant="light" placeholder="Please enter a username..." size="lg" full="true" %}
-            {% include "components/input.html" with id="password" name="password" type="password" variant="light" placeholder="Please enter a password..." size="lg" full="true" %}
-            </div>
-            <div class="button-group">
-                {% include "components/button.html" with id="submitButton" type="submit" variant="primary" text="Login" size="lg" %}
-                <a href="{% url 'password_reset' %}">{% include "components/button.html" with id="" type="button" variant="primary" text="Forgot Password" size="lg" %}</a>
-            </div>
-        </form>
-</section>
-{% endblock body_block %}
+    <form class="auth-form" method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="input-group">
+        {% if form.errors %}
+          <div class="error">
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% include 'components/input.html' with id='username' name='username' type='text' variant='light' placeholder='Please enter a username...' size='lg' full='true' %}
+        {% include 'components/input.html' with id='password' name='password' type='password' variant='light' placeholder='Please enter a password...' size='lg' full='true' %}
+      </div>
+      <div class="button-group">
+        {% include 'components/button.html' with id='submitButton' type='submit' variant='primary' text='Login' size='lg' %}
+        <a href="{% url 'password_reset' %}">{% include 'components/button.html' with id='' type='button' variant='primary' text='Forgot Password' size='lg' %}</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}
