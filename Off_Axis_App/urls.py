@@ -68,4 +68,7 @@ urlpatterns = [
         name="password_reset_complete",
     ),
     path("stripe/webhook/", views.stripe_webhook, name="stripe_webhook"),
+    path("scan-tickets/", views.scan_tickets, name="scan_tickets"),
+    path("scan-tickets/<int:id>", views.ticket_scanner, name="ticket_scanner"),
+    path("scan-tickets-api/<str:code>", views.scan_ticket_api, name="scan_ticket_api"),
 ]

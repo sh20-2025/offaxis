@@ -11,7 +11,11 @@ from .models import (
     Festival,
 )
 from .forms import ClientForm, ContactInformationForm
-from django.http.response import HttpResponseBadRequest, HttpResponseNotAllowed
+from django.http.response import (
+    HttpResponseBadRequest,
+    HttpResponseNotAllowed,
+    HttpResponseForbidden,
+)
 from django.http import QueryDict
 from .helpers.cart import get_or_create_cart
 from .helpers.stripe import CheckoutProduct, create_checkout_session
@@ -452,5 +456,51 @@ def stripe_webhook(request):
 
     if event["type"] == "checkout.session.completed":
         handle_checkout_session_completed(event)
+
+    return HttpResponse(status=200)
+
+
+def scan_tickets(request):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    context = {
+        # "gigs": Gig.objects.filter(artist=request.user.artist)
+        "gigs": Gig.objects.all()
+    }
+
+    return render(request, "Off_Axis/scan_tickets.html", context)
+
+
+def ticket_scanner(request, id):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    # gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
+    gig = Gig.objects.filter(id=id).first()
+    if not gig:
+        return HttpResponseForbidden()
+
+    context = {"gig": gig}
+
+    return render(request, "Off_Axis/ticket_scanner.html", context)
+
+
+@csrf_exempt
+def scan_ticket_api(request, code):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    ticket = Ticket.objects.filter(qr_code_data=code).first()
+    if not ticket:
+        return HttpResponseBadRequest()
+
+    ticket.is_used = True
+    ticket.save()
+
+    print("Ticket scanned for code ", code)
 
     return HttpResponse(status=200)
