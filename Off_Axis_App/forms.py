@@ -2,7 +2,6 @@ from django import forms
 from .models import Client, User, ContactInformation, Artist, SocialLink, GenreTag
 from django.utils.text import slugify
 
-
 class ClientForm(forms.ModelForm):
     username = forms.CharField(max_length=100)
     email = forms.EmailField()
@@ -10,7 +9,6 @@ class ClientForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
-
         model = User
         fields = ("username", "email", "password")
 
@@ -26,7 +24,6 @@ class ClientForm(forms.ModelForm):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
-        print(password, confirm_password)
 
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Passwords do not match")
@@ -53,8 +50,26 @@ class ClientForm(forms.ModelForm):
 
         return client
 
-
 class ContactInformationForm(forms.ModelForm):
     class Meta:
         model = ContactInformation
         fields = ("first_name", "last_name", "email", "message_content", "message_type")
+
+class ArtistForm(forms.ModelForm):
+    class Meta:
+        model = Artist
+        fields = '__all__'
+        widgets = {
+            'bio': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Enter artist bio'}),
+            'profile_picture_url': forms.URLInput(attrs={'placeholder': 'Enter a valid URL'}),
+            'social_links': forms.SelectMultiple(attrs={'size': 5}),
+            'genre_tags': forms.SelectMultiple(attrs={'size': 5}),
+            'slug': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'is_approved': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+    def clean_slug(self):
+        slug = self.cleaned_data.get("slug")
+        if not slug:
+            slug = slugify(self.instance.user.username)
+        return slug
