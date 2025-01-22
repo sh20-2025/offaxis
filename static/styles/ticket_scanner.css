@@ -1,0 +1,12 @@
+.ticket-scanner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 10%;
+  height: 70vh;
+}
+
+#cameraView {
+  height: 100%;
+  aspect-ratio: 1/1;
+}
