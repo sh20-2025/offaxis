@@ -11,17 +11,7 @@
         <h1 class="gigs__title">Gigs</h1>
         <div class="gigs__list">
             {% for gig in gigs %}
-                <a class="gig" href="{% url 'gig' gig.artist.slug gig.id %}">
-                    <img class="gig__image"
-                         width="300"
-                         height="300"
-                         src="{{ gig.gig_photo_url }}"
-                         alt="gig">
-                    <div class="gig__label">
-                        <h2>{{ gig.artist.user.username }}</h2>
-                        <p>{{ gig.venue.address.city }}</p>
-                    </div>
-                </a>
+                {% include 'components/gig.html' with gig=gig %}
             {% endfor %}
         </div>
     </section>

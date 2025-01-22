@@ -23,22 +23,36 @@ urlpatterns = [
     path("admin/logout/", views.admin_logout_view),
     path("", views.index, name="index"),
     path("components", views.components, name="components"),
+    path("approve_artist/<slug:slug>/", views.approve_artist, name="approve_artist"),
+    path(
+        "upload_profile_picture/",
+        views.upload_profile_picture,
+        name="upload_profile_picture",
+    ),
+    path("update_text/", views.update_text, name="update_text"),
+    path("add_genre/", views.add_genre, name="add_genre"),
+    path("contact", views.contact, name="contact"),
     path("cart/", views.cart, name="cart"),
     path("checkout/", views.checkout, name="checkout"),
     path("checkout/completed/", views.checkout_completed, name="checkout_completed"),
     path("contact/", views.contact, name="contact"),
+    path("festivals/", views.festivals, name="festivals"),
+    path("festivals/<str:slug>/", views.festival, name="festival"),
     # have not implemented password change for artist and clients for now, will do so later for next sprint
     path(
         "password_reset/",
         auth_views.PasswordResetView.as_view(
-            template_name="registration/password_reset.html"
+            template_name="registration/password_reset.html",
+            email_template_name="registration/password_reset_email.html",
+            html_email_template_name="registration/password_reset_email.html",
+            subject_template_name="registration/password_reset_subject.txt",
         ),
         name="password_reset",
     ),
     path(
         "password_reset/done/",
         auth_views.PasswordResetDoneView.as_view(
-            template_name="registration/password_reset_sent.html"
+            template_name="registration/password_reset_sent.html",
         ),
         name="password_reset_done",
     ),

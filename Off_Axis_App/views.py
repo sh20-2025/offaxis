@@ -1,6 +1,15 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Artist, Gig, Ticket, Cart, CartItem, ContactInformation
+from .models import (
+    Artist,
+    Gig,
+    Ticket,
+    GenreTag,
+    Cart,
+    CartItem,
+    ContactInformation,
+    Festival,
+)
 from .forms import ClientForm, ContactInformationForm
 from django.http.response import HttpResponseBadRequest, HttpResponseNotAllowed
 from django.http import QueryDict
@@ -16,6 +25,8 @@ from django.contrib import admin
 from django.conf import settings
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import JsonResponse
+import json
 
 
 def components(request):
@@ -46,14 +57,15 @@ def artists_view(request):
 def artist_view(request, slug):
     context = {}
     artist = Artist.objects.get(slug=slug)
-
+    genres = GenreTag.objects.all()
     context["artist"] = artist
+    context["genres"] = genres
     return render(request, "Off_Axis/artist.html", context)
 
 
 def register(request):
     client_form = ClientForm()
-    is_artist = request.POST.get("isArtist") == "true"
+    is_artist = request.POST.get("isArtist") == "Artist"
 
     if request.method == "POST":
         client_form = ClientForm(request.POST)
@@ -73,7 +85,7 @@ def register(request):
                 return render(
                     request,
                     "registration/register.html",
-                    {"error": "Username already exists"},
+                    {"error": "Username already exists", "clientForm": client_form},
                 )
 
     return render(
@@ -106,6 +118,69 @@ def login_redirect_view(request):
         return redirect(reverse("artist", args=[request.user.artist.slug]))
     else:
         return redirect("/")
+
+
+@login_required
+def approve_artist(request, slug):
+    artist = get_object_or_404(Artist, slug=slug)
+    if request.method == "POST":
+        artist.is_approved = "approve" in request.POST
+        artist.save()
+    return redirect(reverse("artist", args=[artist.slug]))
+
+
+@login_required
+def upload_profile_picture(request):
+    artist_slug = request.POST.get("artist_slug")
+    artist = get_object_or_404(Artist, slug=artist_slug)
+
+    if artist.profile_picture:
+        artist.profile_picture.delete()
+
+    if (
+        "profile_picture" in request.FILES
+    ):  # Ensure the name matches the name in the JavaScript
+        artist.profile_picture = request.FILES["profile_picture"]
+        artist.save()
+        return JsonResponse({"picture_url": artist.profile_picture.url})
+
+    return JsonResponse({"error": "No file uploaded"}, status=400)
+
+
+@login_required
+def update_text(request):
+    if request.method == "POST":
+        section_id = request.POST.get("section_id")
+        new_text = request.POST.get("new_text")
+
+        artist_slug = request.POST.get("artist_slug")
+        artist = get_object_or_404(Artist, slug=artist_slug)
+
+        if section_id == "bio-text":
+            artist.bio = new_text
+            artist.save()
+        else:
+            return JsonResponse({"error": "Invalid section ID"}, status=400)
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@login_required
+def add_genre(request):
+    if request.method == "POST":
+        genre_tag = request.POST.get("genre")
+        artist_slug = request.POST.get("artist_slug")
+        artist = get_object_or_404(Artist, slug=artist_slug)
+
+        genre, created = GenreTag.objects.get_or_create(tag=genre_tag)
+        artist.genre_tags.add(genre)
+        artist.save()
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
 
 
 @login_required
@@ -333,3 +408,21 @@ def contact(request):
         "Off_Axis/contact.html",
         {"form": form, "contact_message_type": contact_message_type},
     )
+
+
+def festivals(request):
+    context = {
+        "festivals": Festival.objects.filter(is_active=True),
+    }
+
+    return render(request, "Off_Axis/festivals.html", context)
+
+
+def festival(request, slug):
+    f = Festival.objects.get(slug=slug)
+    context = {
+        "festival": f,
+        "artists": f.artists.all(),
+    }
+
+    return render(request, "Off_Axis/festival.html", context)
