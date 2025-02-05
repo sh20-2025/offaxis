@@ -12,8 +12,6 @@ build-job:
     # - chmod ./scripts/format.ps1
     # - chmod ./scripts/setup.ps1
     - git fetch origin
-    - python manage.py makemigrations
-    - python manage.py migrate
     - ./scripts/activate-venv.ps1
     - ./scripts/check-django.ps1
     - ./scripts/format.ps1
