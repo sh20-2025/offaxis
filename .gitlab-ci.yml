@@ -7,10 +7,11 @@ stages:
 build-job:
   stage: build
   script:
-    - chmod ./scripts/activate-venv.ps1
+    # - chmod ./scripts/activate-venv.ps1
     # - chmod ./scripts/check-django.ps1
     # - chmod ./scripts/format.ps1
     # - chmod ./scripts/setup.ps1
+    - git fetch origin
     - echo "Compiling the code..."
     - echo "Building the project..."
 
