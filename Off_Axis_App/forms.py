@@ -1,8 +1,7 @@
 from django import forms
-from .models import Client, User, ContactInformation
+from .models import Client, User, ContactInformation, Artist
 from django.contrib.auth.password_validation import validate_password
 from django.utils.text import slugify
-import re
 
 class ClientForm(forms.ModelForm):
     username = forms.CharField(max_length=100)
