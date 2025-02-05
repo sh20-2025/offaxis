@@ -1,0 +1,18 @@
+# Define pipeline stages (executed in order)
+stages:
+  - build
+  - test
+
+# First job: Build stage
+build-job:
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - echo "Building the project..."
+
+# Second job: Test stage
+test-job:
+  stage: test
+  script:
+    - echo "Running unit tests..."
+    - echo "Running lint checks..."
