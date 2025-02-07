@@ -79,15 +79,17 @@ html, body {
 /* Dashboard */
 .dashboard {
     margin: 0 auto;
-    padding: 15px;
-    max-width: 1200px;
+    padding: 0px;
+    max-width: auto;
+    background-color: black;
 }
 
 .dashboard .module {
     background: var(--header-bg);
     border: 1px solid var(--oa-blue-dark);
+    max-width: auto;
     border-radius: 8px;
-    padding: 20px;
+    padding: 0px;
     margin-bottom: 20px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
 }

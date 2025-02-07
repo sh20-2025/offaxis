@@ -45,6 +45,7 @@ html, body {
   font-family: Arial, sans-serif;
   font-size: 14px;
   background: var(--body-bg);
+  background-color: #000000;
   color: var(--body-fg);
   line-height: 1.6;
 }
