@@ -61,11 +61,7 @@
         {% if user == artist.user or user.is_staff%}
         <div class="add-genre">
                 <label for="genre">Add Genre:</label>
-                <select id="genre" name="genre" data-artist-slug="{{ artist.slug }}">
-                    {% for genre in genres %}
-                        <option value="{{ genre.tag }}">{{ genre.tag }}</option>
-                    {% endfor %}
-                </select>
+                {% include "components/input.html" with id="genre" name="genre" type="select" variant="dark" placeholder="Select Genres.." size="md" options=options %}
                 {% include "components/button.html" with id="add-genre-button" type="submit" variant="primary" text="Add" size="sm" %}
         </div>
         {% endif %}

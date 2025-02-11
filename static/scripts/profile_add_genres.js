@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (addGenreButton) {
         addGenreButton.addEventListener("click", async () => {
             const selectedGenre = genreSelect.value;
+
             const artistSlug = genreSelect.getAttribute("data-artist-slug");
 
             const data = new FormData();

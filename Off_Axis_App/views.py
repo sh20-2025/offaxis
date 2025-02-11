@@ -66,9 +66,15 @@ def artist_view(request, slug):
     if spotify_link:
         top_track = get_artist_top_track(spotify_link.url)
 
+    genres = GenreTag.objects.all()
+    select_options = []
+    for each in genres:
+        select_options.append({"label": each.tag, "value": each.tag})
+    print(select_options)
+
     context = {
         "artist": artist,
-        "genres": GenreTag.objects.all(),
+        "options": select_options,
         "top_track": top_track,
     }
     return render(request, "Off_Axis/artist.html", context)
