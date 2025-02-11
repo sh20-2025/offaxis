@@ -1,0 +1,38 @@
+.select-gig {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 10%;
+  flex-direction: column;
+}
+
+.select-gig__gig {
+  width: 100%;
+  display: flex;
+  padding: 2rem;
+  border: 1px solid var(--oa-text-light);
+  gap: 1rem;
+  align-items: center;
+}
+
+.select-gig__gig__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.select-gig__gig__name {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.select-gig__gig__venue,
+.select-gig__gig__date {
+  font-size: 1.5rem;
+  font-weight: medium;
+  opacity: 0.8;
+}
+
+.select-gig__gig__cta {
+  height: 4rem;
+  width: 10rem;
+  margin-left: auto;
+}

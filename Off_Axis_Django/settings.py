@@ -34,6 +34,7 @@ SPOTIFY_CLIENT_SECRET = "28be09bd328f4a63855c74d816a6fb71"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+HOST = "http://127.0.0.1"
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "sh20.pythonanywhere.com"]
 
 
@@ -150,6 +151,9 @@ STRIPE_CURRENCY_CODE = "GBP"
 STRIPE_CHECKOUT_SUCCESS_URL = "http://127.0.0.1:8000/checkout/completed/?status=success"
 STRIPE_CHECKOUT_CANCEL_URL = "http://127.0.0.1:8000/checkout/completed/?status=fail"
 STRIPE_CHECKOUT_ALLOW_PROMO_CODES = True
+STRIPE_WEBHOOK_SECRET = (
+    "whsec_29cea3e78599dceb9e3c6d51e0bc329a0a4e08a67fadce54d60afd32dd060e02"
+)
 
 # Email reset password
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

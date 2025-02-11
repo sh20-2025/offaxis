@@ -1,0 +1,31 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}
+    Off Axis Gigs - Scan Tickets
+{% endblock title_block %}
+{% block import_block %}
+    <link rel="stylesheet" href="{% static "styles/scan_tickets.css" %}">
+{% endblock import_block %}
+{% block body_block %}
+    <section class="select-gig">
+        {% for gig in gigs %}
+            <div class="select-gig__gig">
+                <img src="{{ gig.gig_photo_url }}"
+                     alt="{{ gig.artist.user.username }}'s Gig"
+                     width="300"
+                     height="300" />
+                <div class="select-gig__gig__text">
+                    <p class="select-gig__gig__name">{{ gig.artist.user.username }}</p>
+                    <div class="select-gig__gig__details">
+                        <p class="select-gig__gig__venue">{{ gig.venue.name }}</p>
+                        <p class="select-gig__gig__date">{{ gig.date|date:"d/m/Y" }}</p>
+                    </div>
+                </div>
+                <a href="{% url 'ticket_scanner' id=gig.id %}"
+                   class="select-gig__gig__cta">
+                    {% include "components/button.html" with variant="primary" text="Select" size="lg" class="select-gig__gig__cta select-button" %}
+                </a>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock body_block %}
