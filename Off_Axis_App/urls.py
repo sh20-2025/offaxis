@@ -74,4 +74,14 @@ urlpatterns = [
     path("scan-tickets/", views.scan_tickets, name="scan_tickets"),
     path("scan-tickets/<int:id>", views.ticket_scanner, name="ticket_scanner"),
     path("scan-tickets-api/<str:code>", views.scan_ticket_api, name="scan_ticket_api"),
+    path(
+        "artist/<slug:slug>/add-social-link/",
+        views.add_social_link,
+        name="add_social_link",
+    ),
+    path(
+        "artist/<slug:slug>/remove-social-link/<str:social_type>/",
+        views.remove_social_link,
+        name="remove_social_link",
+    ),
 ]

@@ -24,28 +24,28 @@
           <img src="{% static "icons/image.svg" %}" alt="profile picture" id="profile-picture"/>
           <p>No Profile Picture Given.</p>
         {% endif %}
-          {% if user == artist.user or user.is_staff%}  
+          {% if user == artist.user or user.is_staff%}
           <h5> Upload image? </h5>
           <div class="upload-container">
              {% csrf_token %}
-             <input type="file" id="upload-picture" 
-                    name="profile_picture" 
+             <input type="file" id="upload-picture"
+                    name="profile_picture"
                     accept="image/*"
                     data-artist-slug="{{ artist.slug }}">
           </div>
           {% endif %}
-        
+
     </section>
     <section class="profile-header">
         <h1>{{ artist.user.username }}'s Profile</h1>
-    
+
         <p class="profile-bio" id="bio-text">{{ artist.bio }}</p>
-    
-        {% if user == artist.user or user.is_staff%}  
+
+        {% if user == artist.user or user.is_staff%}
         <button id="edit-bio-button" data-artist-slug="{{ artist.slug }}">Edit</button>
         <button id="save-bio-button" style="display: none;">Save</button>
         {% endif %}
-    
+
         <p> {{ artist.user.username }}'s Genres: </p>
         <div class="genre-tags" id="genre-tags">
             {% for tag in artist.genre_tags.all %}
@@ -54,7 +54,7 @@
               <div>No genres available.</div>
             {% endfor %}
         </div>
-    
+
         {% if user == artist.user or user.is_staff%}
         <div class="add-genre">
                 <label for="genre">Add Genre:</label>
@@ -63,25 +63,36 @@
                         <option value="{{ genre.tag }}">{{ genre.tag }}</option>
                     {% endfor %}
                 </select>
-                <button id="add-genre-button" type="submit">Add</button>         
+                <button id="add-genre-button" type="submit">Add</button>
         </div>
         {% endif %}
-        
-        
-        
+
+
+
     </section>
-    
+
     <section class="profile-socials">
         <p> {{ artist.user.username }}'s Socials: </p>
         <ul>
-          {% for social_link in artist.social_links.all %}
-              <a href={{ social_link.url }}><li>{{ social_link.type }}</li></a>
-          {% empty %}
-              <li>No socials available.</li>
-          {% endfor %}
+            {% for social_link in artist.social_links.all %}
+            {% if social_link.type != "WhatsApp" %}
+                <a href="{{ social_link.url }}"><li>{{ social_link.type }}</li></a>
+            {% elif user.is_authenticated and user.is_staff %}
+                <a href="{{ social_link.url }}"><li>{{ social_link.type }}</li></a>
+            {% elif user.is_authenticated and user.artist %}
+                <a href="{{ social_link.url }}"><li>{{ social_link.type }}</li></a>
+            {% endif %}
+        {% empty %}
+            <li>No socials available.</li>
+        {% endfor %}
         </ul>
+        {% if request.user.is_authenticated and request.user == artist.user %}
+    <a href="{% url 'add_social_link' slug=artist.slug %}" class="btn btn-primary">
+        Add Social Links
+    </a>
+{% endif %}
     </section>
-    
+
     <section class="profile-gigs">
     <div class="gigs-section" style="width: 70%; margin-top: 0;">
     <div class="right" style="width: 100%">
@@ -97,7 +108,7 @@
         </div>
         </div>
     </section>
-    
+
     </section>
     {% else %}
         <div class="unapproved-message">
@@ -107,7 +118,7 @@
         </div>
         </div>
     {% endif %}
-    
+
     <section class="approval-section">
     {% if user == artist.user or user.is_staff%}
         <h2>Approval Status</h2>

@@ -9,8 +9,9 @@ from .models import (
     CartItem,
     ContactInformation,
     Festival,
+    SocialLink,
 )
-from .forms import ClientForm, ContactInformationForm
+from .forms import ClientForm, ContactInformationForm, SocialLinkForm
 from django.http.response import (
     HttpResponseBadRequest,
     HttpResponseNotAllowed,
@@ -22,9 +23,10 @@ from .helpers.stripe import CheckoutProduct, create_checkout_session
 from .helpers.stripe_webhook import handle_checkout_session_completed
 from django.urls import reverse
 from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.timezone import now
 import math
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 from django.contrib.auth import login
 from django.contrib import admin
 from django.conf import settings
@@ -504,3 +506,90 @@ def scan_ticket_api(request, code):
     print("Ticket scanned for code ", code)
 
     return HttpResponse(status=200)
+
+
+@login_required
+def add_social_link(request, slug):
+    artist = get_object_or_404(Artist, slug=slug)
+
+    if request.user != artist.user:
+        return HttpResponseForbidden(
+            "You are not allowed to edit this artist's social links."
+        )
+
+    social_platforms = ["YouTube", "Spotify", "Instagram", "SoundCloud", "WhatsApp"]
+    allowed_domains = {
+        "spotify.com",
+        "youtube.com",
+        "soundcloud.com",
+        "whatsapp.com",
+        "instagram.com",
+    }
+
+    social_links_data = [
+        {"type": platform, "link": artist.social_links.filter(type=platform).first()}
+        for platform in social_platforms
+    ]
+
+    if request.method == "POST":
+        social_type = request.POST.get("type")
+        social_url = request.POST.get("url")
+
+        if not social_type or not social_url:
+            return redirect("add_social_link", slug=artist.slug)
+
+        social_url = social_url.strip().lower()
+
+        if not social_url.startswith(("http://", "https://")):
+            social_url = "https://" + social_url
+
+        parsed_url = urlparse(social_url)
+        domain = parsed_url.netloc.replace("www.", "")
+
+        if domain not in allowed_domains:
+            return render(
+                request,
+                "Off_Axis/add_social_link.html",
+                {
+                    "artist": artist,
+                    "social_links_data": social_links_data,
+                    "allowed_domains": allowed_domains,
+                    "error_message": f"Invalid URL! Only {', '.join(allowed_domains)} are allowed.",
+                },
+            )
+
+        existing_link = artist.social_links.filter(type=social_type).first()
+        if existing_link:
+            return redirect("add_social_link", slug=artist.slug)
+
+        social_link = SocialLink.objects.create(type=social_type, url=social_url)
+        artist.social_links.add(social_link)
+
+        return redirect("add_social_link", slug=artist.slug)
+
+    return render(
+        request,
+        "Off_Axis/add_social_link.html",
+        {
+            "artist": artist,
+            "social_links_data": social_links_data,
+            "allowed_domains": allowed_domains,
+        },
+    )
+
+
+@login_required
+def remove_social_link(request, slug, social_type):
+
+    artist = get_object_or_404(Artist, slug=slug)
+
+    if request.user != artist.user:
+        return HttpResponseForbidden("You are not allowed to remove this social link.")
+
+    if request.method == "POST":
+        social_link = artist.social_links.filter(type=social_type).first()
+        if social_link:
+            artist.social_links.remove(social_link)
+            social_link.delete()
+
+    return redirect("add_social_link", slug=artist.slug)

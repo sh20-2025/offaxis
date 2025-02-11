@@ -1,8 +1,9 @@
 from django import forms
-from .models import Client, User, ContactInformation
+from .models import Client, User, ContactInformation, Artist, SocialLink
 from django.contrib.auth.password_validation import validate_password
 from django.utils.text import slugify
 import re
+
 
 class ClientForm(forms.ModelForm):
     username = forms.CharField(max_length=100)
@@ -68,22 +69,26 @@ class ClientForm(forms.ModelForm):
 
         return client
 
+
 class ContactInformationForm(forms.ModelForm):
     class Meta:
         model = ContactInformation
         fields = ("first_name", "last_name", "email", "message_content", "message_type")
 
+
 class ArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
-        fields = '__all__'
+        fields = "__all__"
         widgets = {
-            'bio': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Enter artist bio'}),
-            'profile_picture_url': forms.URLInput(attrs={'placeholder': 'Enter a valid URL'}),
-            'social_links': forms.SelectMultiple(attrs={'size': 5}),
-            'genre_tags': forms.SelectMultiple(attrs={'size': 5}),
-            'slug': forms.TextInput(attrs={'readonly': 'readonly'}),
-            'is_approved': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            "bio": forms.Textarea(attrs={"rows": 4, "placeholder": "Enter artist bio"}),
+            "profile_picture_url": forms.URLInput(
+                attrs={"placeholder": "Enter a valid URL"}
+            ),
+            "social_links": forms.SelectMultiple(attrs={"size": 5}),
+            "genre_tags": forms.SelectMultiple(attrs={"size": 5}),
+            "slug": forms.TextInput(attrs={"readonly": "readonly"}),
+            "is_approved": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
     def clean_slug(self):
@@ -91,3 +96,15 @@ class ArtistForm(forms.ModelForm):
         if not slug:
             slug = slugify(self.instance.user.username)
         return slug
+
+
+class SocialLinkForm(forms.ModelForm):
+    class Meta:
+        model = SocialLink
+        fields = ["type", "url"]
+
+    def clean_url(self):
+        url = self.cleaned_data.get("url")
+        if url and not url.startswith(("http://", "https://")):
+            url = "https://" + url
+        return url
