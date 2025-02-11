@@ -137,6 +137,12 @@
         {% empty %}
           <p> {{ artist.user.username }} currently has no gigs! </p>
         {% endfor %}
+        {% if user.is_staff or user == artist.user  %}
+            {% include "components/button.html" with id="add-gig-form-button" type="submit" variant="primary" text="Post a new gig?" size="sm" %}
+            <div class="gig-forms-container">
+            {{ gig_form.as_p }}
+            </div>
+        {% endif %}
         </div>
         </div>
     </section>

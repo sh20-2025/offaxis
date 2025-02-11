@@ -11,7 +11,7 @@ from .models import (
     ContactInformation,
     Festival,
 )
-from .forms import ClientForm, ContactInformationForm
+from .forms import ClientForm, ContactInformationForm, GigForm
 from django.http.response import (
     HttpResponseBadRequest,
     HttpResponseNotAllowed,
@@ -67,6 +67,16 @@ def artists_view(request):
 def artist_view(request, slug):
     artist = get_object_or_404(Artist, slug=slug)
 
+    gig_form = GigForm()
+
+    if request.method == "POST":
+        gig_form = GigForm(request.POST, request.FILES)
+        if gig_form.is_valid():
+            gig = gig_form.save(commit=False)
+            gig.artist = artist
+            gig.save()
+            return redirect(reverse("artist", args=[artist.slug]))
+
     # Get Spotify top track if artist has Spotify link
     top_track = None
     spotify_link = artist.social_links.filter(type="Spotify").first()
@@ -83,6 +93,7 @@ def artist_view(request, slug):
         "artist": artist,
         "options": select_options,
         "top_track": top_track,
+        "gig_form": gig_form,
     }
     return render(request, "Off_Axis/artist.html", context)
 
