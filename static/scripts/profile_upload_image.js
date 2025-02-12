@@ -1,9 +1,7 @@
+import { get_csrf_token} from "./helpers/csrf";
+
 document.addEventListener("DOMContentLoaded", () => {
-  const csrfElement = document.querySelector("input[name=csrfmiddlewaretoken]");
-  if (!csrfElement) {
-    console.error("CSRF token not found!");
-  }
-  const csrfToken = csrfElement.value;
+  const csrfToken = get_csrf_token();
 
   async function uploadImage(inputElement, url, imgElement, artistSlug = null,) {
     const file = inputElement.files[0];
