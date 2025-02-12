@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Artist, Client, SocialLink, GenreTag, ContactInformation
 from .forms import ArtistForm
+from django.template.defaultfilters import slugify
 
 
 @admin.register(Artist)
