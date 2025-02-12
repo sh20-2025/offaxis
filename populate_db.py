@@ -18,13 +18,6 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 def populate():
     Artist.objects.all().delete()
 
-    if not User.objects.filter(username="admin").exists():
-        admin_user = User.objects.create_superuser(
-            "admin", "sh20.team.offaxis@gmail.com", "BespokePassword"
-        )
-        Client.objects.create(user=admin_user, phone_number="+447123456789")
-        Artist.objects.create(user=admin_user, bio="I am the admin", is_approved=False)
-
     add_genre_tag("Rock")
     add_genre_tag("Pop")
     add_genre_tag("Rap")
@@ -156,6 +149,35 @@ def populate():
         "/static/images/festival-placeholder.png",
         "https://www.youtube.com/embed/wtOvDo1Mrh8?si=wFSIWqES72Fi3Fi0",
     )
+
+    if not User.objects.filter(username="admin").exists():
+        admin_user = User.objects.create_superuser(
+            "admin", "sh20.team.offaxis@gmail.com", "BespokePassword"
+        )
+        Client.objects.create(user=admin_user, phone_number="+447123456789")
+        admin_artist = Artist.objects.create(
+            user=admin_user, bio="I am the admin", is_approved=False
+        )
+        admin_artist.save()
+
+        add_gig(
+            admin_artist,
+            v1,
+            "2022-12-12 12:00:00",
+            14.00,
+            40,
+            "A gig by admin",
+            "/static/images/gig-placeholder.png",
+        )
+        add_gig(
+            admin_artist,
+            v2,
+            "2022-12-12 12:00:00",
+            18.00,
+            100,
+            "A gig by admin 2",
+            "/static/images/gig-placeholder.png",
+        )
 
 
 def add_artist(name, bio, is_approved):
