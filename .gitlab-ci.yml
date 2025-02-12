@@ -10,16 +10,13 @@ stages:
 
 setup-python:
   stage: setup
-  image: ubuntu:latest
+  image: python:3.13-alpine
   tags:
     - main
   variables:
    PYTHON_VERSION: "3.13.0"
   before_script:
     - echo "Setting up Python ..."
-    # Update package list and install Python
-    - apt-get update -y
-    - apt-get install -y python3=${PYTHON_VERSION} python3-pip
   script:
     # Verify installations
     - python --version
