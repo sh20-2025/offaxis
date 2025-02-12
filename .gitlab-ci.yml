@@ -3,10 +3,10 @@ stages:
   - build
   - test
 
-cache:
-  paths:
-    - .pip-cache/
-    - venv/
+# cache:
+#   paths:
+#     - .pip-cache/
+#     - venv/
 
 setup-venv:
   stage: setup
