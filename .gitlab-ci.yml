@@ -3,12 +3,9 @@ stages:
   - test
 
 build-job:
-  # tags:
-  #   - windows
-  #   - shell
   stage: build
   script:
-    - echo "onion and garlic"
+    # - echo "onion and garlic"
     - echo "Hello, $GITLAB_USER_LOGIN!"
     - echo "Compiling the code..."
     - echo "Building the project..."
