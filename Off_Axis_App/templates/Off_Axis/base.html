@@ -10,12 +10,12 @@
         <link rel="stylesheet" href="{% static "styles/components.css" %}">
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        {% block import_block %}
-        {% endblock %}
-        <script src="{% static 'scripts/navbar.js' %}" data-static-url="{% static '' %}"></script>
-
+        {% block import_block %}{% endblock %}
+        <script src="{% static 'scripts/navbar.js' %}"
+                data-static-url="{% static '' %}"></script>
     </head>
     <body>
+        <div class="header-scroll-placeholder"></div>
         <header class="header" id="navbar-header-container">
             <div class="container header-container">
                 <div class="logo">
@@ -32,28 +32,37 @@
                             <a href="{% url 'artists' %}">Artists</a>
                         </li>
                         <li>
-                            <a href=""}>Festivals</a>
+                            <a href="{% url 'festivals' %}">Festivals</a>
                         </li>
                         <li>
                             <a href={% url 'contact' %}>Contact</a>
                         </li>
-
                         <li>
-                            <a href=""><img src="{% static 'icons/shopping-cart.svg' %}" alt="Shopping Cart" id="shoppingCartIcon"></a>
+                            <a href="{% url 'cart' %}">
+                                <img src="{% static 'icons/shopping-cart.svg' %}"
+                                        alt="Shopping Cart"
+                                        id="shoppingCartIcon">
+                            </a>
                         </li>
-
                         {% if user.is_authenticated %}
                             <li>
-                                <a>{{ user.username }}</a>
+                                {% if user.artist %}
+                                    <a href="{% url 'artist' slug=user.artist.slug %}">{{ user.username }}</a>
+                                {% else %}
+                                    <a>{{ user.username }}</a>
+                                {% endif %}
                             </li>
-
-
                             <li>
                                 <form action="{% url 'logout' %}" method="post">
                                     {% csrf_token %}
                                     {% include "components/button.html" with id="button3" type="submit" variant="primary" text="Logout" size="sm" %}
                                 </form>
                             </li>
+                            {% if user.artist %}
+                                <li>
+                                    <a href="{% url 'scan_tickets' %}">Scan Tickets</a>
+                                </li>
+                            {% endif %}
                         {% else %}
                             <li>
                                 <a href="{% url 'login' %}">Login</a>
@@ -65,26 +74,27 @@
                     </ul>
                 </nav>
                 <div class="hamburger-menu">
-                    <a><button id="hamburgerButton">
-                        <img src="{% static 'icons/hamburger-menu.svg' %}" alt="Hamburger Menu" id="hamburgerMenuSVG">
-                    </button></a>
-
+                    <a>
+                        <button id="hamburgerButton">
+                            <img src="{% static 'icons/hamburger-menu.svg' %}"
+                                    alt="Hamburger Menu"
+                                    id="hamburgerMenuSVG">
+                        </button>
+                    </a>
                 </div>
             </div>
-
-
-
-        </div>
-    </header>
-    {% block body_block %}{% endblock %}
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Off Axis Gigs. All rights reserved.</p>
-            <div class="sign-up-form">
-                <h3>Subscribe to our Newsletter</h3>
-                {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
-                {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="md" required="true" %}
-                {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
+        </header>
+            {% block body_block %}
+            {% endblock %}
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2024 Off Axis Gigs. All rights reserved.</p>
+                <div class="sign-up-form">
+                    <h3>Subscribe to our Newsletter</h3>
+                    {% include "components/label.html" with id="email-label" variant="light" required="true" for="email-input" size="md" text="Email Address" %}
+                    {% include "components/input.html" with id="email-input" name="email" type="email" variant="light" placeholder="Enter your email..." size="md" required="true" %}
+                    {% include "components/button.html" with id="subscribe-button" type="submit" variant="primary" text="Subscribe" size="md" %}
+                </div>
             </div>
         </footer>
     </body>

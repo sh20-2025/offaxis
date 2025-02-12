@@ -116,6 +116,13 @@
         {% include "components/label.html" with id="label5" variant="dark" required="true" for="input5" size="md" text="Email" %}
         {% include "components/label.html" with id="label6" variant="dark" required="true" for="input6" size="sm" text="Email" %}
       </div>
+
+      {% comment %} checkboxes {% endcomment %}
+      <div class="component" data-name="checkbox">
+        {% include "components/checkbox.html" with id="checkbox1" name="checkbox" checked=True size="lg" label="Check Me" %}
+        {% include "components/checkbox.html" with id="checkbox2" name="checkbox" checked=False size="md" label="Check Me" %}
+        {% include "components/checkbox.html" with id="checkbox3" name="checkbox" checked=True size="sm" label="Check Me" %}
+      </div>
     </div>
   </body>
 </html>

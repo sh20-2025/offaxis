@@ -1,0 +1,33 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}
+    Off Axis Gigs - {{ festival.name }}
+{% endblock title_block %}
+{% block import_block %}
+    <link rel="stylesheet" href="{% static "styles/festival.css" %}">
+{% endblock import_block %}
+{% block body_block %}
+    <section class="festival">
+        <iframe class="festival__video"
+                width="560"
+                height="315"
+                src="{{ festival.youtube_video_url }}"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen></iframe>
+        <div class="festival__details">
+            <h1 class="festival__title">{{ festival.name }}</h1>
+            <p class="festival__description">{{ festival.description }}</p>
+        </div>
+    </section>
+    <section class="festival-artists">
+        <h2 class="festival-artists__title">Featuring</h2>
+        <div class="festival-artists__list">
+            {% for artist in artists %}
+                {% include 'components/artist.html' with artist=artist %}
+            {% endfor %}
+        </div>
+    </section>
+{% endblock body_block %}

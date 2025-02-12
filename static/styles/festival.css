@@ -1,0 +1,47 @@
+.festival {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding-bottom: 2rem;
+}
+
+.festival__video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+}
+
+.festival__details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 4rem;
+}
+
+.festival__title {
+  text-transform: uppercase;
+  font-size: 3rem;
+}
+
+.festival-artists {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 2rem;
+  padding: 4rem 10%;
+  align-items: center;
+}
+
+.festival-artists__list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  width: 100%;
+}
+
+.festival-artists__list .artist {
+  max-width: 15rem;
+  width: 100%;
+}

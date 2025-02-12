@@ -1,0 +1,27 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}
+    Off Axis Gigs - Festivals
+{% endblock title_block %}
+{% block import_block %}
+    <link rel="stylesheet" href="{% static "styles/festivals.css" %}">
+{% endblock import_block %}
+{% block body_block %}
+    <section class="festivals">
+        <h1 class="festivals__title">Festivals</h1>
+        <div class="festivals__list">
+            {% for festival in festivals %}
+                <a class="festival" href="{% url 'festival' festival.slug %}">
+                    <img class="festival__image"
+                         width="300"
+                         height="300"
+                         src="{{ festival.festival_photo_url }}"
+                         alt="{{ fesitval.name }} Image">
+                    <div class="festival__label">
+                        <h2>{{ festival.name }}</h2>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock body_block %}

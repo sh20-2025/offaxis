@@ -1,15 +1,15 @@
-.gig {
+.gig-page {
   display: flex;
   flex-direction: row;
   width: 100%;
 }
 
-.gig__image {
+.gig-page__image {
   width: 100%;
   height: auto;
 }
 
-.gig__details {
+.gig-page__details {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -17,41 +17,41 @@
   padding: 4rem;
 }
 
-.gig__title {
+.gig-page__title {
   text-transform: uppercase;
   font-size: 3rem;
 }
 
-.gig__info {
+.gig-page__info {
   opacity: 0.8;
 }
 
-.gig__price {
+.gig-page__price {
   font-size: 1.25rem;
   line-height: 1.8rem;
 }
 
-.gig__price span {
+.gig-page__price span {
   margin-left: 3rem;
 }
 
-.gig__price-table {
+.gig-page__price-table {
   border-collapse: collapse;
   width: 100%;
 }
 
-.gig__price-table td {
+.gig-page__price-table td {
   border: 1px solid var(--oa-text-light);
   padding: 0.5rem;
   font-size: 1rem;
 }
 
-.gig__tickets-status {
+.gig-page__tickets-status {
   color: var(--oa-pink);
   font-size: 1.25rem;
 }
 
-.gig__form {
+.gig-page__form {
   display: flex;
   flex-direction: column;
   gap: 1rem;

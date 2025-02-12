@@ -1,29 +1,18 @@
 {% extends "Off_Axis/base.html" %}
 {% load static %}
-
-
-{% block title_block %}
-    Artists
-{% endblock %}
-
+{% block title_block %}Off Axis Gigs - Artists{% endblock %}
 {% block import_block %}
-    <link rel = "stylesheet" href="{% static "css/../../../static/styles/profile.css" %}">
+    <link rel = "stylesheet" href="{% static "styles/artists.css" %}">
 {% endblock %}
-
 {% block body_block %}
-{% for artist in artists %}
-    <ul>
-        <li>
-            <div class="artists-card">
-                <h3>{{ artist.user.username }}</h3>
-                <a href="{% url 'artist' slug=artist.slug %}">{{ artist.user.username }} </a>
-                    <p>{{ artist.bio }}</p>
-                    <p>{{ artist.genre }}</p>
-            </div>
-        </li>
-    </ul>
-{% empty %}
-    <p>No artists found</p>
-{% endfor %}
-
+    <section class="artists">
+        <h1 class="artists__title">Artists</h1>
+        <div class="artists__list">
+            {% for artist in artists %}
+                {% if artist.is_approved or user.is_staff %}
+                    {% include 'components/artist.html' with artist=artist %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
 {% endblock %}
