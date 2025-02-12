@@ -1,17 +1,53 @@
 stages:
+  - setup
   - build
   - test
 
+cache:
+  paths:
+    - .pip-cache/
+    - venv/
+
+setup-venv:
+  stage: setup
+  tags:
+    - windows
+  script:
+    - .\scripts\activate-venv.ps1
+    - .\scripts\check-django.ps1
+    - .\scripts\format.ps1
+    - .\scripts\setup.ps1
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+    - pre-commit install
+  # artifacts:
+  #   paths:
+  #     - venv/
+
 build-job:
   stage: build
+  tags:
+    - windows
   script:
-    - echo "onion and garlic"
-    - echo "Hello, $GITLAB_USER_LOGIN!"
-    - echo "Compiling the code..."
-    - echo "Building the project..."
+    - .\scripts\activate-venv.ps1
+    - python manage.py check
+    - python manage.py migrate --noinput
+    - python manage.py collectstatic --noinput
+  dependencies:
+    - setup-venv
 
 test-job:
   stage: test
+  tags:
+    - windows
   script:
-    - echo "Running unit tests..."
-    - echo "Running lint checks..."
+    - .\scripts\activate-venv.ps1
+    - black --check .
+    - flake8 .
+    - pre-commit run --all-files
+    - coverage run --source='.' manage.py test
+    - coverage report
+    - bandit -r .
+    - python manage.py makemigrations --check --dry-run
+  dependencies:
+    - setup-venv
