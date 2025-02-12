@@ -17,12 +17,13 @@ setup-python:
   script:
     - echo "Setting up Python ..."
 
-    - Set-ExecutionPolicy Bypass -Scope Process -Force
+    # - Set-ExecutionPolicy Bypass -Scope Process -Force
 
-    - if (-not (Test-Path "$env:ProgramData\chocolatey\choco.exe")) {
-        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-      }
+    # - if (-not (Test-Path "$env:ProgramData\chocolatey\choco.exe")) {
+    #     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+    #   iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+    #   }
+    - Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
     - choco install python --version=$env:PYTHON_VERSION -y --no-progress
     
