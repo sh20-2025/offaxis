@@ -27,3 +27,6 @@ db.sqlite3
 # media content
 /media/*
 !/media/
+
+# spotify cache
+.cache
