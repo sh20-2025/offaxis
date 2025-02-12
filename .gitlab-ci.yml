@@ -3,6 +3,9 @@ stages:
   - test
 
 build-job:
+  tags:
+    - windows
+    - shell
   stage: build
   script:
     - echo "onion and garlic"
