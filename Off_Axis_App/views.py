@@ -1,11 +1,26 @@
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Artist, Gig, Ticket, Cart, CartItem, ContactInformation
+from .models import (
+    Artist,
+    Gig,
+    Ticket,
+    GenreTag,
+    SocialLink,
+    Cart,
+    CartItem,
+    ContactInformation,
+    Festival,
+)
 from .forms import ClientForm, ContactInformationForm
-from django.http.response import HttpResponseBadRequest, HttpResponseNotAllowed
+from django.http.response import (
+    HttpResponseBadRequest,
+    HttpResponseNotAllowed,
+    HttpResponseForbidden,
+)
 from django.http import QueryDict
 from .helpers.cart import get_or_create_cart
 from .helpers.stripe import CheckoutProduct, create_checkout_session
+from .helpers.stripe_webhook import handle_checkout_session_completed
 from django.urls import reverse
 from django.core.cache import cache
 from django.utils.timezone import now
@@ -16,6 +31,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+import stripe
+from .api.spotify_utils import get_artist_top_track
+from django.views.decorators.http import require_POST
 
 
 def components(request):
@@ -44,16 +65,31 @@ def artists_view(request):
 
 
 def artist_view(request, slug):
-    context = {}
-    artist = Artist.objects.get(slug=slug)
+    artist = get_object_or_404(Artist, slug=slug)
 
-    context["artist"] = artist
+    # Get Spotify top track if artist has Spotify link
+    top_track = None
+    spotify_link = artist.social_links.filter(type="Spotify").first()
+    if spotify_link:
+        top_track = get_artist_top_track(spotify_link.url)
+
+    genres = GenreTag.objects.all()
+    select_options = []
+    for each in genres:
+        select_options.append({"label": each.tag, "value": each.tag})
+    print(select_options)
+
+    context = {
+        "artist": artist,
+        "options": select_options,
+        "top_track": top_track,
+    }
     return render(request, "Off_Axis/artist.html", context)
 
 
 def register(request):
     client_form = ClientForm()
-    is_artist = request.POST.get("isArtist") == "true"
+    is_artist = request.POST.get("isArtist") == "Artist"
 
     if request.method == "POST":
         client_form = ClientForm(request.POST)
@@ -73,7 +109,7 @@ def register(request):
                 return render(
                     request,
                     "registration/register.html",
-                    {"error": "Username already exists"},
+                    {"error": "Username already exists", "clientForm": client_form},
                 )
 
     return render(
@@ -106,6 +142,69 @@ def login_redirect_view(request):
         return redirect(reverse("artist", args=[request.user.artist.slug]))
     else:
         return redirect("/")
+
+
+@login_required
+def approve_artist(request, slug):
+    artist = get_object_or_404(Artist, slug=slug)
+    if request.method == "POST":
+        artist.is_approved = "approve" in request.POST
+        artist.save()
+    return redirect(reverse("artist", args=[artist.slug]))
+
+
+@login_required
+def upload_profile_picture(request):
+    artist_slug = request.POST.get("artist_slug")
+    artist = get_object_or_404(Artist, slug=artist_slug)
+
+    if artist.profile_picture:
+        artist.profile_picture.delete()
+
+    if (
+        "profile_picture" in request.FILES
+    ):  # Ensure the name matches the name in the JavaScript
+        artist.profile_picture = request.FILES["profile_picture"]
+        artist.save()
+        return JsonResponse({"picture_url": artist.profile_picture.url})
+
+    return JsonResponse({"error": "No file uploaded"}, status=400)
+
+
+@login_required
+def update_text(request):
+    if request.method == "POST":
+        section_id = request.POST.get("section_id")
+        new_text = request.POST.get("new_text")
+
+        artist_slug = request.POST.get("artist_slug")
+        artist = get_object_or_404(Artist, slug=artist_slug)
+
+        if section_id == "bio-text":
+            artist.bio = new_text
+            artist.save()
+        else:
+            return JsonResponse({"error": "Invalid section ID"}, status=400)
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@login_required
+def add_genre(request):
+    if request.method == "POST":
+        genre_tag = request.POST.get("genre")
+        artist_slug = request.POST.get("artist_slug")
+        artist = get_object_or_404(Artist, slug=artist_slug)
+
+        genre, created = GenreTag.objects.get_or_create(tag=genre_tag)
+        artist.genre_tags.add(genre)
+        artist.save()
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
 
 
 @login_required
@@ -333,3 +432,117 @@ def contact(request):
         "Off_Axis/contact.html",
         {"form": form, "contact_message_type": contact_message_type},
     )
+
+
+def festivals(request):
+    context = {
+        "festivals": Festival.objects.filter(is_active=True),
+    }
+
+    return render(request, "Off_Axis/festivals.html", context)
+
+
+def festival(request, slug):
+    f = Festival.objects.get(slug=slug)
+    context = {
+        "festival": f,
+        "artists": f.artists.all(),
+    }
+
+    return render(request, "Off_Axis/festival.html", context)
+
+
+def add_social_link(request):
+    if request.method == "POST":
+        artist_slug = request.POST.get("artist_slug")
+        social_type = request.POST.get("type")
+        social_url = request.POST.get("url")
+
+        artist = get_object_or_404(Artist, slug=artist_slug)
+        social_link = SocialLink.objects.create(
+            artist=artist, type=social_type, url=social_url
+        )
+        social_link.save()
+        artist.social_links.add(social_link)
+        artist.save()
+
+        return JsonResponse({"success": True})
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@require_POST
+def delete_social_link(request, social_link_id):
+    social_link = get_object_or_404(SocialLink, id=social_link_id)
+    social_link.delete()
+    return JsonResponse({"success": True})
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    payload = request.body
+
+    try:
+        sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except stripe.error.SignatureVerificationError:
+        return HttpResponseBadRequest(status=400)
+
+    # Handle the event
+    if not event:
+        return HttpResponseBadRequest(status=400)
+
+    if event["type"] == "checkout.session.completed":
+        handle_checkout_session_completed(event)
+
+    return HttpResponse(status=200)
+
+
+def scan_tickets(request):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    context = {
+        # "gigs": Gig.objects.filter(artist=request.user.artist)
+        "gigs": Gig.objects.all()
+    }
+
+    return render(request, "Off_Axis/scan_tickets.html", context)
+
+
+def ticket_scanner(request, id):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    # gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
+    gig = Gig.objects.filter(id=id).first()
+    if not gig:
+        return HttpResponseForbidden()
+
+    context = {"gig": gig}
+
+    return render(request, "Off_Axis/ticket_scanner.html", context)
+
+
+@csrf_exempt
+def scan_ticket_api(request, code):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    ticket = Ticket.objects.filter(qr_code_data=code).first()
+    if not ticket:
+        return HttpResponseBadRequest()
+
+    ticket.is_used = True
+    ticket.save()
+
+    print("Ticket scanned for code ", code)
+
+    return HttpResponse(status=200)
