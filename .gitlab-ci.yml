@@ -11,7 +11,7 @@ stages:
 setup-venv:
   stage: setup
   tags:
-    - windows
+    - main
   script:
     - .\scripts\activate-venv.ps1
     - .\scripts\check-django.ps1
@@ -27,7 +27,7 @@ setup-venv:
 build-job:
   stage: build
   tags:
-    - windows
+    - main
   script:
     - .\scripts\activate-venv.ps1
     - python manage.py check
@@ -39,7 +39,7 @@ build-job:
 test-job:
   stage: test
   tags:
-    - windows
+    - main
   script:
     - .\scripts\activate-venv.ps1
     - black --check .
