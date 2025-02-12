@@ -6,7 +6,7 @@ build-job:
   stage: build
   script:
     - echo "onion and garlic"
-    - echo "Hello, $GITLAB_USER_LOGIN!"
+    - echo "Hello, $env:GITLAB_USER_LOGIN!"
     - echo "Compiling the code..."
     - echo "Building the project..."
 
