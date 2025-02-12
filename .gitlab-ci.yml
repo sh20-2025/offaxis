@@ -16,21 +16,23 @@ setup-python:
    PYTHON_VERSION: "3.13.0"
   script:
     - echo "Setting up Python ..."
-    
-    # Ensure Chocolatey is installed if not already
-    - @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-
-    # Install Python via Chocolatey
-    - choco install python --version=${env:PYTHON_VERSION} -y --no-progress
-    
-    # Set Python path
-    - $env:Path = "C:\Python${env:PYTHON_VERSION};C:\Python${env:PYTHON_VERSION}\Scripts;" + $env:Path
-
-    # Check Python and pip versions
+    # Force Chocolatey installation
+    - Set-ExecutionPolicy Bypass -Scope Process -Force
+    - if (Test-Path "$env:ProgramData\chocolatey") {
+        Remove-Item -Recurse -Force "$env:ProgramData\chocolatey"
+      }
+    - [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+    - iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+    - $env:Path += ";$env:ProgramData\chocolatey\bin"
+    # Install Python
+    - choco install python --version=$env:PYTHON_VERSION -y --no-progress
+    - $env:Path = "C:\Python$env:PYTHON_VERSION;C:\Python$env:PYTHON_VERSION\Scripts;$env:Path"
+    # Verify installations
     - python --version
     - pip --version
+    - python -m pip install --upgrade pip
+    - echo "Python setup complete!"
 
-    - echo "Hooray, Python's done setting up!"
 
 setup-venv:
   stage: setup
