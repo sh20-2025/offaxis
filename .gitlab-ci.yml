@@ -1,17 +1,12 @@
-# Define pipeline stages (executed in order)
 stages:
   - build
   - test
 
-# First job: Build stage
+
 build-job:
   stage: build
   script:
-    # - chmod ./scripts/activate-venv.ps1
-    # - chmod ./scripts/check-django.ps1
-    # - chmod ./scripts/format.ps1
-    # - chmod ./scripts/setup.ps1
-    - git fetch origin
+    - echo "onion and garlic"
     - ./scripts/activate-venv.ps1
     - ./scripts/check-django.ps1
     - ./scripts/format.ps1
@@ -19,7 +14,6 @@ build-job:
     - echo "Compiling the code..."
     - echo "Building the project..."
 
-# Second job: Test stage
 test-job:
   stage: test
   script:
