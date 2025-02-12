@@ -95,7 +95,7 @@ test-job:
 
     - coverage report
 
-    - bandit -r .
+    - python -m bandit -r .
 
     - python manage.py makemigrations --check --dry-run
 

@@ -4,4 +4,5 @@ black==24.10.0
 flake8==7.1.1
 stripe==11.3.0
 coverage==7.4.4
+bandit==1.7.7
 python-dotenv
