@@ -540,6 +540,9 @@ def scan_ticket_api(request, code):
     if not ticket:
         return HttpResponseBadRequest()
 
+    if ticket.is_used:
+        return HttpResponseBadRequest()
+
     ticket.is_used = True
     ticket.save()
 
