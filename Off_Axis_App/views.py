@@ -453,24 +453,6 @@ def festival(request, slug):
     return render(request, "Off_Axis/festival.html", context)
 
 
-def add_social_link(request):
-    if request.method == "POST":
-        artist_slug = request.POST.get("artist_slug")
-        social_type = request.POST.get("type")
-        social_url = request.POST.get("url")
-
-        artist = get_object_or_404(Artist, slug=artist_slug)
-        social_link = SocialLink.objects.create(
-            artist=artist, type=social_type, url=social_url
-        )
-        social_link.save()
-        artist.social_links.add(social_link)
-        artist.save()
-
-        return JsonResponse({"success": True})
-    return JsonResponse({"error": "Invalid request"}, status=400)
-
-
 @require_POST
 def delete_social_link(request, social_link_id):
     social_link = get_object_or_404(SocialLink, id=social_link_id)

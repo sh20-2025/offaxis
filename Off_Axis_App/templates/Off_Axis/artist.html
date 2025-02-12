@@ -77,42 +77,12 @@
 
     </section>
 
-    <section class="profile-socials">
-        <p> {{ artist.user.username }}'s Socials: </p>
-        <ul>
-            {% for social_link in artist.social_links.all %}
-            {% if social_link.type != "WhatsApp" %}
-                <a href="{{ social_link.url }}"><li>{{ social_link.type }}</li></a>
-            {% elif user.is_authenticated and user.is_staff %}
-                <a href="{{ social_link.url }}"><li>{{ social_link.type }}</li></a>
-            {% elif user.is_authenticated and user.artist %}
-                <a href="{{ social_link.url }}"><li>{{ social_link.type }}</li></a>
-            {% endif %}
-        {% empty %}
-            <li>No socials available.</li>
-        {% endfor %}
-        </ul>
-        {% if request.user.is_authenticated and request.user == artist.user %}
-{% endif %}
-    </section>
-
-    <p> {{ artist.user.username }}'s Socials: </p>
-    <ul id="link-container">
-      {% for social_link in artist.social_links.all %}
-          <li>
-          <a href="{{ social_link.url }}">{{ social_link.type }}</a>
-          </li>
-      {% empty %}
-          <li id="empty-message">No socials available.</li>
-      {% endfor %}
-    </ul>
-
     {% if user == artist.user or user.is_staff %}
     <div class="add-social-link">
         <label for="social-type">Add Social Link:</label>
         <select id="social-type" name="social-type" data-artist-slug="{{ artist.slug }}">
             <option value="Spotify">Spotify</option>
-            <option value="Instagram">Instagram</option>
+            <option value="Instagram">Instagram</option>s
             <option value="Facebook">Facebook</option>
             <option value="YouTube">YouTube</option>
         </select>
@@ -120,6 +90,7 @@
         <button id="add-social-link-button" type="submit">Add</button>
     </div>
     {% endif %}
+
     <p> {{ artist.user.username }}'s Socials: </p>
     <ul id="link-container">
       {% for social_link in artist.social_links.all %}
@@ -135,20 +106,6 @@
           <li id="empty-message">No socials available.</li>
       {% endfor %}
     </ul>
-
-    {% if user == artist.user or user.is_staff %}
-    <div class="add-social-link">
-        <label for="social-type">Add Social Link:</label>
-        <select id="social-type" name="social-type" data-artist-slug="{{ artist.slug }}">
-            <option value="Spotify">Spotify</option>
-            <option value="Instagram">Instagram</option>
-            <option value="Facebook">Facebook</option>
-            <option value="YouTube">YouTube</option>
-        </select>
-        <label for="social-url"></label><input type="url" id="social-url" name="social-url" placeholder="Enter URL">
-        {% include "components/button.html" with id="add-social-link-button" type="submit" variant="primary" text="Add" size="sm" %}
-    </div>
-    {% endif %}
 
     {% if top_track %}
     <section class="profile-top-track">

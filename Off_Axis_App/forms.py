@@ -4,7 +4,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.text import slugify
 
 
-
 class ClientForm(forms.ModelForm):
     username = forms.CharField(max_length=100)
     email = forms.EmailField()

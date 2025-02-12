@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const socialUrl = document.getElementById("social-url");
     const linksContainer = document.getElementById("link-container");
 
-if (addLinkButton) {
+    if (addLinkButton) {
         addLinkButton.addEventListener("click", async () => {
             const selectedType = typeSelect.value;
             const url = socialUrl.value;
