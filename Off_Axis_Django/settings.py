@@ -28,6 +28,9 @@ DB_FILE = BASE_DIR / "db.sqlite3"
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-7^trs%m8**6omxauig3jmrns0f31a!86i60nj+h8w%hv4kbg+!"
 
+SPOTIFY_CLIENT_ID = "85a256999fb14094b33e7d104cb83700"
+SPOTIFY_CLIENT_SECRET = "28be09bd328f4a63855c74d816a6fb71"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

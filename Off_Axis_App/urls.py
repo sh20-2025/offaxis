@@ -71,6 +71,11 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
+    path(
+        "delete_social_link/<int:social_link_id>/",
+        views.delete_social_link,
+        name="delete_social_link",
+    ),
     path("stripe/webhook/", views.stripe_webhook, name="stripe_webhook"),
     path("scan-tickets/", views.scan_tickets, name="scan_tickets"),
     path("scan-tickets/<int:id>", views.ticket_scanner, name="ticket_scanner"),
