@@ -16,18 +16,10 @@ setup-python:
    PYTHON_VERSION: "3.13.0"
   script:
     - echo "Setting up Python ..."
-    # Force Chocolatey installation
-    - Set-ExecutionPolicy Bypass -Scope Process -Force
-    - if (Test-Path "$env:ProgramData\chocolatey") {
-        Remove-Item -Recurse -Force "$env:ProgramData\chocolatey"
-      }
-    - [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    - iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-    - $env:Path += ";$env:ProgramData\chocolatey\bin"
-    # Install Python
-    - choco install python --version=$env:PYTHON_VERSION -y --no-progress
-    - $env:Path = "C:\Python$env:PYTHON_VERSION;C:\Python$env:PYTHON_VERSION\Scripts;$env:Path"
-    # Verify installations
+    - Invoke-WebRequest -Uri "https://www.python.org/ftp/python/${env:PYTHON_VERSION}/python-${env:PYTHON_VERSION}-amd64.exe" -OutFile "python-installer.exe"
+    - Start-Process "python-installer.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait
+    - Remove-Item -Force "python-installer.exe" # Clean up the installer file
+  # Verify installations
     - python --version
     - pip --version
     - python -m pip install --upgrade pip
