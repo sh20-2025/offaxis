@@ -15,18 +15,10 @@ setup-python:
   tags:
     - main
   variables:
-   PYTHON_VERSION: "3.11.8"
+   PYTHON_VERSION: "3.13.0"
   script:
     - echo "Installing Chocolatey..."
-    - Set-ExecutionPolicy Bypass -Scope Process -Force
-    - [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    - iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-    - $env:Path += ";$env:ProgramData\chocolatey\bin"
-    
-    - echo "Installing Python..."
-    - choco install python --version=$env:PYTHON_VERSION -y --no-progress
-    - refreshenv
-    
+    - winget install --id Python.Python.3.13 --version ${env:PYTHON_VERSION} --silent
     - echo "Verifying installations:"
     - python --version
     - pip --version
