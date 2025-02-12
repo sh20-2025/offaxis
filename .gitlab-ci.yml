@@ -5,6 +5,9 @@ stages:
   - build
   - test
 
+variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+
 # cache:
 #   paths:
 #     - .pip-cache/
