@@ -16,25 +16,24 @@ setup-python:
    PYTHON_VERSION: "3.13.0"
   script:
     - echo "Setting up Python ..."
-
-    # - Set-ExecutionPolicy Bypass -Scope Process -Force
-
-    # - if (-not (Test-Path "$env:ProgramData\chocolatey\choco.exe")) {
-    #     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    #   iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-    #   }
-    - Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
-    # - choco install python --version=$env:PYTHON_VERSION -y --no-progress
     
-    - choco install python --version=${env:PYTHON_VERSION}
+    # Ensure Chocolatey is installed if not already
+    - if (-not (Test-Path "$env:ProgramData\chocolatey\choco.exe")) {
+        Set-ExecutionPolicy Bypass -Scope Process -Force;
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+      }
 
+    # Install Python via Chocolatey
+    - choco install python --version=${env:PYTHON_VERSION} -y --no-progress
+    
+    # Set Python path
     - $env:Path = "C:\Python${env:PYTHON_VERSION};C:\Python${env:PYTHON_VERSION}\Scripts;" + $env:Path
-    
+
+    # Check Python and pip versions
     - python --version
-    
     - pip --version
-    
+
     - echo "Hooray, Python's done setting up!"
 
 setup-venv:
