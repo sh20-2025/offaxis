@@ -13,13 +13,15 @@ setup-venv:
   tags:
     - main
   script:
+    - echo "Setting up venv..."
     - .\scripts\activate-venv.ps1
     - .\scripts\check-django.ps1
     - .\scripts\format.ps1
     - .\scripts\setup.ps1
-    - pip install --upgrade pip
+    - .\Scripts\python.exe -m pip install --upgrade pip
     - pip install -r requirements.txt
     - pre-commit install
+    - echo "Finish setting up venv..."
   # artifacts:
   #   paths:
   #     - venv/
@@ -29,10 +31,12 @@ build-job:
   tags:
     - main
   script:
+    - echo "Building..."
     - .\scripts\activate-venv.ps1
     - python manage.py check
     - python manage.py migrate --noinput
     - python manage.py collectstatic --noinput
+    - echo "Done building..."
   dependencies:
     - setup-venv
 
@@ -41,6 +45,7 @@ test-job:
   tags:
     - main
   script:
+    - echo "Begin testing..."
     - .\scripts\activate-venv.ps1
     - black --check .
     - flake8 .
@@ -49,5 +54,6 @@ test-job:
     - coverage report
     - bandit -r .
     - python manage.py makemigrations --check --dry-run
+    - echo "☝️🤓 TEST FINISH ✅!"
   dependencies:
     - setup-venv
