@@ -27,7 +27,7 @@ setup-python:
 
     # - choco install python --version=$env:PYTHON_VERSION -y --no-progress
     
-    - choco install -y python313 --override --install-arguments '/quiet InstallAllUsers=1 PrependPath=1 TargetDir=C:\Python3'
+    - choco install python --version=${env:PYTHON_VERSION}
 
     - $env:Path = "C:\Python${env:PYTHON_VERSION};C:\Python${env:PYTHON_VERSION}\Scripts;" + $env:Path
     
