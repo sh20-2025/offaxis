@@ -10,16 +10,17 @@ stages:
 
 setup-python:
   stage: setup
-  image: ubuntu:20.04
+  image: alpine
   tags:
     - main
   variables:
    PYTHON_VERSION: "3.13.0"
-  script:
+  before_script:
     - echo "Setting up Python ..."
     # Update package list and install Python
-    - apt-get update
-    - apt-get install -y python3 python3-pip
+    - apk add update
+    - apk add install -y python3 python3-pip
+  script:
     # Verify installations
     - python --version
     - pip --version
