@@ -15,12 +15,19 @@ setup-python:
   tags:
     - main
   variables:
-   PYTHON_VERSION: "3.13.0"
-  before_script:
-    - echo "Setting up Python ..."
-    - choco install python --version=$env:PYTHON_VERSION -y
+   PYTHON_VERSION: "3.11.8"
   script:
-    # Verify installations
+    - echo "Installing Chocolatey..."
+    - Set-ExecutionPolicy Bypass -Scope Process -Force
+    - [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+    - iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+    - $env:Path += ";$env:ProgramData\chocolatey\bin"
+    
+    - echo "Installing Python..."
+    - choco install python --version=$env:PYTHON_VERSION -y --no-progress
+    - refreshenv
+    
+    - echo "Verifying installations:"
     - python --version
     - pip --version
     - python -m pip install --upgrade pip
