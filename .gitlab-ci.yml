@@ -8,6 +8,22 @@ stages:
 #     - .pip-cache/
 #     - venv/
 
+setup-python:
+  stage: setup
+  tags:
+    - main
+  variables:
+   PYTHON_VERSION: "3.13.0"
+  script:
+    - echo "Setting up Python ..."
+    - if (-not (Test-Path "C:\Python${env:PYTHON_VERSION}")) {
+        choco install python --version=${env:PYTHON_VERSION} -y
+      }
+    - $env:Path = "C:\Python${env:PYTHON_VERSION};C:\Python${env:PYTHON_VERSION}\Scripts;" + $env:Path
+    - python --version
+    - pip --version
+    - echo "Hooray, Python's done setting up!"
+
 setup-venv:
   stage: setup
   tags:
@@ -19,7 +35,7 @@ setup-venv:
     - .\scripts\check-django.ps1
     - .\scripts\format.ps1
     - .\scripts\setup.ps1
-    # - .\Scripts\python.exe -m pip install --upgrade pip
+    - .\Scripts\python.exe -m pip install --upgrade pip
     - pre-commit install
     - echo "Finish setting up venv..."
   # artifacts:
@@ -38,6 +54,7 @@ build-job:
     - python manage.py collectstatic --noinput
     - echo "Done building..."
   dependencies:
+    - setup-python
     - setup-venv
 
 test-job:
@@ -56,4 +73,5 @@ test-job:
     - python manage.py makemigrations --check --dry-run
     - echo "☝️🤓 TEST FINISH ✅!"
   dependencies:
+    - setup-python
     - setup-venv
