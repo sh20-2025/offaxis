@@ -1,5 +1,9 @@
 import { BarcodeDetectorPolyfill } from "https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.21/dist/main.js";
 
+const successAudio = new Audio("/static/audio/success.mp3");
+const errorAudio = new Audio("/static/audio/error.mp3");
+const viewElement = document.querySelector(".ticket-scanner__view");
+
 try {
   window["BarcodeDetector"].getSupportedFormats();
 } catch {
@@ -44,12 +48,17 @@ const detectCode = () => {
           method: "POST",
         });
         if (res.ok) {
-          alert(`Scanned in ticket with code ${code}!`);
+          successAudio.play();
+          viewElement.classList.add("ticket-scanner__view--success");
         } else {
-          alert("Failed to scan in ticket!");
+          errorAudio.play();
+          viewElement.classList.add("ticket-scanner__view--error");
         }
 
-        scanning = false;
+        setTimeout(() => {
+          scanning = false;
+          viewElement.classList.remove("ticket-scanner__view--error", "ticket-scanner__view--success");
+        }, 1000);
       }
     })
     .catch((err) => {
