@@ -18,7 +18,7 @@ setup-python:
   before_script:
     - echo "Setting up Python ..."
     # Update package list and install Python
-    - apt-get -yq update
+    - apt-get update -y
     - apt-get install -y python3=${PYTHON_VERSION} python3-pip
   script:
     # Verify installations
