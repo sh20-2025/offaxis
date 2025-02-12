@@ -75,6 +75,7 @@
     <ul id="link-container">
       {% for social_link in artist.social_links.all %}
           <li class="link-item">
+
           <a href="{{ social_link.url }}">{% include "components/button.html" with id="button9" type="button" variant="rainbow" text=social_link.type size="md" %}</a>
           {% if user == artist.user or user.is_staff %}
             <div class="delete-social-link" data-social-link-id="{{ social_link.id }}">
