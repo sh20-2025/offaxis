@@ -20,8 +20,8 @@ setup-python:
   variables:
    PYTHON_VERSION: "3.13.0"
   script:
-    - echo "Installing Chocolatey..."
-    - winget install --id Python.Python.3.13 --version ${env:PYTHON_VERSION} --silent
+    # - echo "Installing Chocolatey..."
+    # - winget install --id Python.Python.3.13 --version ${env:PYTHON_VERSION} --silent
     - echo "Verifying installations:"
     - python --version
     - pip --version
