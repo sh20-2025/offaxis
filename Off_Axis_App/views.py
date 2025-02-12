@@ -5,11 +5,11 @@ from .models import (
     Gig,
     Ticket,
     GenreTag,
+    SocialLink,
     Cart,
     CartItem,
     ContactInformation,
     Festival,
-    SocialLink,
 )
 from .forms import ClientForm, ContactInformationForm, SocialLinkForm
 from django.http.response import (
