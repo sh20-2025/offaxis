@@ -1,3 +1,5 @@
+image: python:3.13-alpine
+
 stages:
   - setup
   - build
@@ -10,7 +12,6 @@ stages:
 
 setup-python:
   stage: setup
-  image: python:3.13-alpine
   tags:
     - main
   variables:
