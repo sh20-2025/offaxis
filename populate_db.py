@@ -127,6 +127,28 @@ def populate():
         "/static/images/gig-placeholder.png",
     )
 
+    add_gig(
+        a5,
+        v1,
+        "2022-12-12 12:00:00",
+        14.00,
+        40,
+        "A gig by someone",
+        "/static/images/gig-placeholder.png",
+        False,
+    )
+
+    add_gig(
+        a4,
+        v2,
+        "2022-12-12 12:00:00",
+        9.00,
+        15,
+        "A gig by someone",
+        "/static/images/gig-placeholder.png",
+        False,
+    )
+
     Festival.objects.all().delete()
 
     add_festival(

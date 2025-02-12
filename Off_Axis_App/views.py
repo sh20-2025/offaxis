@@ -11,7 +11,7 @@ from .models import (
     ContactInformation,
     Festival,
 )
-from .forms import ClientForm, ContactInformationForm, SocialLinkForm
+from .forms import ClientForm, ContactInformationForm, SocialLinkForm, GigForm
 from django.http.response import (
     HttpResponseBadRequest,
     HttpResponseNotAllowed,
@@ -38,6 +38,7 @@ import json
 import stripe
 from .api.spotify_utils import get_artist_top_track
 from django.views.decorators.http import require_POST
+import re
 
 
 def components(request):
@@ -68,6 +69,16 @@ def artists_view(request):
 def artist_view(request, slug):
     artist = get_object_or_404(Artist, slug=slug)
 
+    gig_form = GigForm()
+
+    if request.method == "POST":
+        gig_form = GigForm(request.POST, request.FILES)
+        if gig_form.is_valid():
+            gig = gig_form.save(commit=False)
+            gig.artist = artist
+            gig.save()
+            return redirect(reverse("artist", args=[artist.slug]))
+
     # Get Spotify top track if artist has Spotify link
     top_track = None
     spotify_link = artist.social_links.filter(type="Spotify").first()
@@ -78,12 +89,12 @@ def artist_view(request, slug):
     select_options = []
     for each in genres:
         select_options.append({"label": each.tag, "value": each.tag})
-    print(select_options)
 
     context = {
         "artist": artist,
         "options": select_options,
         "top_track": top_track,
+        "gig_form": gig_form,
     }
     return render(request, "Off_Axis/artist.html", context)
 
@@ -453,82 +464,41 @@ def festival(request, slug):
     return render(request, "Off_Axis/festival.html", context)
 
 
-@require_POST
-def delete_social_link(request, social_link_id):
-    social_link = get_object_or_404(SocialLink, id=social_link_id)
-    social_link.delete()
-    return JsonResponse({"success": True})
-
-
-@csrf_exempt
-def stripe_webhook(request):
-    if request.method != "POST":
-        return HttpResponseNotAllowed(["POST"])
-
-    payload = request.body
-
-    try:
-        sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
-        )
-    except stripe.error.SignatureVerificationError:
-        return HttpResponseBadRequest(status=400)
-
-    # Handle the event
-    if not event:
-        return HttpResponseBadRequest(status=400)
-
-    if event["type"] == "checkout.session.completed":
-        handle_checkout_session_completed(event)
-
-    return HttpResponse(status=200)
-
-
-def scan_tickets(request):
-    if not request.user.is_authenticated or not request.user.artist:
-        return HttpResponseForbidden()
-
-    context = {
-        # "gigs": Gig.objects.filter(artist=request.user.artist)
-        "gigs": Gig.objects.all()
+def social_link_validation(social_link, type):
+    # validating social_link against type shown
+    link_regex = {
+        "YouTube": r"https://www\.youtube\.com/channel/[a-zA-Z0-9_-]+",
+        "Spotify": r"https://open\.spotify\.com/artist/[a-zA-Z0-9]+",
+        "Instagram": r"https://www\.instagram\.com/[a-zA-Z0-9_]+",
+        "SoundCloud": r"https://soundcloud\.com/[a-zA-Z0-9_-]+",
+        "WhatsApp": r"https://wa\.me/[0-9]+",
     }
 
-    return render(request, "Off_Axis/scan_tickets.html", context)
+    if not re.match(link_regex[type], social_link):
+        return False
+    return True
 
 
-def ticket_scanner(request, id):
-    if not request.user.is_authenticated or not request.user.artist:
-        return HttpResponseForbidden()
+def add_social_link_on_artist(request):
+    if request.method == "POST":
+        artist_slug = request.POST.get("artist_slug")
+        social_type = request.POST.get("type")
+        social_url = request.POST.get("url")
 
-    # gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
-    gig = Gig.objects.filter(id=id).first()
-    if not gig:
-        return HttpResponseForbidden()
+        artist = get_object_or_404(Artist, slug=artist_slug)
 
-    context = {"gig": gig}
+        if not social_link_validation(social_url, social_type):
+            return JsonResponse({"error": "Invalid URL"}, status=400)
 
-    return render(request, "Off_Axis/ticket_scanner.html", context)
+        social_link = SocialLink.objects.create(
+            artist=artist, type=social_type, url=social_url
+        )
+        social_link.save()
+        artist.social_links.add(social_link)
+        artist.save()
 
-
-@csrf_exempt
-def scan_ticket_api(request, code):
-    if not request.user.is_authenticated or not request.user.artist:
-        return HttpResponseForbidden()
-
-    if request.method != "POST":
-        return HttpResponseNotAllowed(["POST"])
-
-    ticket = Ticket.objects.filter(qr_code_data=code).first()
-    if not ticket:
-        return HttpResponseBadRequest()
-
-    ticket.is_used = True
-    ticket.save()
-
-    print("Ticket scanned for code ", code)
-
-    return HttpResponse(status=200)
+        return JsonResponse({"success": True})
+    return JsonResponse({"error": "Invalid request"}, status=400)
 
 
 @login_required
@@ -601,6 +571,13 @@ def add_social_link(request, slug):
     )
 
 
+@require_POST
+def delete_social_link(request, social_link_id):
+    social_link = get_object_or_404(SocialLink, id=social_link_id)
+    social_link.delete()
+    return JsonResponse({"success": True})
+
+
 @login_required
 def remove_social_link(request, slug, social_type):
 
@@ -616,3 +593,74 @@ def remove_social_link(request, slug, social_type):
             social_link.delete()
 
     return redirect("add_social_link", slug=artist.slug)
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    payload = request.body
+
+    try:
+        sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except stripe.error.SignatureVerificationError:
+        return HttpResponseBadRequest(status=400)
+
+    # Handle the event
+    if not event:
+        return HttpResponseBadRequest(status=400)
+
+    if event["type"] == "checkout.session.completed":
+        handle_checkout_session_completed(event)
+
+    return HttpResponse(status=200)
+
+
+def scan_tickets(request):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    context = {
+        # "gigs": Gig.objects.filter(artist=request.user.artist)
+        "gigs": Gig.objects.all()
+    }
+
+    return render(request, "Off_Axis/scan_tickets.html", context)
+
+
+def ticket_scanner(request, id):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    # gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
+    gig = Gig.objects.filter(id=id).first()
+    if not gig:
+        return HttpResponseForbidden()
+
+    context = {"gig": gig}
+
+    return render(request, "Off_Axis/ticket_scanner.html", context)
+
+
+@csrf_exempt
+def scan_ticket_api(request, code):
+    if not request.user.is_authenticated or not request.user.artist:
+        return HttpResponseForbidden()
+
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    ticket = Ticket.objects.filter(qr_code_data=code).first()
+    if not ticket:
+        return HttpResponseBadRequest()
+
+    ticket.is_used = True
+    ticket.save()
+
+    print("Ticket scanned for code ", code)
+
+    return HttpResponse(status=200)

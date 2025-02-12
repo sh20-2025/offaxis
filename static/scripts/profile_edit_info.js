@@ -1,9 +1,8 @@
+import { get_csrf_token} from "./helpers/csrf.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-    const csrfElement = document.querySelector("input[name=csrfmiddlewaretoken]");
-    if (!csrfElement) {
-    console.error("CSRF token not found!");
-    }
-    const csrfToken = csrfElement.value;
+
+    const csrfToken = get_csrf_token();
 
     function toggleEditMode(sectionId, editButtonId, saveButtonId, url) {
         const section = document.getElementById(sectionId);

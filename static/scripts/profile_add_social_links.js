@@ -1,20 +1,34 @@
+import { get_csrf_token } from "./helpers/csrf.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-    const csrfElement = document.querySelector("input[name=csrfmiddlewaretoken]");
-    if (!csrfElement) {
-        console.error("CSRF token not found!");
-    }
-    const csrfToken = csrfElement.value;
+    const csrfToken = get_csrf_token();
 
     const addLinkButton = document.getElementById("add-social-link-button");
     const typeSelect = document.getElementById("social-type");
     const socialUrl = document.getElementById("social-url");
     const linksContainer = document.getElementById("link-container");
 
-    if (addLinkButton) {
+    const urlPatterns = {
+        "Facebook": /^https?:\/\/(www\.)?facebook\.com\/.+$/,
+        "Twitter": /^https?:\/\/(www\.)?twitter\.com\/.+$/,
+        "Instagram": /^https?:\/\/(www\.)?instagram\.com\/.+$/,
+        "Youtube": /^https?:\/\/(www\.)?youtube\.com\/.+$/,
+        "Spotify": /^https?:\/\/(www\.)?open\.spotify\.com\/.+$/,
+        "Soundcloud": /^https?:\/\/(www\.)?soundcloud\.com\/.+$/,
+    };
+
+if (addLinkButton) {
         addLinkButton.addEventListener("click", async () => {
             const selectedType = typeSelect.value;
             const url = socialUrl.value;
             const artistSlug = typeSelect.getAttribute("data-artist-slug");
+
+            console.log('testing url pattern', urlPatterns[selectedType].test(url));
+
+            if (!urlPatterns[selectedType].test(url)) {
+                alert(`Invalid URL for ${selectedType}`);
+                return;
+            }
 
             const data = new FormData();
             data.append("type", selectedType);
@@ -22,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
             data.append("artist_slug", artistSlug);
 
             try {
-                const res = await fetch("/add_social_link/", {
+                const res = await fetch("/add_social_link_on_artist/", {
                     method: "POST",
                     headers: {
                         "X-CSRFToken": csrfToken,

@@ -9,12 +9,11 @@
 {% block import_block %}
     <link rel = "stylesheet" href="{% static "styles/profile.css" %}">
     <link rel="stylesheet" href="{% static "styles/gigs_section.css" %}">
-    <script src="{% static "scripts/profile_upload_image.js" %}" defer></script>
-    <script src="{% static "scripts/profile_edit_info.js" %}" defer></script>
-    <script src="{% static "scripts/profile_add_genres.js" %}" defer></script>
-    <script src="{% static "scripts/profile_add_social_links.js" %}" defer></script>
-    <script src="{% static 'scripts/delete_social_link.js' %}" defer></script>
-
+    <script src="{% static "scripts/profile_upload_image.js" %}" defer type="module"></script>
+    <script src="{% static "scripts/profile_edit_info.js" %}" defer type="module"></script>
+    <script src="{% static "scripts/profile_add_genres.js" %}" defer type="module"></script>
+    <script src="{% static "scripts/profile_add_social_links.js" %}" defer type="module"></script>
+    <script src="{% static 'scripts/delete_social_link.js' %}" defer type="module"></script>
 {% endblock %}
 
 {% block body_block %}
@@ -95,6 +94,7 @@
     <ul id="link-container">
       {% for social_link in artist.social_links.all %}
           <li class="link-item">
+
           <a href="{{ social_link.url }}">{% include "components/button.html" with id="button9" type="button" variant="rainbow" text=social_link.type size="md" %}</a>
           {% if user == artist.user or user.is_staff %}
             <div class="delete-social-link" data-social-link-id="{{ social_link.id }}">
@@ -143,6 +143,12 @@
         {% empty %}
           <p> {{ artist.user.username }} currently has no gigs! </p>
         {% endfor %}
+        {% if user.is_staff or user == artist.user  %}
+            {% include "components/button.html" with id="add-gig-form-button" type="submit" variant="primary" text="Post a new gig?" size="sm" %}
+            <div class="gig-forms-container">
+            {{ gig_form.as_p }}
+            </div>
+        {% endif %}
         </div>
         </div>
     </section>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Client, User, ContactInformation, Artist, SocialLink
+from .models import Client, User, ContactInformation, Artist, SocialLink, Gig
 from django.contrib.auth.password_validation import validate_password
 from django.utils.text import slugify
 
@@ -107,3 +107,38 @@ class SocialLinkForm(forms.ModelForm):
         if url and not url.startswith(("http://", "https://")):
             url = "https://" + url
         return url
+
+
+class GigForm(forms.ModelForm):
+    class Meta:
+        model = Gig
+        fields = [
+            "artist",
+            "venue",
+            "supporting_artists",
+            "date",
+            "price",
+            "booking_fee",
+            "capacity",
+            "description",
+            "gig_photo_url",
+            "is_approved",
+        ]
+        widgets = {
+            "date": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "venue": forms.TextInput(attrs={"placeholder": "Enter venue name"}),
+            "supporting_artists": forms.SelectMultiple(attrs={"size": 5}),
+            "description": forms.Textarea(
+                attrs={"rows": 4, "placeholder": "Enter description"}
+            ),
+            "gig_photo_url": forms.URLInput(attrs={"placeholder": "Enter a valid URL"}),
+            "is_approved": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+    def save(self, commit=True):
+        gig = super().save(commit=False)
+        if not gig.description:
+            gig.description = "No description provided."
+        if commit:
+            gig.save()
+        return gig

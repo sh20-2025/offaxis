@@ -16,7 +16,7 @@ class ArtistAdmin(admin.ModelAdmin):
                     "cart",
                     "bio",
                     "is_approved",
-                    "profile_picture_url",
+                    "profile_picture",
                     "social_links",
                     "genre_tags",
                     "slug",
