@@ -87,9 +87,6 @@
         {% endfor %}
         </ul>
         {% if request.user.is_authenticated and request.user == artist.user %}
-    <a href="{% url 'add_social_link' slug=artist.slug %}" class="btn btn-primary">
-        Add Social Links
-    </a>
 {% endif %}
     </section>
 

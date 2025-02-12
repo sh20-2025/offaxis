@@ -86,7 +86,7 @@ def register(request):
                 if is_artist:
                     artist = Artist(user=client.user)
                     artist.save()
-                    return redirect(reverse("artist", args=[artist.slug]))
+                    return redirect("add_social_link", slug=artist.slug)
 
                 return redirect("/")
 
