@@ -16,12 +16,22 @@ setup-python:
    PYTHON_VERSION: "3.13.0"
   script:
     - echo "Setting up Python ..."
-    - if (-not (Test-Path "C:\Python${env:PYTHON_VERSION}")) {
-        choco install python --version=${env:PYTHON_VERSION} -y
+
+    - Set-ExecutionPolicy Bypass -Scope Process -Force
+
+    - if (-not (Test-Path "$env:ProgramData\chocolatey\choco.exe")) {
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
       }
+
+    - choco install python --version=$env:PYTHON_VERSION -y --no-progress
+    
     - $env:Path = "C:\Python${env:PYTHON_VERSION};C:\Python${env:PYTHON_VERSION}\Scripts;" + $env:Path
+    
     - python --version
+    
     - pip --version
+    
     - echo "Hooray, Python's done setting up!"
 
 setup-venv:
@@ -30,14 +40,22 @@ setup-venv:
     - main
   script:
     - echo "Setting up venv..."
+
     - pip install -r requirements.txt
+
     - .\scripts\activate-venv.ps1
+
     - .\scripts\check-django.ps1
+
     - .\scripts\format.ps1
+
     - .\scripts\setup.ps1
-    - .\Scripts\python.exe -m pip install --upgrade pip
+
     - pre-commit install
+
     - echo "Finish setting up venv..."
+  dependencies:
+    - setup-python
   # artifacts:
   #   paths:
   #     - venv/
@@ -48,10 +66,15 @@ build-job:
     - main
   script:
     - echo "Building..."
+
     - .\scripts\activate-venv.ps1
+
     - python manage.py check
+
     - python manage.py migrate --noinput
+
     - python manage.py collectstatic --noinput
+
     - echo "Done building..."
   dependencies:
     - setup-python
@@ -63,14 +86,23 @@ test-job:
     - main
   script:
     - echo "Begin testing..."
+
     - .\scripts\activate-venv.ps1
+
     - black --check .
+
     - flake8 .
+
     - pre-commit run --all-files
+
     - coverage run --source='.' manage.py test
+
     - coverage report
+
     - bandit -r .
+
     - python manage.py makemigrations --check --dry-run
+
     - echo "☝️🤓 TEST FINISH ✅!"
   dependencies:
     - setup-python
