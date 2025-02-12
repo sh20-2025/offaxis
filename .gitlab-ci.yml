@@ -2,11 +2,11 @@ stages:
   - build
   - test
 
-
 build-job:
   stage: build
   script:
     - echo "onion and garlic"
+    - echo "Hello, $GITLAB_USER_LOGIN!"
     - ./scripts/activate-venv.ps1
     - ./scripts/check-django.ps1
     - ./scripts/format.ps1
