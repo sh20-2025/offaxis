@@ -25,8 +25,10 @@ setup-python:
     #   }
     - Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-    - choco install python --version=$env:PYTHON_VERSION -y --no-progress
+    # - choco install python --version=$env:PYTHON_VERSION -y --no-progress
     
+    - choco install -y python313 --override --install-arguments '/quiet InstallAllUsers=1 PrependPath=1 TargetDir=C:\Python3'
+
     - $env:Path = "C:\Python${env:PYTHON_VERSION};C:\Python${env:PYTHON_VERSION}\Scripts;" + $env:Path
     
     - python --version
