@@ -31,6 +31,7 @@ urlpatterns = [
     ),
     path("update_text/", views.update_text, name="update_text"),
     path("add_genre/", views.add_genre, name="add_genre"),
+    path("add_social_link/", views.add_social_link, name="add_social_link"),
     path("contact", views.contact, name="contact"),
     path("cart/", views.cart, name="cart"),
     path("checkout/", views.checkout, name="checkout"),
@@ -69,6 +70,11 @@ urlpatterns = [
             template_name="registration/password_reset_successful.html"
         ),
         name="password_reset_complete",
+    ),
+    path(
+        "delete_social_link/<int:social_link_id>/",
+        views.delete_social_link,
+        name="delete_social_link",
     ),
     path("stripe/webhook/", views.stripe_webhook, name="stripe_webhook"),
     path("scan-tickets/", views.scan_tickets, name="scan_tickets"),

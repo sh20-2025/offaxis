@@ -46,8 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  const customUploadButton = document.getElementById("custom-upload-button");
   const profilePictureInput = document.getElementById("upload-picture");
   const profilePictureImg = document.querySelector(".profile-picture img");
+  if (customUploadButton) {
+    customUploadButton.addEventListener("click", () => {
+      profilePictureInput.click();
+    });
+  }
   if (profilePictureInput) {
       const artistSlug = profilePictureInput.getAttribute("data-artist-slug");
     profilePictureInput.addEventListener("input", () => {
