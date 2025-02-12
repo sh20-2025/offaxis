@@ -9,11 +9,11 @@
 {% block import_block %}
     <link rel = "stylesheet" href="{% static "styles/profile.css" %}">
     <link rel="stylesheet" href="{% static "styles/gigs_section.css" %}">
-    <script src="{% static "scripts/profile_upload_image.js" %}" defer></script>
-    <script src="{% static "scripts/profile_edit_info.js" %}" defer></script>
-    <script src="{% static "scripts/profile_add_genres.js" %}" defer></script>
-    <script src="{% static "scripts/profile_add_social_links.js" %}" defer></script>
-    <script src="{% static 'scripts/delete_social_link.js' %}" defer></script>
+    <script src="{% static "scripts/profile_upload_image.js" %}" defer type="module"></script>
+    <script src="{% static "scripts/profile_edit_info.js" %}" defer type="module"></script>
+    <script src="{% static "scripts/profile_add_genres.js" %}" defer type="module"></script>
+    <script src="{% static "scripts/profile_add_social_links.js" %}" defer type="module"></script>
+    <script src="{% static 'scripts/delete_social_link.js' %}" defer type="module"></script>
 {% endblock %}
 
 {% block body_block %}

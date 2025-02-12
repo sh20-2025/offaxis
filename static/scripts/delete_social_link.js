@@ -1,4 +1,4 @@
-import { get_csrf_token} from "./helpers/csrf";
+import { get_csrf_token} from "./helpers/csrf.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     const deleteIcons = document.querySelectorAll('.delete-social-link');

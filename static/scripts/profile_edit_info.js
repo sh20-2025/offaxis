@@ -1,6 +1,7 @@
-import { get_csrf_token} from "./helpers/csrf";
+import { get_csrf_token} from "./helpers/csrf.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+
     const csrfToken = get_csrf_token();
 
     function toggleEditMode(sectionId, editButtonId, saveButtonId, url) {

@@ -25,7 +25,7 @@ from django.urls import reverse
 from django.core.cache import cache
 from django.utils.timezone import now
 import math
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 from django.contrib.auth import login
 from django.contrib import admin
 from django.conf import settings
@@ -37,6 +37,7 @@ import json
 import stripe
 from .api.spotify_utils import get_artist_top_track
 from django.views.decorators.http import require_POST
+import re
 
 
 def components(request):
@@ -87,7 +88,6 @@ def artist_view(request, slug):
     select_options = []
     for each in genres:
         select_options.append({"label": each.tag, "value": each.tag})
-    print(select_options)
 
     context = {
         "artist": artist,
@@ -463,13 +463,32 @@ def festival(request, slug):
     return render(request, "Off_Axis/festival.html", context)
 
 
-def add_social_link(request):
+def social_link_validation(social_link, type):
+    # validating social_link against type shown
+    link_regex = {
+        "YouTube": r"https://www\.youtube\.com/channel/[a-zA-Z0-9_-]+",
+        "Spotify": r"https://open\.spotify\.com/artist/[a-zA-Z0-9]+",
+        "Instagram": r"https://www\.instagram\.com/[a-zA-Z0-9_]+",
+        "SoundCloud": r"https://soundcloud\.com/[a-zA-Z0-9_-]+",
+        "WhatsApp": r"https://wa\.me/[0-9]+",
+    }
+
+    if not re.match(link_regex[type], social_link):
+        return False
+    return True
+
+
+def add_social_link_on_artist(request):
     if request.method == "POST":
         artist_slug = request.POST.get("artist_slug")
         social_type = request.POST.get("type")
         social_url = request.POST.get("url")
 
         artist = get_object_or_404(Artist, slug=artist_slug)
+
+        if not social_link_validation(social_url, social_type):
+            return JsonResponse({"error": "Invalid URL"}, status=400)
+
         social_link = SocialLink.objects.create(
             artist=artist, type=social_type, url=social_url
         )
@@ -479,6 +498,66 @@ def add_social_link(request):
 
         return JsonResponse({"success": True})
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@login_required
+def add_social_link(request, slug):
+    artist = get_object_or_404(Artist, slug=slug)
+
+    if request.user != artist.user:
+        return HttpResponseForbidden(
+            "You are not allowed to edit this artist's social links."
+        )
+
+    social_platforms = ["YouTube", "Spotify", "Instagram", "SoundCloud", "WhatsApp"]
+    allowed_domains = {
+        "spotify.com",
+        "youtube.com",
+        "soundcloud.com",
+        "whatsapp.com",
+        "instagram.com",
+    }
+
+    social_links_data = [
+        {"type": platform, "link": artist.social_links.filter(type=platform).first()}
+        for platform in social_platforms
+    ]
+
+    if request.method == "POST":
+        social_type = request.POST.get("type")
+        social_url = request.POST.get("url")
+
+        if not social_type or not social_url:
+            return redirect("add_social_link", slug=artist.slug)
+
+        social_url = social_url.strip().lower()
+
+        if not social_url.startswith(("http://", "https://")):
+            social_url = "https://" + social_url
+
+        parsed_url = urlparse(social_url)
+        domain = parsed_url.netloc.replace("www.", "")
+
+        if domain not in allowed_domains:
+            return render(
+                request,
+                "Off_Axis/add_social_link.html",
+                {
+                    "artist": artist,
+                    "social_links_data": social_links_data,
+                    "allowed_domains": allowed_domains,
+                    "error_message": f"Invalid URL! Only {', '.join(allowed_domains)} are allowed.",
+                },
+            )
+
+        existing_link = artist.social_links.filter(type=social_type).first()
+        if existing_link:
+            return redirect("add_social_link", slug=artist.slug)
+
+        social_link = SocialLink.objects.create(type=social_type, url=social_url)
+        artist.social_links.add(social_link)
+
+        return redirect("add_social_link", slug=artist.slug)
 
 
 @require_POST
