@@ -14,12 +14,13 @@ setup-venv:
     - main
   script:
     - echo "Setting up venv..."
+    - start .
+    - pip install -r requirements.txt
     - .\scripts\activate-venv.ps1
     - .\scripts\check-django.ps1
     - .\scripts\format.ps1
     - .\scripts\setup.ps1
-    - .\Scripts\python.exe -m pip install --upgrade pip
-    - pip install -r requirements.txt
+    # - .\Scripts\python.exe -m pip install --upgrade pip
     - pre-commit install
     - echo "Finish setting up venv..."
   # artifacts:
