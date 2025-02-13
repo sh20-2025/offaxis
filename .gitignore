@@ -24,4 +24,9 @@ __pycache__/
 # db
 db.sqlite3
 
+# media content
+/media/*
+!/media/
+
+# environment file
 .env
