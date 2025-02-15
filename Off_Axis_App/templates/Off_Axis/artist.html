@@ -18,6 +18,23 @@
 {% endblock %}
 
 {% block body_block %}
+
+{% if user == artist.user or user.is_staff%}
+    <section id="approval-section">
+        <h2 >Approval Status</h2>
+        <p>{{ artist.user.username }}'s Approval Status: {{ artist.is_approved }}</p>
+        {% if user.is_staff %}
+            <form method="post" action="{% url 'approve_artist' artist.slug %}">
+                {% csrf_token %}
+                <label for="approve">Approve Artist:</label>
+                <input type="checkbox" id="approve" name="approve" {% if artist.is_approved %}checked{% endif %}>
+                {% include "components/button.html" with id="button3" type="submit" variant="secondary" text="Save" size="sm" %}
+            </form>
+        {% endif %}
+    </section>
+
+    <div id="left-column">
+    {% endif %}
     {% if artist.is_approved or user.is_staff or user == artist.user %}
     <section class="profile">
     <section class="profile-picture">
@@ -92,11 +109,11 @@
 
     {% endif %}
 
-    <p> {{ artist.user.username }}'s Socials: </p>
+    <h2> {{ artist.user.username }}'s Socials: </h2>
     <ul id="link-container">
       {% for social_link in artist.social_links.all %}
           <li class="link-item">
-          <a href="{{ social_link.url }}">{% include "components/button.html" with id="button9" type="button" variant="rainbow" text=social_link.type size="md" %}</a>
+          <a href="{{ social_link.url }}">{% include "components/button.html" with id="button9" type="button" variant="rainbow" class="social-buttons" text=social_link.type size="md" %}</a>
           {% if user == artist.user or user.is_staff %}
             <div class="delete-social-link" data-social-link-id="{{ social_link.id }}">
                 <img src="{% static 'icons/trash.svg' %}" alt="Delete" class="delete-icon">
@@ -148,6 +165,13 @@
         </div>
     </section>
 
+    {% if user.is_staff or user == artist.user  %}
+            {% include "components/button.html" with id="add-gig-form-button" type="submit" variant="primary" text="Post a new gig?" size="sm" %}
+            <div class="gig-forms-container">
+            {{ gig_form.as_p }}
+            </div>
+        {% endif %}
+
     </section>
     {% else %}
         <div class="unapproved-message">
@@ -158,18 +182,4 @@
         </div>
     {% endif %}
 
-    <section class="approval-section">
-    {% if user == artist.user or user.is_staff%}
-        <h2>Approval Status</h2>
-        <p>{{ artist.user.username }}'s Approval Status: {{ artist.is_approved }}</p>
-        {% if user.is_staff %}
-            <form method="post" action="{% url 'approve_artist' artist.slug %}">
-                {% csrf_token %}
-                <label for="approve">Approve Artist:</label>
-                <input type="checkbox" id="approve" name="approve" {% if artist.is_approved %}checked{% endif %}>
-                {% include "components/button.html" with id="button3" type="submit" variant="primary" text="Save" size="sm" %}
-            </form>
-        {% endif %}
-    {% endif %}
-    </section>
 {% endblock %}

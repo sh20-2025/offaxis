@@ -7,17 +7,17 @@
   margin: 5rem 0 5rem 5rem;
 }
 
-.profile .profile-picture img{
+.profile .profile-picture img {
   /* left image and 20rem * 20rem */
   width: 20rem;
   height: 20rem;
 }
 
-.profile .profile-header{
+.profile .profile-header {
   padding: 2rem 0;
 }
 
-.profile .profile-header h1{
+.profile .profile-header h1 {
   text-align: left;
   text-transform: uppercase;
   font-size: 2rem;
@@ -25,12 +25,12 @@
 }
 
 .profile .profile-header p.profile-bio {
-  margin:0.5rem;
+  margin: 0.5rem;
 }
 
 .profile .profile-header .genre-tags {
-  margin:0.5rem;
-  width:70%;
+  margin: 0.5rem;
+  width: 70%;
   display: flex;
   gap: 1rem;
 }
@@ -40,8 +40,14 @@ a {
   color: inherit;
 }
 
-.approval-section {
+#approval-section {
   margin: 2rem;
+  background-color: var(--oa-pink);
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .unapproved-message {
@@ -62,48 +68,48 @@ a {
 }
 
 #upload-picture {
-    display: none;
+  display: none;
 }
 
 .profile-top-track {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background: var(--oa-text-dark);
-    border-radius: 8px;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--oa-text-dark);
+  border-radius: 8px;
 }
 
 .top-track-container {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    margin-top: 1rem;
-    flex-direction: row;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-top: 1rem;
+  flex-direction: row;
 }
 
 .album-artwork {
-    width: 5rem;
-    height: 5rem;
-    object-fit: cover;
-    border-radius: 4px;
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
 .track-details {
-    flex: 1;
+  flex: 1;
 }
 
 .track-details h4 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
 }
 
 .track-details audio {
-    width: 100%;
-    max-width: 300px;
-    margin: 1rem 0;
+  width: 100%;
+  max-width: 300px;
+  margin: 1rem 0;
 }
 
 .spotify-link {
-    display: inline-block;
-    margin-top: 1rem;
-    text-decoration: none;
+  display: inline-block;
+  margin-top: 1rem;
+  text-decoration: none;
 }
