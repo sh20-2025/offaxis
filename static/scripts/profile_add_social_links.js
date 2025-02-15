@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Soundcloud": /^https?:\/\/(www\.)?soundcloud\.com\/.+$/,
     };
 
-if (addLinkButton) {
+    if (addLinkButton) {
         addLinkButton.addEventListener("click", async () => {
             const selectedType = typeSelect.value;
             const url = socialUrl.value;
@@ -34,6 +34,14 @@ if (addLinkButton) {
             data.append("type", selectedType);
             data.append("url", url);
             data.append("artist_slug", artistSlug);
+
+            const existingLinks = linksContainer.querySelectorAll("li a");
+            for (const link of existingLinks) {
+                if (link.innerText.trim().toLowerCase() === selectedType.toLowerCase()) {
+                    alert(`${selectedType} link already exists.`);
+                    return;
+                }
+            }
 
             try {
                 const res = await fetch("/add_social_link_on_artist/", {

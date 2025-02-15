@@ -46,8 +46,8 @@
         <p class="profile-bio" id="bio-text">{{ artist.bio }}</p>
 
         {% if user == artist.user or user.is_staff%}
-        <button id="edit-bio-button" data-artist-slug="{{ artist.slug }}">Edit</button>
-        <button id="save-bio-button" style="display: none;">Save</button>
+        <button id="edit-bio-button" data-artist-slug="{{ artist.slug }}">Edit Description</button>
+        <button id="save-bio-button" style="display: none;">Save Description</button>
         {% endif %}
 
         <p> {{ artist.user.username }}'s Genres: </p>
