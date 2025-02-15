@@ -481,7 +481,8 @@ def social_link_validation(social_link, type):
 
 def add_social_link_on_artist(request):
     if request.method == "POST":
-        artist_slug = request.POST.get("artist_slug")
+        artist_slug = request.POST.get("artist_slug", "").strip()
+
         social_type = request.POST.get("type")
         social_url = request.POST.get("url")
 
