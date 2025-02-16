@@ -11,10 +11,12 @@
   /* left image and 20rem * 20rem */
   width: 20rem;
   height: 20rem;
+
 }
 
 .profile .profile-header {
   padding: 2rem 0;
+
 }
 
 .profile .profile-header h1 {
@@ -26,6 +28,7 @@
 
 .profile .profile-header p.profile-bio {
   margin: 0.5rem;
+
 }
 
 .profile .profile-header .genre-tags {
@@ -65,6 +68,7 @@ a {
   align-items: center;
   gap: 1rem;
   margin: 1rem 0;
+
 }
 
 #upload-picture {
@@ -76,6 +80,7 @@ a {
   padding: 1.5rem;
   background: var(--oa-text-dark);
   border-radius: 8px;
+
 }
 
 .top-track-container {
@@ -112,4 +117,16 @@ a {
   display: inline-block;
   margin-top: 1rem;
   text-decoration: none;
+}
+
+.profile-gigs {
+  grid-column: 2;
+}
+
+.profile-gig-form {
+  grid-column: 2;
+}
+
+.gig-forms-container {
+  display: none;
 }
