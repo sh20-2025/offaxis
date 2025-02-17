@@ -24,6 +24,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("components", views.components, name="components"),
     path("approve_artist/<slug:slug>/", views.approve_artist, name="approve_artist"),
+    path("approve-gig/<int:id>/", views.approve_gig, name="approve_gig"),
     path(
         "upload_profile_picture/",
         views.upload_profile_picture,

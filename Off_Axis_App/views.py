@@ -11,7 +11,14 @@ from .models import (
     ContactInformation,
     Festival,
 )
-from .forms import ClientForm, ContactInformationForm, SocialLinkForm, GigForm
+from .forms import (
+    ClientForm,
+    ContactInformationForm,
+    SocialLinkForm,
+    GigForm,
+    VenueForm,
+    AddressForm,
+)
 from django.http.response import (
     HttpResponseBadRequest,
     HttpResponseNotAllowed,
@@ -69,14 +76,28 @@ def artists_view(request):
 def artist_view(request, slug):
     artist = get_object_or_404(Artist, slug=slug)
 
-    gig_form = GigForm()
+    address_form = AddressForm(prefix="address")
+    venue_form = VenueForm(prefix="venue")
+    gig_form = GigForm(prefix="gig")
 
     if request.method == "POST":
-        gig_form = GigForm(request.POST, request.FILES)
-        if gig_form.is_valid():
+        address_form = AddressForm(request.POST, prefix="address")
+        venue_form = VenueForm(request.POST, prefix="venue")
+        gig_form = GigForm(request.POST, request.FILES, prefix="gig")
+
+        if address_form.is_valid() and venue_form.is_valid() and gig_form.is_valid():
+            # Save Address first
+            address = address_form.save()
+
+            venue = venue_form.save(commit=False)
+            venue.address = address
+            venue.save()
+
             gig = gig_form.save(commit=False)
+            gig.venue = venue
             gig.artist = artist
             gig.save()
+
             return redirect(reverse("artist", args=[artist.slug]))
 
     # Get Spotify top track if artist has Spotify link
@@ -94,6 +115,8 @@ def artist_view(request, slug):
         "artist": artist,
         "options": select_options,
         "top_track": top_track,
+        "address_form": address_form,
+        "venue_form": venue_form,
         "gig_form": gig_form,
     }
     return render(request, "Off_Axis/artist.html", context)
@@ -154,6 +177,18 @@ def login_redirect_view(request):
         return redirect(reverse("artist", args=[request.user.artist.slug]))
     else:
         return redirect("/")
+
+
+@login_required
+def approve_gig(request, id):
+    gig = get_object_or_404(Gig, id=id)
+    if request.method == "POST":
+        if "approve" in request.POST:
+            gig.approve()
+        else:
+            gig.is_approved = False
+            gig.save()
+    return redirect(reverse("gig", args=[gig.artist.slug, gig.id]))
 
 
 @login_required
