@@ -113,8 +113,9 @@
 
     {% endif %}
 
-    <h2> {{ artist.user.username }}'s Socials: </h2>
+    
     <ul id="link-container">
+      <h2> {{ artist.user.username }}'s Socials: </h2>
       {% for social_link in artist.social_links.all %}
           <li class="link-item">
           <a href="{{ social_link.url }}">{% include "components/button.html" with id="button9" type="button" variant="rainbow" class="social-buttons" text=social_link.type size="md" %}</a>

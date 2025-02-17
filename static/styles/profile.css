@@ -5,6 +5,7 @@
   grid-template-columns: 1fr 2fr;
   grid-gap: 1rem;
   margin: 5rem 0 5rem 5rem;
+  position: relative;
 }
 
 .profile .profile-picture img {
@@ -62,6 +63,19 @@ a {
   cursor: pointer;
 }
 
+.add-social-link {
+  position: relative;
+}
+
+#link-container {
+  position: absolute;
+  top: 55%;
+  left: 0;
+  right: 0;
+  margin-top: 10px;
+}
+
+
 .link-item {
   display: flex;
   justify-content: flex-start;
@@ -80,7 +94,7 @@ a {
   padding: 1.5rem;
   background: var(--oa-text-dark);
   border-radius: 8px;
-
+  grid-column: 2;
 }
 
 .top-track-container {
