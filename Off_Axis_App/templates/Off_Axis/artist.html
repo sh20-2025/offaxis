@@ -174,16 +174,109 @@
 
             <div class="gig-forms-container">
             
-                <form method="post" action=""
+                <h2>Create a New Gig</h2>
 
 
+  <form method="post" action="{% url 'artist' artist.slug %}">
+    {% csrf_token %}
+    
+    <input type="hidden" name="artist" value="{{ artist.slug }}">
+    <input type="hidden" name="is_approved" value="false">
+    
+    <div class="gig-form-row">
+      <label for="{{ gig_form.venue.id_for_label }}">Venue:</label>
+      <div class="input-field">
+        {{ gig_form.venue }}
+        {% for error in gig_form.venue.errors %}
+          <div class="error">{{ error }}</div>
+        {% endfor %}
+      </div>
+    </div>
 
+   
+    <div class="gig-form-row">
+      <label for="{{ gig_form.supporting_artists.id_for_label }}">Supporting Artists:</label>
+      <div class="input-field">
+        {{ gig_form.supporting_artists }}
+        {% for error in gig_form.supporting_artists.errors %}
+          <div class="error">{{ error }}</div>
+        {% endfor %}
+      </div>
+    </div>
 
+   
+    <div class="gig-form-row">
+      <label for="{{ gig_form.date.id_for_label }}">Date:</label>
+      <div class="input-field">
+        {{ gig_form.date }}
+        {% for error in gig_form.date.errors %}
+          <div class="error">{{ error }}</div>
+        {% endfor %}
+      </div>
+    </div>
 
+   
+    <div class="gig-form-row">
+      <label for="{{ gig_form.price.id_for_label }}">Price:</label>
+      <div class="input-field">
+        {{ gig_form.price }}
+        {% for error in gig_form.price.errors %}
+          <div class="error">{{ error }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+   
+    <div class="gig-form-row">
+      <label for="{{ gig_form.booking_fee.id_for_label }}">Booking Fee:</label>
+      <div class="input-field">
+        {{ gig_form.booking_fee }}
+        {% for error in gig_form.booking_fee.errors %}
+          <div class="error">{{ error }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+  
+    <div class="gig-form-row">
+      <label for="{{ gig_form.capacity.id_for_label }}">Capacity:</label>
+      <div class="input-field">
+        {{ gig_form.capacity }}
+        {% for error in gig_form.capacity.errors %}
+          <div class="error">{{ error }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    
+    <div class="gig-form-row">
+      <label for="{{ gig_form.description.id_for_label }}">Description:</label>
+      <div class="input-field">
+        {{ gig_form.description }}
+        {% for error in gig_form.description.errors %}
+          <div class="error">{{ error }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    
+    <div class="gig-form-row">
+      <label for="{{ gig_form.gig_photo_url.id_for_label }}">Gig Photo URL:</label>
+      <div class="input-field">
+        {{ gig_form.gig_photo_url }}
+        {% for error in gig_form.gig_photo_url.errors %}
+          <div class="error">{{ error }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    
+    <input type="hidden" name="artist" value="{{ artist.slug }}">
+
+    <button type="submit" class="btn-submit">Submit Gig</button>
+  </form>
             </div>
         {% endif %}
-        </section>
-
 </section>
 
     

@@ -130,3 +130,19 @@ a {
 .gig-forms-container {
   display: none;
 }
+
+.gig-form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.gig-form-row label {
+  width: 150px;
+  margin-right: 1rem;
+  font-weight: bold;
+}
+
+.gig-form-row .input-field {
+  flex: 1;
+}
