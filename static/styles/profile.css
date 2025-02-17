@@ -134,22 +134,27 @@ a {
   background-color: black;
   border-radius: 30px;
   border: 1px solid grey;
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-right: 20px;
 }
 
 .gig-form-row {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .gig-form-row label {
-  width: 150px;
+  width: 125px;
   margin-right: 1rem;
   font-weight: bold;
 }
 
 .gig-form-row .input-field {
   flex: 1;
+  gap: 1rem;
 }
 
 .inline {
@@ -159,10 +164,20 @@ a {
   align-items: flex-start;
 }
 
-/* Each inline field stacks its label above the input */
 .inline-field {
   display: flex;
   flex-direction: column;
   flex: 1 1 30%;
-  /* Adjust 30% as needed for your layout */
+  font-weight: bold;
+
+}
+
+.gig-form-headings {
+  color: var(--oa-pink);
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+#gig-form-submit-button {
+  margin: 20px 10px 10px;
 }
