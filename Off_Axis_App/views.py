@@ -111,6 +111,10 @@ def artist_view(request, slug):
     for each in genres:
         select_options.append({"label": each.tag, "value": each.tag})
 
+    supporting_artists_options = [
+        {"label": a.user.username, "value": a.id} for a in Artist.objects.all()
+    ]
+
     context = {
         "artist": artist,
         "options": select_options,
@@ -118,6 +122,7 @@ def artist_view(request, slug):
         "address_form": address_form,
         "venue_form": venue_form,
         "gig_form": gig_form,
+        "supporting_artists_options": supporting_artists_options,
     }
     return render(request, "Off_Axis/artist.html", context)
 

@@ -128,7 +128,12 @@ a {
 }
 
 .gig-forms-container {
+  margin-top: 20px;
+  padding: 25px 20px 10px;
   display: none;
+  background-color: black;
+  border-radius: 30px;
+  border: 1px solid grey;
 }
 
 .gig-form-row {
@@ -145,4 +150,19 @@ a {
 
 .gig-form-row .input-field {
   flex: 1;
+}
+
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* Each inline field stacks its label above the input */
+.inline-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 30%;
+  /* Adjust 30% as needed for your layout */
 }
