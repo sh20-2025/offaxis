@@ -317,17 +317,19 @@
                       <div class="error">{{ error }}</div>
                     {% endfor %}
                   </div>
-                  <div class="inline-field">
-                    <label for="{{ venue_form.description.id_for_label }}">Venue Description</label>
-                    {% include "components/input.html" with id=venue_form.venue_description.auto_id name=venue_form.description.html_name type="text" variant="light" placeholder="Enter Venue Description..." size="lg" %}
-                    {% for error in venue_form.description.errors %}
-                      <div class="error">{{ error }}</div>
-                    {% endfor %}
-                  </div>
+                  
                   <div class="inline-field">
                     <label for="{{ venue_form.venue_photo_url.id_for_label }}">Venue Photo URL</label>
                     {% include "components/input.html" with id=venue_form.venue_photo_url.auto_id name=venue_form.venue_photo_url.html_name type="text" variant="light" placeholder="Enter Venue Photo URL..." size="lg" %}
                     {% for error in venue_form.venue_photo_url.errors %}
+                      <div class="error">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+
+                  <div class="inline-field">
+                    <label for="{{ venue_form.description.id_for_label }}">Venue Description</label>
+                    {% include "components/input.html" with id=venue_form.venue_description.auto_id name=venue_form.description.html_name type="textarea" variant="light" placeholder="Enter Venue Description..." size="lg" %}
+                    {% for error in venue_form.description.errors %}
                       <div class="error">{{ error }}</div>
                     {% endfor %}
                   </div>
