@@ -58,7 +58,6 @@ build-job:
     - .\scripts\activate-venv.ps1
     - python manage.py check
     - python manage.py migrate --noinput
-    - python manage.py collectstatic --noinput
     - echo "Done building..."
   dependencies:
     - setup-python
