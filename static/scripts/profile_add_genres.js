@@ -1,9 +1,7 @@
+import {get_csrf_token} from "./helpers/csrf.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-    const csrfElement = document.querySelector("input[name=csrfmiddlewaretoken]");
-    if (!csrfElement) {
-        console.error("CSRF token not found!");
-    }
-    const csrfToken = csrfElement.value;
+    const csrfToken = get_csrf_token();
 
     const addGenreButton = document.getElementById("add-genre-button");
     const genreSelect = document.getElementById("genre");
