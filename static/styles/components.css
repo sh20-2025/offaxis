@@ -11,6 +11,11 @@
   text-transform: uppercase;
 }
 
+.btn:disabled {
+  filter: grayscale(1);
+  cursor: default;
+}
+
 .btn-sm {
   padding: 0.5rem 1rem;
   font-size: 0.8rem;
@@ -286,7 +291,7 @@ select.input {
 }
 
 .checkbox-text {
-  margin-left: 1rem; 
+  margin-left: 1rem;
 }
 
 .checkbox-label-sm .checkbox-text {
@@ -324,7 +329,7 @@ select.input {
 }
 
 .checkbox-container input[type="checkbox"]:checked + .checkbox-label .custom-checkbox {
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
 
 .custom-checkbox::after {
@@ -363,4 +368,60 @@ select.input {
   top: 4px;
   width: 7px;
   height: 14px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(1rem);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal--open {
+  display: flex;
+}
+
+.modal__body {
+  background-color: var(--oa-text-light);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 50rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  color: var(--oa-text-dark);
+}
+
+.modal__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal__close {
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+  border: none;
+}
+
+.modal__close img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: invert(1);
+}
+
+.modaL__title {
+  font-size: 1.25rem;
+  font-weight: 500;
 }

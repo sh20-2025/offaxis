@@ -13,6 +13,7 @@
         {% block import_block %}{% endblock %}
         <script src="{% static 'scripts/navbar.js' %}"
                 data-static-url="{% static '' %}"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
         <div class="header-scroll-placeholder"></div>
@@ -40,8 +41,8 @@
                         <li>
                             <a href="{% url 'cart' %}">
                                 <img src="{% static 'icons/shopping-cart.svg' %}"
-                                        alt="Shopping Cart"
-                                        id="shoppingCartIcon">
+                                     alt="Shopping Cart"
+                                     id="shoppingCartIcon">
                             </a>
                         </li>
                         {% if user.is_authenticated %}
@@ -77,15 +78,14 @@
                     <a>
                         <button id="hamburgerButton">
                             <img src="{% static 'icons/hamburger-menu.svg' %}"
-                                    alt="Hamburger Menu"
-                                    id="hamburgerMenuSVG">
+                                 alt="Hamburger Menu"
+                                 id="hamburgerMenuSVG">
                         </button>
                     </a>
                 </div>
             </div>
         </header>
-            {% block body_block %}
-            {% endblock %}
+        {% block body_block %}{% endblock %}
         <footer class="footer">
             <div class="container">
                 <p>&copy; 2024 Off Axis Gigs. All rights reserved.</p>

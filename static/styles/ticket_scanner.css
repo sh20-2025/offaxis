@@ -4,6 +4,7 @@
   align-items: center;
   padding: 2rem;
   height: 80vh;
+  flex-direction: column;
 }
 
 #cameraView {
@@ -67,4 +68,20 @@
   text-align: center;
   position: absolute;
   bottom: 10%;
+}
+
+@media screen and (max-width: 768px) {
+  .ticket-scanner__view__label {
+    font-size: 1.5rem;
+    bottom: 5%;
+  }
+}
+
+#show-result-button {
+  max-width: 42rem;
+  margin-top: 2rem;
+}
+
+#scan-result-modal .modal__content {
+  font-size: 1.5rem;
 }
