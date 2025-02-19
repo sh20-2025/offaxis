@@ -537,7 +537,8 @@ def scan_ticket_api(request, code):
         return HttpResponseNotAllowed(["POST"])
 
     ticket = Ticket.objects.filter(qr_code_data=code).first()
-    if not ticket or request.user.artist.id != ticket.gig.artist.id or ticket.is_used:
+    if not ticket or request.user.artist.id != ticket.gig.artist.id:
+        # if not ticket or request.user.artist.id != ticket.gig.artist.id or ticket.is_used:
         return HttpResponseBadRequest()
 
     ticket.is_used = True
@@ -545,4 +546,14 @@ def scan_ticket_api(request, code):
 
     print("Ticket scanned for code ", code)
 
-    return HttpResponse(status=200)
+    return JsonResponse(
+        status=200,
+        data={
+            "name": ticket.checkout_name,
+            "email": ticket.checkout_email,
+            "country": ticket.checkout_country,
+            "postcode": ticket.checkout_postcode,
+            "price": ticket.purchase_price,
+            "discount_used": ticket.discount_used,
+        },
+    )
