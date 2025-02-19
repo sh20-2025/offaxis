@@ -30,3 +30,6 @@ db.sqlite3
 
 # environment file
 .env
+
+# spotify cache
+.cache
