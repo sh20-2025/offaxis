@@ -74,4 +74,11 @@ urlpatterns = [
     path("scan-tickets/", views.scan_tickets, name="scan_tickets"),
     path("scan-tickets/<int:id>", views.ticket_scanner, name="ticket_scanner"),
     path("scan-tickets-api/<str:code>", views.scan_ticket_api, name="scan_ticket_api"),
+    path(
+        "support_artist_gig/<int:gig_id>/",
+        views.support_artist_gig,
+        name="support_artist_gig",
+    ),
+    path("accept_support/<int:id>", views.accept_support, name="accept_support"),
+    path("Reject_support/<int:id>", views.reject_support, name="decline_support"),
 ]

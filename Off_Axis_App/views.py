@@ -9,6 +9,8 @@ from .models import (
     CartItem,
     ContactInformation,
     Festival,
+    Credit,
+    CreditTransaction,
 )
 from .forms import ClientForm, ContactInformationForm
 from django.http.response import (
@@ -32,6 +34,7 @@ from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 import json
 import stripe
 
@@ -63,6 +66,8 @@ def artists_view(request):
 
 def artist_view(request, slug):
     context = {}
+    print(slug)
+    print(Artist.objects.all())
     artist = Artist.objects.get(slug=slug)
     genres = GenreTag.objects.all()
     context["artist"] = artist
@@ -72,7 +77,7 @@ def artist_view(request, slug):
 
 def register(request):
     client_form = ClientForm()
-    is_artist = request.POST.get("isArtist") == "Artist"
+    is_artist = request.POST.get("isArtist") == "True"
 
     if request.method == "POST":
         client_form = ClientForm(request.POST)
@@ -82,7 +87,8 @@ def register(request):
                 login(request, client.user)
 
                 if is_artist:
-                    artist = Artist(user=client.user)
+                    print("Creating artist")
+                    artist = Artist.objects.create(user=client.user)
                     artist.save()
                     return redirect(reverse("artist", args=[artist.slug]))
 
@@ -504,3 +510,68 @@ def scan_ticket_api(request, code):
     print("Ticket scanned for code ", code)
 
     return HttpResponse(status=200)
+
+
+@login_required
+@require_POST
+def support_artist_gig(request, gig_id):
+    if not hasattr(request.user, "artist"):
+        return JsonResponse({"error": "user is not an artist"}, status=403)
+
+    from_artist = request.user.artist
+    gig = get_object_or_404(Gig, id=gig_id)
+    to_artist = gig.artist
+    amount = request.POST.get("amount")
+
+    if not amount:
+        return JsonResponse({"error": "Invalid request"}, status=400)
+
+    try:
+        amount = float(amount)
+    except ValueError:
+        return JsonResponse({"error": "Invalid amount"}, status=400)
+
+    if from_artist == to_artist:
+        return JsonResponse({"error": "Cannot support yourself"}, status=400)
+
+    try:
+        transaction = CreditTransaction(
+            from_artist=from_artist, to_artist=to_artist, amount=amount
+        )
+        transaction.save()
+        return JsonResponse({"success": True, "message": "Request to support sent"})
+    except ValueError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+@login_required
+@require_POST
+def accept_support(request, transaction_id):
+    transaction = get_object_or_404(
+        CreditTransaction, id=transaction_id, to_artist=request.user.artist
+    )
+    if transaction.status != "pending":
+        return JsonResponse({"error": "Transaction already accepted"}, status=400)
+
+    transaction.status = "accepted"
+    transaction.save()
+    transaction.from_artist.credit.balance -= transaction.amount
+    transaction.to_artist.credit.balance += transaction.amount
+    transaction.from_artist.credit.save()
+    transaction.to_artist.credit.save()
+    return JsonResponse({"success": True, "message": "Transaction accepted"})
+
+
+@login_required
+@require_POST
+def reject_support(request, transaction_id):
+    transaction = get_object_or_404(
+        CreditTransaction, id=transaction_id, to_artist=request.user.artist
+    )
+    if transaction.status != "pending":
+        return JsonResponse({"error": "Transaction already accepted"}, status=400)
+
+    transaction.status = "rejected"
+    transaction.from_artist.credit.balance += transaction.amount
+    transaction.save()
+    return JsonResponse({"success": True, "message": "Transaction rejected"})

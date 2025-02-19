@@ -29,11 +29,19 @@ class Artist(models.Model):
     social_links = models.ManyToManyField("SocialLink", blank=True)
     genre_tags = models.ManyToManyField("GenreTag", blank=True)
     slug = models.SlugField(unique=True, default="default-slug")
+    credit = models.OneToOneField(
+        "Credit", on_delete=models.CASCADE, related_name="artist_credit", null=True
+    )
+    transaction = models.ForeignKey(
+        "CreditTransaction", blank=True, on_delete=models.CASCADE, null=True
+    )
 
     def save(self, *args, **kwargs):
-        # Generate slug from username
         self.slug = slugify(self.user.username)
         super().save(*args, **kwargs)
+        if not self.credit:
+            self.credit = Credit.objects.create()
+            super().save(update_fields=["credit"])
 
     def __str__(self):
         return self.user.username
@@ -182,3 +190,31 @@ class Festival(models.Model):
         # Generate slug from username
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+
+class Credit(models.Model):
+    balance = models.FloatField(default=2.00)
+
+    def __str__(self):
+        return f"Credit - Balance: {self.balance}"
+
+
+class CreditTransaction(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("accepted", "Accepted"),
+        ("rejected", "Rejected"),
+    ]
+
+    from_artist = models.ForeignKey(
+        "Artist", on_delete=models.CASCADE, related_name="sent_transactions"
+    )
+    to_artist = models.ForeignKey(
+        "Artist", on_delete=models.CASCADE, related_name="received_transactions"
+    )
+    amount = models.DecimalField(max_digits=19, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.from_artist.user.username} supported {self.to_artist.user.username} with {self.amount} credits"

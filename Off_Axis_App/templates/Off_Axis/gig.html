@@ -44,7 +44,7 @@
                     <td>£{{ gig.full_price }}</td>
                 </tr>
             </table>
-            <form class="gig-page__form" action="/cart/" method="post">
+            <form id="addToCartForm" class="gig-page__form" action="/cart/" method="post">
                 <div class="gig-page__form__quantity">
                     {% include "components/label.html" with variant="dark" required="true" for="quantity" size="lg" text="Quantity" %}
                     {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="lg" full="true" value="1" %}
@@ -54,7 +54,66 @@
                 <input type="hidden" name="action" value="add">
                 {% csrf_token %}
             </form>
+            <form id="supportArtistForm" class="gig-page__form" action="{% url 'support_artist_gig' gig.id %}" method="post">
+                <div class="gig-page__form__quantity">
+                    {% include "components/label.html" with variant="dark" required="true" for="amount" size="lg" text="Support Amount" %}
+                    {% include "components/input.html" with id="amountInput" name="amount" type="number" variant="light" placeholder="10" size="lg" full="true" value="10" %}
+                </div>
+                {% include "components/button.html" with id="supportButton" type="submit" variant="rainbow" text="Support Artist" size="lg" %}
+                {% csrf_token %}
+            </form>
             <p class="gig-page__description">{{ gig.description }}</p>
+            <div class="gig-page__supporting-artists">
+                <h2>Supporting Artists</h2>
+                <ul>
+                    {% for artist in gig.supporting_artists.all %}
+                        <li>{{ artist.user.username }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </section>
+    <script>
+        document.getElementById('addToCartForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.success ? 'Added to cart successfully!' : data.error);
+            })
+            .catch(error => {
+                alert('An error occurred: ' + error.message);
+            });
+        });
+
+        document.getElementById('supportArtistForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Support sent successfully! New balance: £' + data.new_balance);
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                alert('An error occurred: ' + error.message);
+            });
+        });
+    </script>
 {% endblock body_block %}

@@ -8,7 +8,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
 django.setup()
 
 # fmt: off
-from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address, Festival,)  # noqa: E402
+from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address, Festival, Credit,)  # noqa: E402
 from django.conf import settings  # noqa: E402
 # fmt: on
 
@@ -23,7 +23,9 @@ def populate():
             "admin", "sh20.team.offaxis@gmail.com", "BespokePassword"
         )
         Client.objects.create(user=admin_user, phone_number="+447123456789")
-        Artist.objects.create(user=admin_user, bio="I am the admin", is_approved=False)
+        admin_artist = add_artist("admin", "I am the admin", True)
+
+    admin_artist = Artist.objects.get(user__username="admin")
 
     add_genre_tag("Rock")
     add_genre_tag("Pop")
@@ -127,6 +129,16 @@ def populate():
         "/static/images/gig-placeholder.png",
     )
 
+    add_gig(
+        admin_artist,
+        v1,
+        "2022-12-12 12:00:00",
+        14.00,
+        40,
+        "test gig",
+        "/static/images/gig-placeholder.png",
+    )
+
     Festival.objects.all().delete()
 
     add_festival(
@@ -163,8 +175,13 @@ def add_artist(name, bio, is_approved):
 
     with open("./static/images/gig-placeholder.png", "rb") as f:
         a = Artist.objects.get_or_create(
-            user=u, bio=bio, is_approved=is_approved, profile_picture=ImageFile(f)
+            user=u,
+            bio=bio,
+            is_approved=is_approved,
+            profile_picture=ImageFile(f),
+            credit=Credit.objects.create(balance=2.00),
         )[0]
+
         return a
 
 
