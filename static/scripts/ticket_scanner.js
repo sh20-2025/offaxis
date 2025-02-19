@@ -25,7 +25,9 @@ const video = document.getElementById("cameraView");
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   // Use video without audio
   const constraints = {
-    video: true,
+    video: {
+      facingMode: "environment",
+    },
     audio: false,
   };
 

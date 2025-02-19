@@ -71,6 +71,10 @@
 }
 
 @media screen and (max-width: 768px) {
+  .ticket-scanner {
+    padding: 1rem;
+  }
+
   .ticket-scanner__view__label {
     font-size: 1.5rem;
     bottom: 5%;
