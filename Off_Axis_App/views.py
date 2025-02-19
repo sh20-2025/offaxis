@@ -519,7 +519,6 @@ def ticket_scanner(request, id):
         return HttpResponseForbidden()
 
     gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
-    # gig = Gig.objects.filter(id=id).first()
     if not gig:
         return HttpResponseForbidden()
 
@@ -537,8 +536,7 @@ def scan_ticket_api(request, code):
         return HttpResponseNotAllowed(["POST"])
 
     ticket = Ticket.objects.filter(qr_code_data=code).first()
-    if not ticket or request.user.artist.id != ticket.gig.artist.id:
-        # if not ticket or request.user.artist.id != ticket.gig.artist.id or ticket.is_used:
+    if not ticket or request.user.artist.id != ticket.gig.artist.id or ticket.is_used:
         return HttpResponseBadRequest()
 
     ticket.is_used = True
