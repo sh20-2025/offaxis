@@ -9,11 +9,6 @@ variables:
     GIT_SUBMODULE_STRATEGY: recursive
     DJANGO_SETTINGS_MODULE: "Off_Axis_Django.settings"
 
-# cache:
-#   paths:
-#     - .pip-cache/
-#     - venv/
-
 setup-python:
   stage: setup
   tags:
@@ -21,7 +16,6 @@ setup-python:
   variables:
    PYTHON_VERSION: "3.13.0"
   script:
-    # - winget install --id Python.Python.3.13 --version ${env:PYTHON_VERSION} --silent
     - echo "Verifying installations:"
     - python --version
     - pip --version
@@ -45,9 +39,6 @@ setup-venv:
 
   dependencies:
     - setup-python
-  # artifacts:
-  #   paths:
-  #     - venv/
 
 build-job:
   stage: build
