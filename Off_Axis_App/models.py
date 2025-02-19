@@ -41,11 +41,25 @@ class Artist(models.Model):
 
 # social link attribute.
 class SocialLink(models.Model):
-    type = models.CharField(max_length=100)
+    SPOTIFY = "Spotify"
+    YOUTUBE = "YouTube"
+    SOUNDCLOUD = "SoundCloud"
+    INSTAGRAM = "Instagram"
+    WHATSAPP = "WhatsApp"
+
+    SOCIAL_CHOICES = [
+        (SPOTIFY, "Spotify"),
+        (YOUTUBE, "YouTube"),
+        (SOUNDCLOUD, "SoundCloud"),
+        (INSTAGRAM, "Instagram"),
+        (WHATSAPP, "WhatsApp"),
+    ]
+
+    type = models.CharField(max_length=100, choices=SOCIAL_CHOICES)
     url = models.URLField()
 
     def __str__(self):
-        return self.type
+        return f"{self.type}: {self.url}"
 
 
 # genre tag attribute.

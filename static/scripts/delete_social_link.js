@@ -1,10 +1,12 @@
+import { get_csrf_token} from "./helpers/csrf.js";
+
 document.addEventListener('DOMContentLoaded', function() {
     const deleteIcons = document.querySelectorAll('.delete-social-link');
 
     deleteIcons.forEach(icon => {
         icon.addEventListener('click', function() {
             const socialLinkId = this.getAttribute('data-social-link-id');
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const csrfToken = get_csrf_token();
 
             fetch(`/delete_social_link/${socialLinkId}/`, {
                 method: 'POST',
