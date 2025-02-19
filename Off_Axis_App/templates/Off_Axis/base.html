@@ -38,6 +38,11 @@
                         <li>
                             <a href={% url 'contact' %}>Contact</a>
                         </li>
+                        {% if user.artist %}
+                            <li>
+                                <a href="{% url 'scan_tickets' %}">Scan Tickets</a>
+                            </li>
+                        {% endif %}
                         <li>
                             <a href="{% url 'cart' %}">
                                 <img src="{% static 'icons/shopping-cart.svg' %}"
@@ -59,11 +64,6 @@
                                     {% include "components/button.html" with id="button3" type="submit" variant="primary" text="Logout" size="sm" %}
                                 </form>
                             </li>
-                            {% if user.artist %}
-                                <li>
-                                    <a href="{% url 'scan_tickets' %}">Scan Tickets</a>
-                                </li>
-                            {% endif %}
                         {% else %}
                             <li>
                                 <a href="{% url 'login' %}">Login</a>
