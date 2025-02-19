@@ -35,20 +35,14 @@ setup-venv:
     - main
   script:
     - echo "Setting up venv..."
-
     - pip install -r requirements.txt
-
     - .\scripts\activate-venv.ps1
-
     - .\scripts\check-django.ps1
-
     - .\scripts\format.ps1
-
     - .\scripts\setup.ps1
-
     - pre-commit install
-
     - echo "Finish setting up venv..."
+
   dependencies:
     - setup-python
   # artifacts:
@@ -61,15 +55,10 @@ build-job:
     - main
   script:
     - echo "Building..."
-
     - .\scripts\activate-venv.ps1
-
     - python manage.py check
-
     - python manage.py migrate --noinput
-
     - python manage.py collectstatic --noinput
-
     - echo "Done building..."
   dependencies:
     - setup-python
@@ -81,23 +70,14 @@ test-job:
     - main
   script:
     - echo "Begin testing..."
-
     - .\scripts\activate-venv.ps1
-
     - black --check .
-
     - flake8 .
-
     - pre-commit run --all-files
-
     - coverage run --source='.' manage.py test
-
     - coverage report
-
     - python -m bandit -r .
-
     - python manage.py makemigrations --check --dry-run
-
     - echo "☝️🤓 TEST FINISH ✅!"
   dependencies:
     - setup-python
