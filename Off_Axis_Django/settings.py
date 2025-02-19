@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 import smtplib
+from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 # TEMPLATES_DIR = BASE_DIR / "templates"
@@ -26,13 +28,17 @@ DB_FILE = BASE_DIR / "db.sqlite3"
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-7^trs%m8**6omxauig3jmrns0f31a!86i60nj+h8w%hv4kbg+!"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
-SPOTIFY_CLIENT_ID = "85a256999fb14094b33e7d104cb83700"
-SPOTIFY_CLIENT_SECRET = "28be09bd328f4a63855c74d816a6fb71"
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 HOST = "http://127.0.0.1"
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "sh20.pythonanywhere.com"]
@@ -115,21 +121,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATICFILES_DIRS = [STATIC_DIR]
-
 STATIC_URL = "static/"
-
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -146,20 +146,18 @@ LOGOUT_REDIRECT_URL = "/"
 MAX_CART_ITEMS = 20
 MAX_CART_QUANTITY = 10
 
-STRIPE_SECRET_KEY = "sk_test_51QPliWJihsZ3xOnk9DF31FrgVFMPxynG0OjhhuVpSaQFNJE9hoP6xQ930sN8Ff61Ut8SRafc4huJPQKkfFIdPeX100xRuhXhrw"
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_CURRENCY_CODE = "GBP"
 STRIPE_CHECKOUT_SUCCESS_URL = "http://127.0.0.1:8000/checkout/completed/?status=success"
 STRIPE_CHECKOUT_CANCEL_URL = "http://127.0.0.1:8000/checkout/completed/?status=fail"
 STRIPE_CHECKOUT_ALLOW_PROMO_CODES = True
-STRIPE_WEBHOOK_SECRET = (
-    "whsec_29cea3e78599dceb9e3c6d51e0bc329a0a4e08a67fadce54d60afd32dd060e02"
-)
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 # Email reset password
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_PASSWORD = ""
+# EMAIL_HOST_PASSWORD = ""
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "sh20.team.offaxis@gmail.com"
-EMAIL_HOST_PASSWORD = "valiqjuzlnudbhzl"
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
