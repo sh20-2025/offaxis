@@ -80,5 +80,5 @@ urlpatterns = [
         name="support_artist_gig",
     ),
     path("accept_support/<int:id>", views.accept_support, name="accept_support"),
-    path("Reject_support/<int:id>", views.reject_support, name="decline_support"),
+    path("Reject_support/<int:id>", views.reject_support, name="reject_support"),
 ]

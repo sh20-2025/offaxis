@@ -117,7 +117,12 @@ def gigs(request):
 
 def gig(request, artist, id):
     context = {}
-    context["gig"] = Gig.objects.get(id=id)
+    gig = Gig.objects.get(id=id)
+    artist_transactions = gig.artist.received_transactions.all()
+    if artist_transactions:
+        context["pending_transactions"] = gig.artist.get_pending_transactions()
+        context["accepted_transactions"] = gig.artist.get_accepted_transactions()
+    context["gig"] = gig
     context["tickets_sold"] = context["gig"].tickets_sold()
     context["capacity_last_few"] = context["gig"].capacity * 0.9
 
@@ -527,7 +532,7 @@ def support_artist_gig(request, gig_id):
         return JsonResponse({"error": "Invalid request"}, status=400)
 
     try:
-        amount = float(amount)
+        amount = int(amount)
     except ValueError:
         return JsonResponse({"error": "Invalid amount"}, status=400)
 
@@ -535,10 +540,8 @@ def support_artist_gig(request, gig_id):
         return JsonResponse({"error": "Cannot support yourself"}, status=400)
 
     try:
-        transaction = CreditTransaction(
-            from_artist=from_artist, to_artist=to_artist, amount=amount
-        )
-        transaction.save()
+        to_artist.addTransaction(from_artist, amount=int(amount))
+        to_artist.save()
         return JsonResponse({"success": True, "message": "Request to support sent"})
     except ValueError as e:
         return JsonResponse({"error": str(e)}, status=400)
@@ -546,12 +549,18 @@ def support_artist_gig(request, gig_id):
 
 @login_required
 @require_POST
-def accept_support(request, transaction_id):
+def accept_support(request, id):
     transaction = get_object_or_404(
-        CreditTransaction, id=transaction_id, to_artist=request.user.artist
+        CreditTransaction, id=id, to_artist=request.user.artist
     )
     if transaction.status != "pending":
         return JsonResponse({"error": "Transaction already accepted"}, status=400)
+
+    gig = Gig.objects.filter(artist=request.user.artist).first()
+    if not gig:
+        return JsonResponse(
+            {"error": "You do not have any gigs to support"}, status=400
+        )
 
     transaction.status = "accepted"
     transaction.save()
@@ -564,9 +573,9 @@ def accept_support(request, transaction_id):
 
 @login_required
 @require_POST
-def reject_support(request, transaction_id):
+def reject_support(request, id):
     transaction = get_object_or_404(
-        CreditTransaction, id=transaction_id, to_artist=request.user.artist
+        CreditTransaction, id=id, to_artist=request.user.artist
     )
     if transaction.status != "pending":
         return JsonResponse({"error": "Transaction already accepted"}, status=400)
@@ -574,4 +583,5 @@ def reject_support(request, transaction_id):
     transaction.status = "rejected"
     transaction.from_artist.credit.balance += transaction.amount
     transaction.save()
+    transaction.delete()
     return JsonResponse({"success": True, "message": "Transaction rejected"})

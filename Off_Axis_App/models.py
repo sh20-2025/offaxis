@@ -32,9 +32,25 @@ class Artist(models.Model):
     credit = models.OneToOneField(
         "Credit", on_delete=models.CASCADE, related_name="artist_credit", null=True
     )
-    transaction = models.ForeignKey(
-        "CreditTransaction", blank=True, on_delete=models.CASCADE, null=True
-    )
+
+    def addTransaction(self, from_artist, amount):
+        if from_artist.credit_balance() < amount:
+            raise ValueError("Not enough credits to send")
+        CreditTransaction.objects.create(
+            from_artist=from_artist, to_artist=self, amount=amount
+        )
+
+    def get_all_transactions(self):
+        return CreditTransaction.objects.filter(to_artist=self)
+
+    def get_pending_transactions(self):
+        return CreditTransaction.objects.filter(to_artist=self, status="pending")
+
+    def get_accepted_transactions(self):
+        return CreditTransaction.objects.filter(to_artist=self, status="accepted")
+
+    def credit_balance(self):
+        return self.credit.balance
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.username)
@@ -193,7 +209,7 @@ class Festival(models.Model):
 
 
 class Credit(models.Model):
-    balance = models.FloatField(default=2.00)
+    balance = models.IntegerField(default=2)
 
     def __str__(self):
         return f"Credit - Balance: {self.balance}"
@@ -207,14 +223,17 @@ class CreditTransaction(models.Model):
     ]
 
     from_artist = models.ForeignKey(
-        "Artist", on_delete=models.CASCADE, related_name="sent_transactions"
+        "Artist", on_delete=models.SET_NULL, related_name="sent_transactions", null=True
     )
     to_artist = models.ForeignKey(
-        "Artist", on_delete=models.CASCADE, related_name="received_transactions"
+        "Artist",
+        on_delete=models.SET_NULL,
+        related_name="received_transactions",
+        null=True,
     )
-    amount = models.DecimalField(max_digits=19, decimal_places=2)
+    amount = models.IntegerField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.from_artist.user.username} supported {self.to_artist.user.username} with {self.amount} credits"
+        return f"{self.from_artist.user.username} supported {self.to_artist.user.username} with {self.amount} credits; Status: {self.status}"

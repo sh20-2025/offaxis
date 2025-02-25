@@ -25,7 +25,8 @@ def populate():
         Client.objects.create(user=admin_user, phone_number="+447123456789")
         admin_artist = add_artist("admin", "I am the admin", True)
 
-    admin_artist = Artist.objects.get(user__username="admin")
+    admin_user = User.objects.get(username="admin")
+    admin_artist = Artist.objects.get(user=admin_user)
 
     add_genre_tag("Rock")
     add_genre_tag("Pop")

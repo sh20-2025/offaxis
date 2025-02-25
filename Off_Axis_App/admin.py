@@ -1,5 +1,13 @@
 from django.contrib import admin
-from .models import Artist, Client, SocialLink, GenreTag, ContactInformation, Credit
+from .models import (
+    Artist,
+    Client,
+    SocialLink,
+    GenreTag,
+    ContactInformation,
+    Credit,
+    CreditTransaction,
+)
 from .forms import ArtistForm
 from django.template.defaultfilters import slugify
 
@@ -57,6 +65,13 @@ class ContactInformationAdmin(admin.ModelAdmin):
     )
     list_filter = ("message_type",)
     search_fields = ("first_name", "last_name", "email", "message_type")
+
+
+@admin.register(CreditTransaction)
+class CreditTransactionAdmin(admin.ModelAdmin):
+    list_display = ("from_artist", "to_artist", "amount", "status", "timestamp")
+    list_filter = ("status", "timestamp")
+    search_fields = ("from_artist__user__username", "to_artist__user__username")
 
 
 admin.site.register(Client)
