@@ -704,8 +704,8 @@ def scan_tickets(request):
         return HttpResponseForbidden()
 
     context = {
-        # "gigs": Gig.objects.filter(artist=request.user.artist)
-        "gigs": Gig.objects.all()
+        "gigs": Gig.objects.filter(artist=request.user.artist).order_by("date")
+        # "gigs": Gig.objects.all()
     }
 
     return render(request, "Off_Axis/scan_tickets.html", context)
@@ -715,8 +715,7 @@ def ticket_scanner(request, id):
     if not request.user.is_authenticated or not request.user.artist:
         return HttpResponseForbidden()
 
-    # gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
-    gig = Gig.objects.filter(id=id).first()
+    gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
     if not gig:
         return HttpResponseForbidden()
 
@@ -734,7 +733,7 @@ def scan_ticket_api(request, code):
         return HttpResponseNotAllowed(["POST"])
 
     ticket = Ticket.objects.filter(qr_code_data=code).first()
-    if not ticket:
+    if not ticket or request.user.artist.id != ticket.gig.artist.id or ticket.is_used:
         return HttpResponseBadRequest()
 
     ticket.is_used = True
@@ -742,4 +741,14 @@ def scan_ticket_api(request, code):
 
     print("Ticket scanned for code ", code)
 
-    return HttpResponse(status=200)
+    return JsonResponse(
+        status=200,
+        data={
+            "name": ticket.checkout_name,
+            "email": ticket.checkout_email,
+            "country": ticket.checkout_country,
+            "postcode": ticket.checkout_postcode,
+            "price": ticket.purchase_price,
+            "discount_used": ticket.discount_used,
+        },
+    )

@@ -9,11 +9,11 @@
 {% block body_block %}
 
 <section class="profile-gig-form">
-    
+
 {% if user.is_staff or user == artist.user  %}
 
             <div class="gig-forms-container">
-            
+
               <form method="post" action="{% url 'create-gig' artist.slug %}" enctype="multipart/form-data">
                 {% csrf_token %}
 
@@ -59,7 +59,7 @@
                           <div class="error">{{ error }}</div>
                         {% endfor %}
                       </div>
-                   
+
                       <label for="{{ gig_form.gig_photo_url.id_for_label }}">Gig Photo URL:</label>
                       <div class="inline-field">
                         {% include "components/input.html" with id=gig_form.gig_photo_url.auto_id name=gig_form.gig_photo_url.html_name type="text" variant="light" placeholder="Enter Gig Photo URL..." size="lg" %}
@@ -77,10 +77,10 @@
                         {% endfor %}
                       </div>
                     </div>
-                    
+
                   </div>
                 </div>
-                
+
                 <div id="gig-form-address-section">
                 <h2 class="gig-form-headings">Venue Address Details</h2>
                 <div class="form-section address-section inline">
@@ -92,7 +92,7 @@
                         <div class="error">{{ error }}</div>
                       {% endfor %}
                     </div>
-                  
+
                     <div class="inline-field">
                       <label for="{{ address_form.line_2.id_for_label }}">Line 2:</label>
                       {% include "components/input.html" with id=address_form.line_2.auto_id name=address_form.line_2.html_name type="text" variant="light" placeholder="Enter Address Line 2..." size="lg" %}
@@ -100,8 +100,8 @@
                         <div class="error">{{ error }}</div>
                       {% endfor %}
                     </div>
-                 
-              
+
+
                     <div class="inline-field">
                     <label for="{{ address_form.country.id_for_label }}">Country:</label>
                       {% include "components/input.html" with id=address_form.country.auto_id name=address_form.country.html_name type="text" variant="light" placeholder="Enter Country..." size="lg" %}
@@ -117,9 +117,9 @@
                       {% for error in address_form.city.errors %}
                         <div class="error">{{ error }}</div>
                       {% endfor %}
-                    
+
                   </div>
-                  
+
                     <div class="inline-field">
                       <label for="{{ address_form.state_or_province.id_for_label }}">State/Province:</label>
                       {% include "components/input.html" with id=address_form.state_or_province.auto_id name=address_form.state_or_province.html_name type="text" variant="light" placeholder="Enter State/Province..." size="lg" %}
@@ -127,9 +127,9 @@
                         <div class="error">{{ error }}</div>
                       {% endfor %}
                     </div>
-                  
-        
-                    
+
+
+
                     <div class="inline-field">
                       <label for="{{ address_form.post_code.id_for_label }}">Post Code:</label>
                       {% include "components/input.html" with id=address_form.post_code.auto_id name=address_form.post_code.html_name type="text" variant="light" placeholder="Enter Post Code..." size="lg" %}
@@ -140,7 +140,7 @@
                   </div>
                 </div>
               </div>
-                
+
               <div id="gig-form-venue-section">
                 <h2 class="gig-form-headings">Venue Details</h2>
                 <div class="form-section venue-section inline">
@@ -151,7 +151,7 @@
                       <div class="error">{{ error }}</div>
                     {% endfor %}
                   </div>
-                  
+
                   <div class="inline-field">
                     <label for="{{ venue_form.venue_photo_url.id_for_label }}">Venue Photo URL</label>
                     {% include "components/input.html" with id=venue_form.venue_photo_url.auto_id name=venue_form.venue_photo_url.html_name type="text" variant="light" placeholder="Enter Venue Photo URL..." size="lg" %}
@@ -169,17 +169,17 @@
                   </div>
                 </div>
               </div>
-            
+
                 {% include "components/button.html" with id="gig-form-submit-button" type="submit" variant="primary" text="Submit Form" size="md" %}
               </div>
               </form>
-              
+
 
               </div>
             {% endif %}
           </section>
 
-    
+
 
     </section>
 {% endblock %}

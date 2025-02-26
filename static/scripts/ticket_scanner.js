@@ -1,4 +1,17 @@
 import { BarcodeDetectorPolyfill } from "https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.21/dist/main.js";
+import { openModal } from "./modal.js";
+
+const successAudio = new Audio("/static/audio/success.mp3");
+const errorAudio = new Audio("/static/audio/error.mp3");
+const viewElement = document.querySelector(".ticket-scanner__view");
+
+const showResultButton = document.getElementById("show-result-button");
+const customerEmailElement = document.getElementById("customer-email");
+const customerNameElement = document.getElementById("customer-name");
+const customerPostcodeElement = document.getElementById("customer-postcode");
+const customerCountryElement = document.getElementById("customer-country");
+const ticketPriceElement = document.getElementById("ticket-price");
+const discountsUsedElement = document.getElementById("discounts-used");
 
 try {
   window["BarcodeDetector"].getSupportedFormats();
@@ -12,7 +25,9 @@ const video = document.getElementById("cameraView");
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   // Use video without audio
   const constraints = {
-    video: true,
+    video: {
+      facingMode: "environment",
+    },
     audio: false,
   };
 
@@ -24,6 +39,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 const barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] });
 
 let scanning = false;
+let lastScannedResponse = null;
 
 // Detect code function
 const detectCode = () => {
@@ -44,12 +60,21 @@ const detectCode = () => {
           method: "POST",
         });
         if (res.ok) {
-          alert(`Scanned in ticket with code ${code}!`);
+          successAudio.play();
+          viewElement.classList.add("ticket-scanner__view--success");
+          lastScannedResponse = await res.json();
+          showResultButton.disabled = false;
         } else {
-          alert("Failed to scan in ticket!");
+          errorAudio.play();
+          viewElement.classList.add("ticket-scanner__view--error");
+          lastScannedResponse = null;
+          showResultButton.disabled = true;
         }
 
-        scanning = false;
+        setTimeout(() => {
+          scanning = false;
+          viewElement.classList.remove("ticket-scanner__view--error", "ticket-scanner__view--success");
+        }, 1000);
       }
     })
     .catch((err) => {
@@ -60,3 +85,18 @@ const detectCode = () => {
 
 // Run detect code function every 100 milliseconds
 setInterval(detectCode, 100);
+
+showResultButton.addEventListener("click", () => {
+  if (!lastScannedResponse) {
+    return;
+  }
+
+  customerEmailElement.textContent = lastScannedResponse.email;
+  customerNameElement.textContent = lastScannedResponse.name;
+  customerPostcodeElement.textContent = lastScannedResponse.postcode;
+  customerCountryElement.textContent = lastScannedResponse.country;
+  ticketPriceElement.textContent = lastScannedResponse.price;
+  discountsUsedElement.textContent = lastScannedResponse.discount_used || "N/A";
+
+  openModal("scan-result-modal");
+});

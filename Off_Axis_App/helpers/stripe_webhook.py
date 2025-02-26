@@ -9,11 +9,29 @@ from Off_Axis_App.helpers.emails import send_ticket_email
 def handle_checkout_session_completed(event):
     checkout_session = event.data.object
     line_items = stripe.checkout.Session.list_line_items(checkout_session.id).data
+    breakdown = stripe.checkout.Session.retrieve(
+        checkout_session.id, expand=["total_details.breakdown"]
+    ).total_details.breakdown
 
     email = (
         checkout_session.customer_email
         if checkout_session.customer_email
         else checkout_session.customer_details.email
+    )
+    name = (
+        checkout_session.customer_details.name
+        if checkout_session.customer_details
+        else None
+    )
+    postcode = (
+        checkout_session.customer_details.address.postal_code
+        if checkout_session.customer_details
+        else None
+    )
+    country = (
+        checkout_session.customer_details.address.country
+        if checkout_session.customer_details
+        else None
     )
 
     # print(checkout_session)
@@ -36,7 +54,23 @@ def handle_checkout_session_completed(event):
             continue
 
         for _ in range(item.quantity):
-            ticket = Ticket.objects.create(gig=gig, user=user, checkout_email=email)
+            ticket = Ticket.objects.create(
+                gig=gig,
+                user=user,
+                checkout_email=email,
+                checkout_name=name,
+                checkout_postcode=postcode,
+                checkout_country=country,
+                purchase_price=int(
+                    item.price.unit_amount_decimal
+                    if item.price.unit_amount_decimal
+                    else gig.price
+                )
+                / 100,
+                discount_used=",".join(
+                    [d.discount.coupon.name for d in breakdown.discounts]
+                ),
+            )
 
             qr_img = qrcode.make(ticket.qr_code_data)
             img_io = BytesIO()
