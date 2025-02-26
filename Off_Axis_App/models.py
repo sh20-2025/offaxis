@@ -29,11 +29,28 @@ class Artist(models.Model):
     social_links = models.ManyToManyField("SocialLink", blank=True)
     genre_tags = models.ManyToManyField("GenreTag", blank=True)
     slug = models.SlugField(unique=True, default="default-slug")
+    credit = models.OneToOneField(
+        "Credit", on_delete=models.CASCADE, related_name="artist_credit", null=True
+    )
+
+    def get_all_transactions(self):
+        return CreditTransaction.objects.filter(to_artist=self)
+
+    def get_pending_transactions(self):
+        return CreditTransaction.objects.filter(to_artist=self, status="pending")
+
+    def get_accepted_transactions(self):
+        return CreditTransaction.objects.filter(to_artist=self, status="accepted")
+
+    def credit_balance(self):
+        return self.credit.balance
 
     def save(self, *args, **kwargs):
-        # Generate slug from username
         self.slug = slugify(self.user.username)
         super().save(*args, **kwargs)
+        if not self.credit:
+            self.credit = Credit.objects.create()
+            super().save(update_fields=["credit"])
 
     def __str__(self):
         return self.user.username
@@ -200,3 +217,35 @@ class Festival(models.Model):
         # Generate slug from username
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+
+class Credit(models.Model):
+    balance = models.IntegerField(default=2)
+
+    def __str__(self):
+        return f"Credit - Balance: {self.balance}"
+
+
+class CreditTransaction(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("accepted", "Accepted"),
+        ("rejected", "Rejected"),
+    ]
+
+    from_artist = models.ForeignKey(
+        "Artist", on_delete=models.CASCADE, related_name="sent_transactions", null=True
+    )
+    to_artist = models.ForeignKey(
+        "Artist",
+        on_delete=models.CASCADE,
+        related_name="received_transactions",
+        null=True,
+    )
+    amount = models.IntegerField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    timestamp = models.DateTimeField(auto_now_add=True)
+    gig = models.ForeignKey("Gig", on_delete=models.Case, null=True)
+
+    def __str__(self):
+        return f"{self.from_artist.user.username} supported {self.to_artist.user.username} with {self.amount} credits; Status: {self.status}"

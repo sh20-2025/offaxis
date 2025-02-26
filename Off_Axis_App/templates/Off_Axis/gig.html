@@ -1,28 +1,28 @@
-{% extends "Off_Axis/base.html" %}
+{% extends 'Off_Axis/base.html' %}
 {% load static %}
 {% block title_block %}
-    Off Axis Gigs - {{ gig.artist.user.username|upper }} {{ gig.venue.address.city|upper }}
-{% endblock title_block %}
+  Off Axis Gigs - {{ gig.artist.user.username|upper }} {{ gig.venue.address.city|upper }}
+{% endblock %}
 {% block import_block %}
-    <link rel="stylesheet" href="{% static "styles/gig.css" %}">
-{% endblock import_block %}
+  <link rel="stylesheet" href="{% static 'styles/gig.css' %}" />
+  <script src="{% static 'scripts/gig.js' %}"></script>
+{% endblock %}
 {% block body_block %}
 
-    {% if user == gig.artist.user or user.is_staff %}
-    <section id="approval-section">
-        <h2>Approval Status</h2>
-        <p>{{ gig.artist.user.username }}'s Gig Approval Status: {{ gig.is_approved }}</p>
-        {% if user.is_staff %}
-            <form method="post" action="{% url 'approve_gig' gig.id %}">
-                {% csrf_token %}
-                <label for="approve">Approve Gig:</label>
-                <input type="checkbox" id="approve" name="approve" {% if gig.is_approved %}checked{% endif %}>
-                {% include "components/button.html" with id="button3" type="submit" variant="secondary" text="Save" size="sm" %}
-            </form>
-        {% endif %}
-    </section>
+{% if user == gig.artist.user or user.is_staff %}
+<section id="approval-section">
+    <h2>Approval Status</h2>
+    <p>{{ gig.artist.user.username }}'s Gig Approval Status: {{ gig.is_approved }}</p>
+    {% if user.is_staff %}
+        <form method="post" action="{% url 'approve_gig' gig.id %}">
+            {% csrf_token %}
+            <label for="approve">Approve Gig:</label>
+            <input type="checkbox" id="approve" name="approve" {% if gig.is_approved %}checked{% endif %}>
+            {% include "components/button.html" with id="button3" type="submit" variant="secondary" text="Save" size="sm" %}
+        </form>
     {% endif %}
-
+</section>
+{% endif %}
 
     <section class="gig-page">
         <img src="{{ gig.gig_photo_url }}"
@@ -72,6 +72,115 @@
                 {% csrf_token %}
             </form>
             <p class="gig-page__description">{{ gig.description }}</p>
-        </div>
-    </section>
+            <form id="supportArtistForm" class="gig-page__form" action="{% url 'support_artist_gig' gig.id %}" method="post">
+              <div class="gig-page__form__quantity">
+                {% include 'components/label.html' with variant='dark' required='true' for='amount' size='lg' text='Support Amount' %}
+                {% include 'components/input.html' with id='amountInput' name='amount' type='number' variant='light' placeholder='1' size='lg' full='true' value='1' %}
+              </div>
+              {% include 'components/button.html' with id='supportButton' type='submit' variant='rainbow' text='Support Artist' size='lg' %}
+              {% csrf_token %}
+            </form>
+
+            {% if accepted_transactions %}
+            <div class="gig-page__supporting-artists">
+              <h2>Supporting Artists</h2>
+              <ul>
+                {% for t in accepted_transactions %}
+                  <li>{{ t.from_artist.user.username }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
+            {% if gig.artist.user == user %}
+            {% if pending_transactions %}
+              {% for t in pending_transactions %}
+                <div>
+                  <p>{{ t.from_artist.user.username }} wants to support you with {{ t.amount }} credits.</p>
+                  <a href="{% url 'artist' t.from_artist.slug %}">View Profile</a>
+                  <form id="acceptArtistForm" method="post" action="{% url 'accept_support' t.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Accept</button>
+                  </form>
+                  <form id="rejectArtistForm" method="post" action="{% url 'reject_support' t.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Reject</button>
+                  </form>
+                </div>
+              {% endfor %}
+            {% endif %}
+            {% endif %}
+          </div>
+        </section>
+
+        <script>
+          document.getElementById('supportArtistForm').addEventListener('submit', function (event) {
+            event.preventDefault()
+            const formData = new FormData(this)
+            fetch(this.action, {
+              method: 'POST',
+              body: formData,
+              headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+              }
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  alert('Support sent successfully! New balance: £' + data.new_balance)
+                } else {
+                  alert(data.error)
+                }
+              })
+              .catch((error) => {
+                alert('An error occurred: ' + error.message)
+              })
+          })
+
+        document.getElementById('acceptArtistForm').addEventListener('submit', function (event) {
+            event.preventDefault()
+            const formData = new FormData(this)
+            fetch(this.action, {
+              method: 'POST',
+              body: formData,
+              headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+              }
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  alert(data.message)
+                } else {
+                  alert(data.error)
+                }
+              })
+              .catch((error) => {
+                alert('An error occurred: ' + error.message)
+              })
+          })
+
+          document.getElementById('rejectArtistForm').addEventListener('submit', function (event) {
+            event.preventDefault()
+            const formData = new FormData(this)
+            fetch(this.action, {
+              method: 'POST',
+              body: formData,
+              headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+              }
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  alert(data.message)
+                } else {
+                  alert(data.error)
+                }
+              })
+              .catch((error) => {
+                alert('An error occurred: ' + error.message)
+              })
+          })
+        </script>
 {% endblock body_block %}

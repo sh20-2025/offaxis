@@ -8,7 +8,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
 django.setup()
 
 # fmt: off
-from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address, Festival,)  # noqa: E402
+from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address, Festival, Credit,)  # noqa: E402
 from django.conf import settings  # noqa: E402
 # fmt: on
 
@@ -17,6 +17,16 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 def populate():
     Artist.objects.all().delete()
+
+    if not User.objects.filter(username="admin").exists():
+        admin_user = User.objects.create_superuser(
+            "admin", "sh20.team.offaxis@gmail.com", "BespokePassword"
+        )
+        Client.objects.create(user=admin_user, phone_number="+447123456789")
+        admin_artist = add_artist("admin", "I am the admin", True)
+
+    admin_user = User.objects.get(username="admin")
+    admin_artist = Artist.objects.get(user=admin_user)
 
     add_genre_tag("Rock")
     add_genre_tag("Pop")
@@ -121,25 +131,13 @@ def populate():
     )
 
     add_gig(
-        a5,
+        admin_artist,
         v1,
         "2022-12-12 12:00:00",
         14.00,
         40,
-        "A gig by someone",
+        "test gig",
         "/static/images/gig-placeholder.png",
-        False,
-    )
-
-    add_gig(
-        a4,
-        v2,
-        "2022-12-12 12:00:00",
-        9.00,
-        15,
-        "A gig by someone",
-        "/static/images/gig-placeholder.png",
-        False,
     )
 
     Festival.objects.all().delete()
@@ -207,8 +205,13 @@ def add_artist(name, bio, is_approved):
 
     with open("./static/images/gig-placeholder.png", "rb") as f:
         a = Artist.objects.get_or_create(
-            user=u, bio=bio, is_approved=is_approved, profile_picture=ImageFile(f)
+            user=u,
+            bio=bio,
+            is_approved=is_approved,
+            profile_picture=ImageFile(f),
+            credit=Credit.objects.create(balance=2.00),
         )[0]
+
         return a
 
 

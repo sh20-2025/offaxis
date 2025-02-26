@@ -96,4 +96,11 @@ urlpatterns = [
         views.remove_social_link,
         name="remove_social_link",
     ),
+    path(
+        "support_artist_gig/<int:gig_id>/",
+        views.support_artist_gig,
+        name="support_artist_gig",
+    ),
+    path("accept_support/<int:id>", views.accept_support, name="accept_support"),
+    path("Reject_support/<int:id>", views.reject_support, name="reject_support"),
 ]

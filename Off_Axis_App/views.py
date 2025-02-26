@@ -1,4 +1,4 @@
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import (
     Artist,
@@ -10,6 +10,8 @@ from .models import (
     CartItem,
     ContactInformation,
     Festival,
+    Credit,
+    CreditTransaction,
 )
 from .forms import (
     ClientForm,
@@ -41,11 +43,12 @@ from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 import json
 import stripe
 from .api.spotify_utils import get_artist_top_track
-from django.views.decorators.http import require_POST
 import re
+from django.db.models import F
 
 
 def components(request):
@@ -167,7 +170,7 @@ def artist_view(request, slug):
 
 def register(request):
     client_form = ClientForm()
-    is_artist = request.POST.get("isArtist") == "Artist"
+    is_artist = request.POST.get("isArtist") == "True"
 
     if request.method == "POST":
         client_form = ClientForm(request.POST)
@@ -177,7 +180,8 @@ def register(request):
                 login(request, client.user)
 
                 if is_artist:
-                    artist = Artist(user=client.user)
+                    print("Creating artist")
+                    artist = Artist.objects.create(user=client.user)
                     artist.save()
                     return redirect("add_social_link", slug=artist.slug)
 
@@ -206,7 +210,13 @@ def gigs(request):
 
 def gig(request, artist, id):
     context = {}
-    context["gig"] = Gig.objects.get(id=id)
+    gig = Gig.objects.get(id=id)
+    artist_transactions = gig.artist.received_transactions.all()
+    if artist_transactions:
+        context["pending_transactions"] = gig.artist.get_pending_transactions()
+        context["accepted_transactions"] = gig.artist.get_accepted_transactions()
+
+    context["gig"] = gig
     context["tickets_sold"] = context["gig"].tickets_sold()
     context["capacity_last_few"] = context["gig"].capacity * 0.9
 
@@ -752,3 +762,90 @@ def scan_ticket_api(request, code):
             "discount_used": ticket.discount_used,
         },
     )
+
+
+@login_required
+@require_POST
+def support_artist_gig(request, gig_id):
+    if not hasattr(request.user, "artist"):
+        return JsonResponse({"error": "user is not an artist"}, status=403)
+
+    from_artist = request.user.artist
+    gig = get_object_or_404(Gig, id=gig_id)
+    to_artist = gig.artist
+    amount = request.POST.get("amount")
+
+    if not amount:
+        return JsonResponse({"error": "Invalid request"}, status=400)
+
+    try:
+        amount = int(amount)
+    except ValueError:
+        return JsonResponse({"error": "Invalid amount"}, status=400)
+
+    if from_artist == to_artist:
+        return JsonResponse({"error": "Cannot support yourself"}, status=400)
+
+    existing = CreditTransaction.objects.filter(
+        from_artist=from_artist, to_artist=to_artist, gig=gig
+    )
+    if existing.exists():
+        return JsonResponse(
+            {"error": "You have already supported this gig"}, status=400
+        )
+
+    try:
+        CreditTransaction.objects.create(
+            from_artist=from_artist, to_artist=to_artist, gig=gig, amount=amount
+        )
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Request to support sent",
+                "new_balance": from_artist.credit.balance,
+            }
+        )
+    except ValueError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+@login_required
+@require_POST
+@transaction.atomic
+def accept_support(request, id):
+    transaction = get_object_or_404(
+        CreditTransaction, id=id, to_artist=request.user.artist
+    )
+    if transaction.status != "pending":
+        return JsonResponse({"error": "Transaction already accepted"}, status=400)
+
+    gig = Gig.objects.filter(artist=request.user.artist).first()
+    if not gig:
+        return JsonResponse(
+            {"error": "You do not have any gigs to support"}, status=400
+        )
+
+    transaction.status = "accepted"
+    transaction.save()
+    transaction.from_artist.credit.balance = F("balance") - transaction.amount
+    transaction.to_artist.credit.balance = F("balance") + transaction.amount
+    transaction.from_artist.credit.save()
+    transaction.to_artist.credit.save()
+    return JsonResponse({"success": True, "message": "Transaction accepted"})
+
+
+@login_required
+@require_POST
+@transaction.atomic
+def reject_support(request, id):
+    transaction = get_object_or_404(
+        CreditTransaction, id=id, to_artist=request.user.artist
+    )
+    if transaction.status != "pending":
+        return JsonResponse({"error": "Transaction already accepted"}, status=400)
+
+    transaction.status = "rejected"
+    transaction.from_artist.credit.balance = F("balance") + transaction.amount
+    transaction.save()
+    transaction.delete()
+    return JsonResponse({"success": True, "message": "Transaction rejected"})
