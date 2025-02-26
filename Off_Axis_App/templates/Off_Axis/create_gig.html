@@ -1,0 +1,185 @@
+{% extends "Off_Axis/base.html" %}
+{% load static %}
+{% block title_block %}Off Axis Gigs - Create Gig {% endblock %}
+{% block import_block %}
+  <link rel="stylesheet" href="{% static "styles/create-gig.css" %}">
+  <script src="{% static 'scripts/supporting_artist_creation.js' %}" type="module" defer></script>
+{% endblock %}
+
+{% block body_block %}
+
+<section class="profile-gig-form">
+
+{% if user.is_staff or user == artist.user  %}
+
+            <div class="gig-forms-container">
+
+              <form method="post" action="{% url 'create-gig' artist.slug %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <input type="hidden" name="artist" value="{{ artist.slug }}">
+                <input type="hidden" name="is_approved" value="false">
+
+                <div id="gig-form-gig-section">
+                  <h2 class="gig-form-headings">Gig Details</h2>
+                  <div class="form-section gig-section">
+                    <div class="gig-form-row">
+                      <label for="{{ gig_form.supporting_artists.id_for_label }}">Supporting Artists:</label>
+                      <div class="inline-field">
+                        {% include "components/input.html" with id=gig_form.supporting_artists.auto_id name=gig_form.supporting_artists.html_name type="select" variant="light" placeholder="Supporting Artists..." size="lg" options=supporting_artists_options multiple=True %}
+                        <div id="selected-artists-container"></div>
+                        <input type="hidden" id="supporting_artists_hidden" name="{{ gig_form.supporting_artists.html_name }}">
+                        {% for error in gig_form.supporting_artists.errors %}
+                          <div class="error">{{ error }}</div>
+                        {% endfor %}
+                      </div>
+
+                      <label for="{{ gig_form.date.id_for_label }}">Date:</label>
+                      <div class="inline-field">
+                        {% include "components/input.html" with id=gig_form.date.auto_id name=gig_form.date.html_name type="datetime-local" variant="light" placeholder="Enter Gig Date..." size="lg" %}
+                        {% for error in gig_form.date.errors %}
+                          <div class="error">{{ error }}</div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="gig-form-row">
+                      <label for="{{ gig_form.price.id_for_label }}">Price:</label>
+                      <div class="inline-field">
+                        {% include "components/input.html" with id=gig_form.price.auto_id name=gig_form.price.html_name type="number" variant="light" placeholder="Enter Gig Price..." size="lg" %}
+                        {% for error in gig_form.price.errors %}
+                          <div class="error">{{ error }}</div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="gig-form-row">
+                      <label for="{{ gig_form.capacity.id_for_label }}">Capacity:</label>
+                      <div class="inline-field">
+                        {% include "components/input.html" with id=gig_form.capacity.auto_id name=gig_form.capacity.html_name type="number" variant="light" placeholder="Enter Gig Capacity..." size="lg" %}
+                        {% for error in gig_form.capacity.errors %}
+                          <div class="error">{{ error }}</div>
+                        {% endfor %}
+                      </div>
+
+                      <label for="{{ gig_form.gig_photo_url.id_for_label }}">Gig Photo URL:</label>
+                      <div class="inline-field">
+                        {% include "components/input.html" with id=gig_form.gig_photo_url.auto_id name=gig_form.gig_photo_url.html_name type="text" variant="light" placeholder="Enter Gig Photo URL..." size="lg" %}
+                        {% for error in gig_form.gig_photo_url.errors %}
+                          <div class="error">{{ error }}</div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="gig-form-row">
+                      <label for="{{ gig_form.description.id_for_label }}">Gig Description:</label>
+                      <div class="inline-field">
+                        {% include "components/input.html" with id=gig_form.description.auto_id name=gig_form.description.html_name type="textarea" variant="light" placeholder="Enter Gig Description..." size="lg" %}
+                        {% for error in gig_form.description.errors %}
+                          <div class="error">{{ error }}</div>
+                        {% endfor %}
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div id="gig-form-address-section">
+                <h2 class="gig-form-headings">Venue Address Details</h2>
+                <div class="form-section address-section inline">
+                  <div class="gig-form-row">
+                    <div class="inline-field">
+                      <label for="{{ address_form.line_1.id_for_label }}">Line 1:</label>
+                      {% include "components/input.html" with id=address_form.line_1.auto_id name=address_form.line_1.html_name type="text" variant="light" placeholder="Enter Address Line 1..." size="lg" %}
+                      {% for error in address_form.line_1.errors %}
+                        <div class="error">{{ error }}</div>
+                      {% endfor %}
+                    </div>
+
+                    <div class="inline-field">
+                      <label for="{{ address_form.line_2.id_for_label }}">Line 2:</label>
+                      {% include "components/input.html" with id=address_form.line_2.auto_id name=address_form.line_2.html_name type="text" variant="light" placeholder="Enter Address Line 2..." size="lg" %}
+                      {% for error in address_form.line_2.errors %}
+                        <div class="error">{{ error }}</div>
+                      {% endfor %}
+                    </div>
+
+
+                    <div class="inline-field">
+                    <label for="{{ address_form.country.id_for_label }}">Country:</label>
+                      {% include "components/input.html" with id=address_form.country.auto_id name=address_form.country.html_name type="text" variant="light" placeholder="Enter Country..." size="lg" %}
+                      {% for error in address_form.country.errors %}
+                        <div class="error">{{ error }}</div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="gig-form-row">
+                    <div class="inline-field">
+                      <label for="{{ address_form.city.id_for_label }}">City:</label>
+                      {% include "components/input.html" with id=address_form.city.auto_id name=address_form.city.html_name type="text" variant="light" placeholder="Enter City..." size="lg" %}
+                      {% for error in address_form.city.errors %}
+                        <div class="error">{{ error }}</div>
+                      {% endfor %}
+
+                  </div>
+
+                    <div class="inline-field">
+                      <label for="{{ address_form.state_or_province.id_for_label }}">State/Province:</label>
+                      {% include "components/input.html" with id=address_form.state_or_province.auto_id name=address_form.state_or_province.html_name type="text" variant="light" placeholder="Enter State/Province..." size="lg" %}
+                      {% for error in address_form.state_or_province.errors %}
+                        <div class="error">{{ error }}</div>
+                      {% endfor %}
+                    </div>
+
+
+
+                    <div class="inline-field">
+                      <label for="{{ address_form.post_code.id_for_label }}">Post Code:</label>
+                      {% include "components/input.html" with id=address_form.post_code.auto_id name=address_form.post_code.html_name type="text" variant="light" placeholder="Enter Post Code..." size="lg" %}
+                      {% for error in address_form.post_code.errors %}
+                        <div class="error">{{ error }}</div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="gig-form-venue-section">
+                <h2 class="gig-form-headings">Venue Details</h2>
+                <div class="form-section venue-section inline">
+                  <div class="inline-field">
+                    <label for="{{ venue_form.name.id_for_label }}">Venue Name</label>
+                    {% include "components/input.html" with id=venue_form.name.auto_id name=venue_form.name.html_name type="text" variant="light" placeholder="Enter Venue Name..." size="lg" %}
+                    {% for error in venue_form.name.errors %}
+                      <div class="error">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+
+                  <div class="inline-field">
+                    <label for="{{ venue_form.venue_photo_url.id_for_label }}">Venue Photo URL</label>
+                    {% include "components/input.html" with id=venue_form.venue_photo_url.auto_id name=venue_form.venue_photo_url.html_name type="text" variant="light" placeholder="Enter Venue Photo URL..." size="lg" %}
+                    {% for error in venue_form.venue_photo_url.errors %}
+                      <div class="error">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+
+                  <div class="inline-field">
+                    <label for="{{ venue_form.description.id_for_label }}">Venue Description</label>
+                    {% include "components/input.html" with id=venue_form.venue_description.auto_id name=venue_form.description.html_name type="textarea" variant="light" placeholder="Enter Venue Description..." size="lg" %}
+                    {% for error in venue_form.description.errors %}
+                      <div class="error">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+                {% include "components/button.html" with id="gig-form-submit-button" type="submit" variant="primary" text="Submit Form" size="md" %}
+              </div>
+              </form>
+
+
+              </div>
+            {% endif %}
+          </section>
+
+
+
+    </section>
+{% endblock %}

@@ -1,5 +1,14 @@
 from django import forms
-from .models import Client, User, ContactInformation, Artist, SocialLink, Gig
+from .models import (
+    Client,
+    User,
+    ContactInformation,
+    Artist,
+    SocialLink,
+    Gig,
+    Address,
+    Venue,
+)
 from django.contrib.auth.password_validation import validate_password
 from django.utils.text import slugify
 
@@ -109,12 +118,29 @@ class SocialLinkForm(forms.ModelForm):
         return url
 
 
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = [
+            "line_1",
+            "line_2",
+            "country",
+            "city",
+            "state_or_province",
+            "post_code",
+        ]
+
+
+class VenueForm(forms.ModelForm):
+    class Meta:
+        model = Venue
+        fields = ["name", "description", "venue_photo_url"]
+
+
 class GigForm(forms.ModelForm):
     class Meta:
         model = Gig
         fields = [
-            "artist",
-            "venue",
             "supporting_artists",
             "date",
             "price",
