@@ -1,4 +1,4 @@
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import (
     Artist,
@@ -37,6 +37,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
 import stripe
+from django.db.models import F
 
 
 def components(request):
@@ -66,8 +67,6 @@ def artists_view(request):
 
 def artist_view(request, slug):
     context = {}
-    print(slug)
-    print(Artist.objects.all())
     artist = Artist.objects.get(slug=slug)
     genres = GenreTag.objects.all()
     context["artist"] = artist
@@ -122,6 +121,7 @@ def gig(request, artist, id):
     if artist_transactions:
         context["pending_transactions"] = gig.artist.get_pending_transactions()
         context["accepted_transactions"] = gig.artist.get_accepted_transactions()
+
     context["gig"] = gig
     context["tickets_sold"] = context["gig"].tickets_sold()
     context["capacity_last_few"] = context["gig"].capacity * 0.9
@@ -539,16 +539,32 @@ def support_artist_gig(request, gig_id):
     if from_artist == to_artist:
         return JsonResponse({"error": "Cannot support yourself"}, status=400)
 
+    existing = CreditTransaction.objects.filter(
+        from_artist=from_artist, to_artist=to_artist, gig=gig
+    )
+    if existing.exists():
+        return JsonResponse(
+            {"error": "You have already supported this gig"}, status=400
+        )
+
     try:
-        to_artist.addTransaction(from_artist, amount=int(amount))
-        to_artist.save()
-        return JsonResponse({"success": True, "message": "Request to support sent"})
+        CreditTransaction.objects.create(
+            from_artist=from_artist, to_artist=to_artist, gig=gig, amount=amount
+        )
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Request to support sent",
+                "new_balance": from_artist.credit.balance,
+            }
+        )
     except ValueError as e:
         return JsonResponse({"error": str(e)}, status=400)
 
 
 @login_required
 @require_POST
+@transaction.atomic
 def accept_support(request, id):
     transaction = get_object_or_404(
         CreditTransaction, id=id, to_artist=request.user.artist
@@ -564,8 +580,8 @@ def accept_support(request, id):
 
     transaction.status = "accepted"
     transaction.save()
-    transaction.from_artist.credit.balance -= transaction.amount
-    transaction.to_artist.credit.balance += transaction.amount
+    transaction.from_artist.credit.balance = F("balance") - transaction.amount
+    transaction.to_artist.credit.balance = F("balance") + transaction.amount
     transaction.from_artist.credit.save()
     transaction.to_artist.credit.save()
     return JsonResponse({"success": True, "message": "Transaction accepted"})
@@ -573,6 +589,7 @@ def accept_support(request, id):
 
 @login_required
 @require_POST
+@transaction.atomic
 def reject_support(request, id):
     transaction = get_object_or_404(
         CreditTransaction, id=id, to_artist=request.user.artist
@@ -581,7 +598,7 @@ def reject_support(request, id):
         return JsonResponse({"error": "Transaction already accepted"}, status=400)
 
     transaction.status = "rejected"
-    transaction.from_artist.credit.balance += transaction.amount
+    transaction.from_artist.credit.balance = F("balance") + transaction.amount
     transaction.save()
     transaction.delete()
     return JsonResponse({"success": True, "message": "Transaction rejected"})

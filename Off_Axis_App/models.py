@@ -33,13 +33,6 @@ class Artist(models.Model):
         "Credit", on_delete=models.CASCADE, related_name="artist_credit", null=True
     )
 
-    def addTransaction(self, from_artist, amount):
-        if from_artist.credit_balance() < amount:
-            raise ValueError("Not enough credits to send")
-        CreditTransaction.objects.create(
-            from_artist=from_artist, to_artist=self, amount=amount
-        )
-
     def get_all_transactions(self):
         return CreditTransaction.objects.filter(to_artist=self)
 
@@ -223,17 +216,18 @@ class CreditTransaction(models.Model):
     ]
 
     from_artist = models.ForeignKey(
-        "Artist", on_delete=models.SET_NULL, related_name="sent_transactions", null=True
+        "Artist", on_delete=models.CASCADE, related_name="sent_transactions", null=True
     )
     to_artist = models.ForeignKey(
         "Artist",
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name="received_transactions",
         null=True,
     )
     amount = models.IntegerField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     timestamp = models.DateTimeField(auto_now_add=True)
+    gig = models.ForeignKey("Gig", on_delete=models.Case, null=True)
 
     def __str__(self):
         return f"{self.from_artist.user.username} supported {self.to_artist.user.username} with {self.amount} credits; Status: {self.status}"

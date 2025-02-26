@@ -5,6 +5,7 @@
 {% endblock %}
 {% block import_block %}
   <link rel="stylesheet" href="{% static 'styles/gig.css' %}" />
+  <script src="{% static 'scripts/gig.js' %}"></script>
 {% endblock %}
 {% block body_block %}
   <section class="gig-page">
@@ -62,49 +63,33 @@
       <div class="gig-page__supporting-artists">
         <h2>Supporting Artists</h2>
         <ul>
-          {% for artist in gig.supporting_artists.all %}
-            <li>{{ artist.user.username }}</li>
+          {% for t in accepted_transactions %}
+            <li>{{ t.from_artist.user.username }}</li>
           {% endfor %}
         </ul>
       </div>
 
-
+      {% if gig.artist.user == user %}
       {% if pending_transactions %}
         {% for t in pending_transactions %}
           <div>
             <p>{{ t.from_artist.user.username }} wants to support you with {{ t.amount }} credits.</p>
             <a href="{% url 'artist' t.from_artist.slug %}">View Profile</a>
-            <form method="post" action="{% url 'accept_support' t.id %}">
+            <form id="acceptArtistForm" method="post" action="{% url 'accept_support' t.id %}">
               {% csrf_token %}
               <button type="submit">Accept</button>
             </form>
-            <form method="post" action="{% url 'reject_support' t.id %}">
+            <form id="rejectArtistForm" method="post" action="{% url 'reject_support' t.id %}">
               {% csrf_token %}
               <button type="submit">Reject</button>
             </form>
           </div>
         {% endfor %}
       {% endif %}
-
-      {% if accepted_transactions %}
-        <h2>Accepted Support</h2>
-        <ul>
-          {% for t in accepted_transactions %}
-            <li>{{ t.from_artist.user.username }} - £{{ t.amount }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-
-      {% if gig.artist.user == user %}
-        <h2>Support Received</h2>
-        <ul>
-          {% for t in accepted_transactions %}
-            <li>{{ t.from_artist.user.username }} - £{{ t.amount }}</li>
-          {% endfor %}
-        </ul>
       {% endif %}
     </div>
   </section>
+
   <script>
     document.getElementById('supportArtistForm').addEventListener('submit', function (event) {
       event.preventDefault()
@@ -128,5 +113,51 @@
           alert('An error occurred: ' + error.message)
         })
     })
+  
+  document.getElementById('acceptArtistForm').addEventListener('submit', function (event) {
+      event.preventDefault()
+      const formData = new FormData(this)
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert(data.message)
+          } else {
+            alert(data.error)
+          }
+        })
+        .catch((error) => {
+          alert('An error occurred: ' + error.message)
+        })
+    })
+  
+    document.getElementById('rejectArtistForm').addEventListener('submit', function (event) {
+      event.preventDefault()
+      const formData = new FormData(this)
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert(data.message)
+          } else {
+            alert(data.error)
+          }
+        })
+        .catch((error) => {
+          alert('An error occurred: ' + error.message)
+        })
+    }) 
   </script>
 {% endblock %}
