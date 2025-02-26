@@ -8,6 +8,12 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 
+# Register your models here.
+# admin.site.register(Artist)
+# admin.site.register(Client)
+# admin.site.register(SocialLink)
+# admin.site.register(GenreTag)
+
 
 class CreditTransactionTestCase(TestCase):
     def setUp(self):

@@ -31,6 +31,11 @@ urlpatterns = [
     ),
     path("update_text/", views.update_text, name="update_text"),
     path("add_genre/", views.add_genre, name="add_genre"),
+    path(
+        "add_social_link_on_artist/",
+        views.add_social_link_on_artist,
+        name="add_social_link_on_artist",
+    ),
     path("contact", views.contact, name="contact"),
     path("cart/", views.cart, name="cart"),
     path("checkout/", views.checkout, name="checkout"),
@@ -70,10 +75,25 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
+    path(
+        "delete_social_link/<int:social_link_id>/",
+        views.delete_social_link,
+        name="delete_social_link",
+    ),
     path("stripe/webhook/", views.stripe_webhook, name="stripe_webhook"),
     path("scan-tickets/", views.scan_tickets, name="scan_tickets"),
     path("scan-tickets/<int:id>", views.ticket_scanner, name="ticket_scanner"),
     path("scan-tickets-api/<str:code>", views.scan_ticket_api, name="scan_ticket_api"),
+    path(
+        "artist/<slug:slug>/add-social-link/",
+        views.add_social_link,
+        name="add_social_link",
+    ),
+    path(
+        "artist/<slug:slug>/remove-social-link/<str:social_type>/",
+        views.remove_social_link,
+        name="remove_social_link",
+    ),
     path(
         "support_artist_gig/<int:gig_id>/",
         views.support_artist_gig,

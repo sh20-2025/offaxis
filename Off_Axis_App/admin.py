@@ -9,7 +9,7 @@ from .models import (
     CreditTransaction,
 )
 from .forms import ArtistForm
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 
 
 @admin.register(Artist)
@@ -33,6 +33,9 @@ class ArtistAdmin(admin.ModelAdmin):
             },
         ),
     )
+    list_display = ("user", "is_approved", "slug")
+    search_fields = ("user__username", "slug")
+    list_filter = ("is_approved",)
     list_display = ("user", "is_approved", "slug")
     search_fields = ("user__username", "slug")
     list_filter = ("is_approved",)

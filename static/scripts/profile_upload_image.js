@@ -1,9 +1,8 @@
+import { get_csrf_token} from "./helpers/csrf.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-  const csrfElement = document.querySelector("input[name=csrfmiddlewaretoken]");
-  if (!csrfElement) {
-    console.error("CSRF token not found!");
-  }
-  const csrfToken = csrfElement.value;
+
+  const csrfToken = get_csrf_token();
 
   async function uploadImage(inputElement, url, imgElement, artistSlug = null,) {
     const file = inputElement.files[0];
@@ -46,8 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  const customUploadButton = document.getElementById("custom-upload-button");
   const profilePictureInput = document.getElementById("upload-picture");
   const profilePictureImg = document.querySelector(".profile-picture img");
+  if (customUploadButton) {
+    customUploadButton.addEventListener("click", () => {
+      profilePictureInput.click();
+    });
+  }
   if (profilePictureInput) {
       const artistSlug = profilePictureInput.getAttribute("data-artist-slug");
     profilePictureInput.addEventListener("input", () => {

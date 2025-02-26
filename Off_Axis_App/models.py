@@ -25,7 +25,7 @@ class Artist(models.Model):
     cart = models.OneToOneField("Cart", null=True, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     is_approved = models.BooleanField(default=False)
-    profile_picture = models.ImageField(upload_to="profile_pictures/", blank=True)
+    profile_picture = models.ImageField(upload_to="artists/", null=True, blank=True)
     social_links = models.ManyToManyField("SocialLink", blank=True)
     genre_tags = models.ManyToManyField("GenreTag", blank=True)
     slug = models.SlugField(unique=True, default="default-slug")
@@ -58,11 +58,25 @@ class Artist(models.Model):
 
 # social link attribute.
 class SocialLink(models.Model):
-    type = models.CharField(max_length=100)
+    SPOTIFY = "Spotify"
+    YOUTUBE = "YouTube"
+    SOUNDCLOUD = "SoundCloud"
+    INSTAGRAM = "Instagram"
+    WHATSAPP = "WhatsApp"
+
+    SOCIAL_CHOICES = [
+        (SPOTIFY, "Spotify"),
+        (YOUTUBE, "YouTube"),
+        (SOUNDCLOUD, "SoundCloud"),
+        (INSTAGRAM, "Instagram"),
+        (WHATSAPP, "WhatsApp"),
+    ]
+
+    type = models.CharField(max_length=100, choices=SOCIAL_CHOICES)
     url = models.URLField()
 
     def __str__(self):
-        return self.type
+        return f"{self.type}: {self.url}"
 
 
 # genre tag attribute.

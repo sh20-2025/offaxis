@@ -9,9 +9,11 @@
 {% block import_block %}
     <link rel = "stylesheet" href="{% static "styles/profile.css" %}">
     <link rel="stylesheet" href="{% static "styles/gigs_section.css" %}">
-    <script src="{% static "scripts/profile_upload_image.js" %}" defer></script>
-    <script src="{% static "scripts/profile_edit_info.js" %}" defer></script>
-    <script src="{% static "scripts/profile_add_genres.js" %}" defer></script>
+    <script src="{% static "scripts/profile_upload_image.js" %}" defer type="module"></script>
+    <script src="{% static "scripts/profile_edit_info.js" %}" defer type="module"></script>
+    <script src="{% static "scripts/profile_add_genres.js" %}" defer type="module"></script>
+    <script src="{% static "scripts/profile_add_social_links.js" %}" defer type="module"></script>
+    <script src="{% static 'scripts/delete_social_link.js' %}" defer type="module"></script>
 {% endblock %}
 
 {% block body_block %}
@@ -24,28 +26,29 @@
           <img src="{% static "icons/image.svg" %}" alt="profile picture" id="profile-picture"/>
           <p>No Profile Picture Given.</p>
         {% endif %}
-          {% if user == artist.user or user.is_staff%}  
+          {% if user == artist.user or user.is_staff%}
           <h5> Upload image? </h5>
           <div class="upload-container">
              {% csrf_token %}
-             <input type="file" id="upload-picture" 
-                    name="profile_picture" 
+             <input type="file" id="upload-picture"
+                    name="profile_picture"
                     accept="image/*"
                     data-artist-slug="{{ artist.slug }}">
+                 {% include "components/button.html" with id="custom-upload-button" type="button" variant="primary" text="Upload Image" size="sm" %}
           </div>
           {% endif %}
-        
+
     </section>
     <section class="profile-header">
         <h1>{{ artist.user.username }}'s Profile</h1>
-    
+
         <p class="profile-bio" id="bio-text">{{ artist.bio }}</p>
-    
-        {% if user == artist.user or user.is_staff%}  
+
+        {% if user == artist.user or user.is_staff%}
         <button id="edit-bio-button" data-artist-slug="{{ artist.slug }}">Edit</button>
         <button id="save-bio-button" style="display: none;">Save</button>
         {% endif %}
-    
+
         <p> {{ artist.user.username }}'s Genres: </p>
         <div class="genre-tags" id="genre-tags">
             {% for tag in artist.genre_tags.all %}
@@ -54,7 +57,7 @@
               <div>No genres available.</div>
             {% endfor %}
         </div>
-    
+
         {% if user == artist.user or user.is_staff%}
         <div class="add-genre">
                 <label for="genre">Add Genre:</label>
@@ -63,25 +66,71 @@
                         <option value="{{ genre.tag }}">{{ genre.tag }}</option>
                     {% endfor %}
                 </select>
-                <button id="add-genre-button" type="submit">Add</button>         
+                <button id="add-genre-button" type="submit">Add</button>
+                {% include "components/input.html" with id="genre" name="genre" type="select" variant="dark" placeholder="Select Genres.." size="md" options=options %}
+                {% include "components/button.html" with id="add-genre-button" type="submit" variant="primary" text="Add" size="sm" %}
         </div>
         {% endif %}
-        
-        
-        
+
+
+
     </section>
-    
-    <section class="profile-socials">
-        <p> {{ artist.user.username }}'s Socials: </p>
-        <ul>
-          {% for social_link in artist.social_links.all %}
-              <a href={{ social_link.url }}><li>{{ social_link.type }}</li></a>
-          {% empty %}
-              <li>No socials available.</li>
-          {% endfor %}
-        </ul>
+
+    {% if user == artist.user or user.is_staff %}
+    <div class="add-social-link">
+        <label for="social-type">Add Social Link:</label>
+        <select id="social-type" name="social-type" data-artist-slug="{{ artist.slug }}">
+            <option value="Spotify">Spotify</option>
+            <option value="Instagram">Instagram</option>s
+            <option value="Facebook">Facebook</option>
+            <option value="YouTube">YouTube</option>
+        </select>
+        <label for="social-url"></label><input type="url" id="social-url" name="social-url" placeholder="Enter URL">
+        <button id="add-social-link-button" type="submit">Add</button>
+    </div>
+    {% endif %}
+
+    <p> {{ artist.user.username }}'s Socials: </p>
+    <ul id="link-container">
+      {% for social_link in artist.social_links.all %}
+          <li class="link-item">
+
+          <a href="{{ social_link.url }}">{% include "components/button.html" with id="button9" type="button" variant="rainbow" text=social_link.type size="md" %}</a>
+          {% if user == artist.user or user.is_staff %}
+            <div class="delete-social-link" data-social-link-id="{{ social_link.id }}">
+                <img src="{% static 'icons/trash.svg' %}" alt="Delete" class="delete-icon">
+            </div>
+        {% endif %}
+          </li>
+      {% empty %}
+          <li id="empty-message">No socials available.</li>
+      {% endfor %}
+    </ul>
+
+    {% if top_track %}
+    <section class="profile-top-track">
+        <h3>Top Track on Spotify</h3>
+        <div class="top-track-container">
+            <img src="{{ top_track.album_image }}" alt="Album artwork" class="album-artwork">
+            <div class="track-details">
+                <h4>{{ top_track.name }}</h4>
+                <p>From: {{ top_track.album_name }}</p>
+                {% if top_track.preview_url %}
+                    <audio controls>
+                        <source src="{{ top_track.preview_url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                {% endif %}
+                <a href="{{ top_track.external_url }}" target="_blank" class="spotify-link">
+                    {% include "components/button.html" with type="button" variant="rainbow" text="Listen on Spotify" size="sm" %}
+                </a>
+            </div>
+        </div>
     </section>
-    
+    {% endif %}
+
+</section>
+
     <section class="profile-gigs">
     <div class="gigs-section" style="width: 70%; margin-top: 0;">
     <div class="right" style="width: 100%">
@@ -94,10 +143,16 @@
         {% empty %}
           <p> {{ artist.user.username }} currently has no gigs! </p>
         {% endfor %}
+        {% if user.is_staff or user == artist.user  %}
+            {% include "components/button.html" with id="add-gig-form-button" type="submit" variant="primary" text="Post a new gig?" size="sm" %}
+            <div class="gig-forms-container">
+            {{ gig_form.as_p }}
+            </div>
+        {% endif %}
         </div>
         </div>
     </section>
-    
+
     </section>
     {% else %}
         <div class="unapproved-message">
@@ -107,7 +162,7 @@
         </div>
         </div>
     {% endif %}
-    
+
     <section class="approval-section">
     {% if user == artist.user or user.is_staff%}
         <h2>Approval Status</h2>
@@ -117,7 +172,7 @@
                 {% csrf_token %}
                 <label for="approve">Approve Artist:</label>
                 <input type="checkbox" id="approve" name="approve" {% if artist.is_approved %}checked{% endif %}>
-                <button type="submit">Save</button>
+                {% include "components/button.html" with id="button3" type="submit" variant="primary" text="Save" size="sm" %}
             </form>
         {% endif %}
     {% endif %}
