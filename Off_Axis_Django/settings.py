@@ -26,10 +26,10 @@ DB_FILE = BASE_DIR / "db.sqlite3"
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-7^trs%m8**6omxauig3jmrns0f31a!86i60nj+h8w%hv4kbg+!"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
-SPOTIFY_CLIENT_ID = "85a256999fb14094b33e7d104cb83700"
-SPOTIFY_CLIENT_SECRET = "28be09bd328f4a63855c74d816a6fb71"
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -146,14 +146,12 @@ LOGOUT_REDIRECT_URL = "/"
 MAX_CART_ITEMS = 20
 MAX_CART_QUANTITY = 10
 
-STRIPE_SECRET_KEY = "sk_test_51QPliWJihsZ3xOnk9DF31FrgVFMPxynG0OjhhuVpSaQFNJE9hoP6xQ930sN8Ff61Ut8SRafc4huJPQKkfFIdPeX100xRuhXhrw"
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_CURRENCY_CODE = "GBP"
 STRIPE_CHECKOUT_SUCCESS_URL = "http://127.0.0.1:8000/checkout/completed/?status=success"
 STRIPE_CHECKOUT_CANCEL_URL = "http://127.0.0.1:8000/checkout/completed/?status=fail"
 STRIPE_CHECKOUT_ALLOW_PROMO_CODES = True
-STRIPE_WEBHOOK_SECRET = (
-    "whsec_29cea3e78599dceb9e3c6d51e0bc329a0a4e08a67fadce54d60afd32dd060e02"
-)
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 # Email reset password
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

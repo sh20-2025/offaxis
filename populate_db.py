@@ -12,7 +12,7 @@ from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, G
 from django.conf import settings  # noqa: E402
 # fmt: on
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 
 def populate():
