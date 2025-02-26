@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 const acceptArtistForm = document.getElementById('rejectArtistForm');
-if (acceptArtistForm) {    
+if (acceptArtistForm) {
     acceptArtistForm.addEventListener('submit', function (event) {
     event.preventDefault()
     const formData = new FormData(this)

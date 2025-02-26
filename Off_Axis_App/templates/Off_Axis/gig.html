@@ -80,7 +80,7 @@
               {% include 'components/button.html' with id='supportButton' type='submit' variant='rainbow' text='Support Artist' size='lg' %}
               {% csrf_token %}
             </form>
-      
+
             {% if accepted_transactions %}
             <div class="gig-page__supporting-artists">
               <h2>Supporting Artists</h2>
@@ -91,7 +91,7 @@
               </ul>
             </div>
             {% endif %}
-      
+
             {% if gig.artist.user == user %}
             {% if pending_transactions %}
               {% for t in pending_transactions %}
@@ -112,7 +112,7 @@
             {% endif %}
           </div>
         </section>
-      
+
         <script>
           document.getElementById('supportArtistForm').addEventListener('submit', function (event) {
             event.preventDefault()
@@ -136,7 +136,7 @@
                 alert('An error occurred: ' + error.message)
               })
           })
-        
+
         document.getElementById('acceptArtistForm').addEventListener('submit', function (event) {
             event.preventDefault()
             const formData = new FormData(this)
@@ -159,7 +159,7 @@
                 alert('An error occurred: ' + error.message)
               })
           })
-        
+
           document.getElementById('rejectArtistForm').addEventListener('submit', function (event) {
             event.preventDefault()
             const formData = new FormData(this)
@@ -181,6 +181,6 @@
               .catch((error) => {
                 alert('An error occurred: ' + error.message)
               })
-          }) 
+          })
         </script>
 {% endblock body_block %}
