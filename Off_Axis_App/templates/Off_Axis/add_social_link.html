@@ -1,0 +1,41 @@
+{% extends 'Off_Axis/base.html' %}
+{% load static %}
+{% block import_block %}
+<link rel="stylesheet" href="{% static "/styles/social-links.css" %}">
+{% endblock%}
+
+{% block body_block %}
+<div class="container">
+    <div id="main-social-div">
+    <h2>Manage Social Links</h2>
+
+    <ul>
+        {% for social in social_links_data %}
+            <li>
+                <img src="{% static 'icons/' %}{{ social.type|lower }}.svg" alt="{{ social.type }} icon" width="24" height="24" class="social-link-icons">
+                <strong>{{ social.type }}</strong>
+
+                {% if social.link %}
+                    <a href="{{ social.link.url }}" target="_blank" class="social-link-connected-text">Connected</a>
+                    <form method="post" action="{% url 'remove_social_link' slug=artist.slug social_type=social.type %}" style="display:inline;">
+                        {% csrf_token %}
+                        {% include "components/button.html" with id="button2" type="submit" variant="secondary" text="Remove" size="md" %}
+                    </form>
+                {% else %}
+
+                    <form method="post" action="{% url 'add_social_link' slug=artist.slug %}" style="display:inline;">
+                        {% csrf_token %}
+                        {% include "components/input.html" with id="input-type" name="type" type="hidden" value=social.type %}
+                        {% include "components/input.html" with id="input-url" name="url" type="text" variant="light" size="md" placeholder="Enter "|add:social.type|add:" URL" required=True pattern=".*\.[a-zA-Z]{2,}" title="Enter a valid website URL (example.com or full URL)" %}
+
+                        {% include "components/button.html" with id="button2" type="submit" variant="primary" text="Connect" size="md" %}
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'artist' slug=artist.slug %}">{% include "components/button.html" with id="button4" type="button" variant="secondary" text="Back to Profile" size="lg" %}</a>
+</div>
+</div>
+{% endblock %}

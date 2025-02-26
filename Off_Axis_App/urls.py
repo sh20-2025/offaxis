@@ -24,6 +24,8 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("components", views.components, name="components"),
     path("approve_artist/<slug:slug>/", views.approve_artist, name="approve_artist"),
+    path("approve-gig/<int:id>/", views.approve_gig, name="approve_gig"),
+    path("create-gig/<slug:slug>/", views.create_gig, name="create-gig"),
     path(
         "upload_profile_picture/",
         views.upload_profile_picture,
@@ -31,7 +33,11 @@ urlpatterns = [
     ),
     path("update_text/", views.update_text, name="update_text"),
     path("add_genre/", views.add_genre, name="add_genre"),
-    path("add_social_link/", views.add_social_link, name="add_social_link"),
+    path(
+        "add_social_link_on_artist/",
+        views.add_social_link_on_artist,
+        name="add_social_link_on_artist",
+    ),
     path("contact", views.contact, name="contact"),
     path("cart/", views.cart, name="cart"),
     path("checkout/", views.checkout, name="checkout"),
@@ -80,4 +86,14 @@ urlpatterns = [
     path("scan-tickets/", views.scan_tickets, name="scan_tickets"),
     path("scan-tickets/<int:id>", views.ticket_scanner, name="ticket_scanner"),
     path("scan-tickets-api/<str:code>", views.scan_ticket_api, name="scan_ticket_api"),
+    path(
+        "artist/<slug:slug>/add-social-link/",
+        views.add_social_link,
+        name="add_social_link",
+    ),
+    path(
+        "artist/<slug:slug>/remove-social-link/<str:social_type>/",
+        views.remove_social_link,
+        name="remove_social_link",
+    ),
 ]

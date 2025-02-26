@@ -1,0 +1,74 @@
+image: mcr.microsoft.com/windows/servercore:ltsc2022
+
+stages:
+  - setup
+  - build
+  - test
+
+variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    DJANGO_SETTINGS_MODULE: "Off_Axis_Django.settings"
+
+setup-python:
+  stage: setup
+  tags:
+    - main
+  variables:
+   PYTHON_VERSION: "3.13.0"
+  script:
+    - echo "Verifying installations:"
+    - python --version
+    - pip --version
+    - python -m pip install --upgrade pip
+    - echo "Python setup complete!"
+
+
+setup-venv:
+  stage: setup
+  tags:
+    - main
+  script:
+    - echo "Setting up venv..."
+    - pip install -r requirements.txt
+    - .\scripts\activate-venv.ps1
+    - .\scripts\check-django.ps1
+    - .\scripts\format.ps1
+    - .\scripts\setup.ps1
+    - pre-commit install
+    - echo "Finish setting up venv..."
+
+  dependencies:
+    - setup-python
+
+build-job:
+  stage: build
+  tags:
+    - main
+  script:
+    - echo "Building..."
+    - .\scripts\activate-venv.ps1
+    - python manage.py check
+    - python manage.py migrate --noinput
+    - echo "Done building..."
+  dependencies:
+    - setup-python
+    - setup-venv
+
+test-job:
+  stage: test
+  tags:
+    - main
+  script:
+    - echo "Begin testing..."
+    - .\scripts\activate-venv.ps1
+    - black --check .
+    - flake8 .
+    - pre-commit run --all-files
+    - coverage run --source='.' manage.py test
+    - coverage report
+    - python -m bandit -r .
+    - python manage.py makemigrations --check --dry-run
+    - echo "☝️🤓 TEST FINISH ✅!"
+  dependencies:
+    - setup-python
+    - setup-venv

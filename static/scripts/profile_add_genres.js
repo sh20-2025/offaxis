@@ -1,9 +1,7 @@
+import { get_csrf_token } from "./helpers/csrf.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-    const csrfElement = document.querySelector("input[name=csrfmiddlewaretoken]");
-    if (!csrfElement) {
-        console.error("CSRF token not found!");
-    }
-    const csrfToken = csrfElement.value;
+    const csrfToken = get_csrf_token();
 
     const addGenreButton = document.getElementById("add-genre-button");
     const genreSelect = document.getElementById("genre");
@@ -12,12 +10,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (addGenreButton) {
         addGenreButton.addEventListener("click", async () => {
             const selectedGenre = genreSelect.value;
-
             const artistSlug = genreSelect.getAttribute("data-artist-slug");
 
             const data = new FormData();
             data.append("genre", selectedGenre);
             data.append("artist_slug", artistSlug);
+
+
+            const existingGenres = genreTagsContainer.querySelectorAll(".genre");
+            for (const genreEl of existingGenres) {
+                if (genreEl.innerText.trim().toLowerCase() === selectedGenre.trim().toLowerCase()) {
+                    alert(`${selectedGenre} genre already exists.`);
+                    return;
+                }
+            }
 
             try {
                 const res = await fetch("/add_genre/", {

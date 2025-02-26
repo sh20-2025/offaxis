@@ -7,6 +7,23 @@
     <link rel="stylesheet" href="{% static "styles/gig.css" %}">
 {% endblock import_block %}
 {% block body_block %}
+
+    {% if user == gig.artist.user or user.is_staff %}
+    <section id="approval-section">
+        <h2>Approval Status</h2>
+        <p>{{ gig.artist.user.username }}'s Gig Approval Status: {{ gig.is_approved }}</p>
+        {% if user.is_staff %}
+            <form method="post" action="{% url 'approve_gig' gig.id %}">
+                {% csrf_token %}
+                <label for="approve">Approve Gig:</label>
+                <input type="checkbox" id="approve" name="approve" {% if gig.is_approved %}checked{% endif %}>
+                {% include "components/button.html" with id="button3" type="submit" variant="secondary" text="Save" size="sm" %}
+            </form>
+        {% endif %}
+    </section>
+    {% endif %}
+
+
     <section class="gig-page">
         <img src="{{ gig.gig_photo_url }}"
              width="500"

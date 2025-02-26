@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Artist, Client, SocialLink, GenreTag, ContactInformation
 from .forms import ArtistForm
-from django.utils.text import slugify
+from django.template.defaultfilters import slugify
 
 
 @admin.register(Artist)
@@ -16,7 +16,7 @@ class ArtistAdmin(admin.ModelAdmin):
                     "cart",
                     "bio",
                     "is_approved",
-                    "profile_picture_url",
+                    "profile_picture",
                     "social_links",
                     "genre_tags",
                     "slug",

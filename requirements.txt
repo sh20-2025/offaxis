@@ -41,3 +41,6 @@ tzdata==2024.2
 urllib3==2.2.3
 virtualenv==20.27.1
 spotipy==2.25.0
+coverage==7.4.4
+bandit==1.7.7
+python-dotenv==0.21.0

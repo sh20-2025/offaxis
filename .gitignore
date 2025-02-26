@@ -27,3 +27,9 @@ db.sqlite3
 # media content
 /media/*
 !/media/
+
+# environment file
+.env
+
+# spotify cache
+.cache
