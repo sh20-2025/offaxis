@@ -59,6 +59,7 @@
         {% csrf_token %}
       </form>
 
+      {% if accepted_transactions %}
       <p class="gig-page__description">{{ gig.description }}</p>
       <div class="gig-page__supporting-artists">
         <h2>Supporting Artists</h2>
@@ -68,6 +69,7 @@
           {% endfor %}
         </ul>
       </div>
+      {% endif %}
 
       {% if gig.artist.user == user %}
       {% if pending_transactions %}
