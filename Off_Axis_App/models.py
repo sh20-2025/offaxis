@@ -249,3 +249,15 @@ class CreditTransaction(models.Model):
 
     def __str__(self):
         return f"{self.from_artist.user.username} supported {self.to_artist.user.username} with {self.amount} credits; Status: {self.status}"
+
+
+class CMS(models.Model):
+    just_announced_gigs = models.ManyToManyField(
+        "Gig", blank=True, related_name="just_announced_in_cms"
+    )
+    featured_gigs = models.ManyToManyField(
+        "Gig", blank=True, related_name="featured_in_cms"
+    )
+    artist_of_the_week = models.ForeignKey(
+        "Artist", on_delete=models.CASCADE, null=True
+    )
