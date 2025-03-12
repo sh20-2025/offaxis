@@ -785,6 +785,9 @@ def support_artist_gig(request, gig_id):
 
     if from_artist == to_artist:
         return JsonResponse({"error": "Cannot support yourself"}, status=400)
+    
+    if from_artist.credit.balance < amount:
+        return JsonResponse({"error": "Not enough credits to send"}, status=400)
 
     existing = CreditTransaction.objects.filter(
         from_artist=from_artist, to_artist=to_artist, gig=gig
@@ -802,7 +805,7 @@ def support_artist_gig(request, gig_id):
             {
                 "success": True,
                 "message": "Request to support sent",
-                "new_balance": from_artist.credit.balance,
+                "new_balance": from_artist.credit.balance - amount,
             }
         )
     except ValueError as e:
