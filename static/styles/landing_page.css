@@ -117,7 +117,6 @@
 }
 
 .artist-of-the-week .left .artist-of-the-week-media {
-  padding: 2rem;
   background-color: var(--oa-text-medium);
   width: 20rem;
   height: 20rem;
@@ -204,9 +203,8 @@
 
 .our-partners .partner {
   position: relative;
-  width: 9rem;
-  height: 9rem;
-  background-color: var(--oa-text-medium);
+  width: auto;
+  height: 8rem;
   margin: 0.1rem;
 }
 

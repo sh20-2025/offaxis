@@ -71,6 +71,8 @@ def index(request):
     cms = CMS.objects.first()
     context["cms"] = cms
     context["just_announced_gigs"] = cms.just_announced_gigs.all()[:4]
+    context["featured_gigs"] = cms.featured_gigs.all()[:4]
+    context["artist_of_the_week"] = cms.artist_of_the_week
     return render(request, "Off_Axis/index.html", context)
 
 
