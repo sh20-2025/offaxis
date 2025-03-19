@@ -120,6 +120,7 @@ class Gig(models.Model):
     gig_photo_url = models.TextField(max_length=2048)
     is_approved = models.BooleanField(default=False)
     stripe_product_id = models.TextField(max_length=256, null=True, blank=True)
+    is_closed = models.BooleanField(default=False)
 
     def tickets(self):
         return Ticket.objects.filter(gig=self.id)
@@ -180,6 +181,9 @@ class Ticket(models.Model):
     is_used = models.BooleanField(default=False)
     qr_code = models.ImageField(upload_to="ticket-qr-codes/", blank=True)
     qr_code_data = models.UUIDField(default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
 
 
 class Address(models.Model):
@@ -249,3 +253,15 @@ class CreditTransaction(models.Model):
 
     def __str__(self):
         return f"{self.from_artist.user.username} supported {self.to_artist.user.username} with {self.amount} credits; Status: {self.status}"
+
+
+class CMS(models.Model):
+    just_announced_gigs = models.ManyToManyField(
+        "Gig", blank=True, related_name="just_announced_in_cms"
+    )
+    featured_gigs = models.ManyToManyField(
+        "Gig", blank=True, related_name="featured_in_cms"
+    )
+    artist_of_the_week = models.ForeignKey(
+        "Artist", on_delete=models.CASCADE, null=True
+    )

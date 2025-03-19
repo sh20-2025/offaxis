@@ -21,7 +21,7 @@ props:
 {% if type == 'password' %}
     <div class="input-password-container">
         <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full }}"
-               id="{{ id|default:"" }}"
+               id="{{ id|default:name }}"
                type="{{ type|default:"text" }}"
                placeholder="{{ placeholder|default:"" }}"
                name="{{ name|default:"" }}"
@@ -36,7 +36,7 @@ props:
                 type="button"></button>
         <script>
             {
-                const input = document.getElementById("{{ id|default:"" }}");
+                const input = document.getElementById("{{ id|default:name }}");
                 const toggle = input.parentElement.querySelector(".input-password-toggle");
                 toggle.addEventListener("click", () => {
                     if (input.type === "password") {

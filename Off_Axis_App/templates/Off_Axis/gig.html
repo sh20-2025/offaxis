@@ -24,6 +24,34 @@
 </section>
 {% endif %}
 
+{% if user.is_staff %}
+<section id="close-section">
+    <h2>Close Gig</h2>
+    {% if gig.is_closed %}
+      <p>Would you like to open this gig? This will enable ticket buying and show the gig to the public view.</p>
+      <form method="post" action="{% url 'close_gig' gig.id %}">
+        {% csrf_token %}
+        {% include "components/button.html" with id="closeGigButton" type="submit" variant="secondary" text="Open Gig" size="md" %}
+      </form>
+    {% else %}
+      <p>Would you like to close this gig? This will disable ticket buying and hide the gig from public view.</p>
+      <form method="post" action="{% url 'close_gig' gig.id %}">
+          {% csrf_token %}
+          {% include "components/button.html" with id="closeGigButton" type="submit" variant="secondary" text="Close Gig" size="md" %}
+      </form>
+    {% endif %}
+</section>
+
+<section id="export-section">
+    <h2>Export Ticket Data</h2>
+    <p>This will export all the ticket sales data as a CSV for viewing in excel.</p>
+    <form method="get" action="{% url 'export_gig_tickets' gig.id %}">
+        {% csrf_token %}
+        {% include "components/button.html" with id="exportGigButton" type="submit" variant="secondary" text="Export Data" size="md" %}
+    </form>
+</section>
+{% endif %}
+
     <section class="gig-page">
         <img src="{{ gig.gig_photo_url }}"
              width="500"
@@ -61,6 +89,7 @@
                     <td>£{{ gig.full_price }}</td>
                 </tr>
             </table>
+            <p class="gig-page__description">{{ gig.description }}</p>
             <form class="gig-page__form" action="/cart/" method="post">
                 <div class="gig-page__form__quantity">
                     {% include "components/label.html" with variant="dark" required="true" for="quantity" size="lg" text="Quantity" %}
@@ -71,15 +100,18 @@
                 <input type="hidden" name="action" value="add">
                 {% csrf_token %}
             </form>
-            <p class="gig-page__description">{{ gig.description }}</p>
-            <form id="supportArtistForm" class="gig-page__form" action="{% url 'support_artist_gig' gig.id %}" method="post">
-              <div class="gig-page__form__quantity">
-                {% include 'components/label.html' with variant='dark' required='true' for='amount' size='lg' text='Support Amount' %}
-                {% include 'components/input.html' with id='amountInput' name='amount' type='number' variant='light' placeholder='1' size='lg' full='true' value='1' %}
-              </div>
-              {% include 'components/button.html' with id='supportButton' type='submit' variant='rainbow' text='Support Artist' size='lg' %}
-              {% csrf_token %}
-            </form>
+            {% if user.is_authenticated and user.artist %}
+              {% if gig.artist.user != user %}
+                <form id="supportArtistForm" class="gig-page__form" action="{% url 'support_artist_gig' gig.id %}" method="post">
+                  <div class="gig-page__form__quantity">
+                    {% include 'components/label.html' with variant='dark' required='true' for='amount' size='lg' text='Support Amount' %}
+                    {% include 'components/input.html' with id='amountInput' name='amount' type='number' variant='light' placeholder='1' size='lg' full='true' value='1' %}
+                  </div>
+                  {% include 'components/button.html' with id='supportButton' type='submit' variant='rainbow' text='Support Artist' size='lg' %}
+                  {% csrf_token %}
+                </form>
+              {% endif %}
+            {% endif %}
 
             {% if accepted_transactions %}
             <div class="gig-page__supporting-artists">
@@ -93,94 +125,35 @@
             {% endif %}
 
             {% if gig.artist.user == user %}
-            {% if pending_transactions %}
-              {% for t in pending_transactions %}
-                <div>
-                  <p>{{ t.from_artist.user.username }} wants to support you with {{ t.amount }} credits.</p>
-                  <a href="{% url 'artist' t.from_artist.slug %}">View Profile</a>
-                  <form id="acceptArtistForm" method="post" action="{% url 'accept_support' t.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Accept</button>
-                  </form>
-                  <form id="rejectArtistForm" method="post" action="{% url 'reject_support' t.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Reject</button>
-                  </form>
-                </div>
-              {% endfor %}
-            {% endif %}
+              {% if pending_transactions %}
+              <div>
+                <h2>Support Request</h2>
+                <ul>
+                  {% for t in pending_transactions %}
+                  <li>
+                    <div class="gig-page__support-request__details">
+                        <p>{{ t.from_artist.user.username }} wants to support you with {{ t.amount }} credits.</p>
+                        <a href="{% url 'artist' t.from_artist.slug %}">
+                          {% include "components/button.html" with id="button7" type="button" variant="rainbow" text="View Profile" size="sm" %}
+                        </a>
+                        <div class = "support-buttons">
+                          <form id="acceptArtistForm_{{ t.id }}" method="post" action="{% url 'accept_support' t.id %}">
+                            {% csrf_token %}
+                            {% include "components/button.html" with id="accept_artist" type="submit" variant="primary" text="Accept" size="sm" %}
+                          </form>
+                          <form id="rejectArtistForm_{{ t.id }}" method="post" action="{% url 'reject_support' t.id %}">
+                            {% csrf_token %}
+                            {% include "components/button.html" with id="reject_artist" type="submit" variant="primary" text="Reject" size="sm" %}
+                          </form>
+                        </div>
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+              </div>
+              {% endif %}
             {% endif %}
           </div>
         </section>
 
-        <script>
-          document.getElementById('supportArtistForm').addEventListener('submit', function (event) {
-            event.preventDefault()
-            const formData = new FormData(this)
-            fetch(this.action, {
-              method: 'POST',
-              body: formData,
-              headers: {
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-              }
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                if (data.success) {
-                  alert('Support sent successfully! New balance: £' + data.new_balance)
-                } else {
-                  alert(data.error)
-                }
-              })
-              .catch((error) => {
-                alert('An error occurred: ' + error.message)
-              })
-          })
-
-        document.getElementById('acceptArtistForm').addEventListener('submit', function (event) {
-            event.preventDefault()
-            const formData = new FormData(this)
-            fetch(this.action, {
-              method: 'POST',
-              body: formData,
-              headers: {
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-              }
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                if (data.success) {
-                  alert(data.message)
-                } else {
-                  alert(data.error)
-                }
-              })
-              .catch((error) => {
-                alert('An error occurred: ' + error.message)
-              })
-          })
-
-          document.getElementById('rejectArtistForm').addEventListener('submit', function (event) {
-            event.preventDefault()
-            const formData = new FormData(this)
-            fetch(this.action, {
-              method: 'POST',
-              body: formData,
-              headers: {
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-              }
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                if (data.success) {
-                  alert(data.message)
-                } else {
-                  alert(data.error)
-                }
-              })
-              .catch((error) => {
-                alert('An error occurred: ' + error.message)
-              })
-          })
-        </script>
 {% endblock body_block %}

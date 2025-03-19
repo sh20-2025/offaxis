@@ -12,6 +12,7 @@ from .models import (
     Festival,
     Credit,
     CreditTransaction,
+    CMS,
 )
 from .forms import (
     ClientForm,
@@ -49,6 +50,7 @@ import stripe
 from .api.spotify_utils import get_artist_top_track
 import re
 from django.db.models import F
+import csv
 
 
 def components(request):
@@ -66,7 +68,13 @@ def components(request):
 
 
 def index(request):
-    return render(request, "Off_Axis/index.html")
+    context = {}
+    cms = CMS.objects.first()
+    context["cms"] = cms
+    context["just_announced_gigs"] = cms.just_announced_gigs.all()[:4]
+    context["featured_gigs"] = cms.featured_gigs.all()[:4]
+    context["artist_of_the_week"] = cms.artist_of_the_week
+    return render(request, "Off_Axis/index.html", context)
 
 
 def artists_view(request):
@@ -245,6 +253,19 @@ def approve_gig(request, id):
 
 
 @login_required
+def close_gig(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    gig = get_object_or_404(Gig, id=id)
+    if request.method == "POST":
+        gig.is_closed = not gig.is_closed
+        gig.save()
+
+    return redirect(reverse("gig", args=[gig.artist.slug, gig.id]))
+
+
+@login_required
 def approve_artist(request, slug):
     artist = get_object_or_404(Artist, slug=slug)
     if request.method == "POST":
@@ -371,6 +392,10 @@ def cart(request):
             return response()
 
         gig = Gig.objects.get(id=gig_id)
+
+        if gig.is_closed:
+            context["error"] = "Gig is closed"
+            return response()
 
         existing_cart_item = CartItem.objects.filter(cart=cart, gig=gig).first()
         action = query_dict.get("action")
@@ -764,6 +789,7 @@ def scan_ticket_api(request, code):
     )
 
 
+@transaction.atomic
 @login_required
 @require_POST
 def support_artist_gig(request, gig_id):
@@ -786,6 +812,9 @@ def support_artist_gig(request, gig_id):
     if from_artist == to_artist:
         return JsonResponse({"error": "Cannot support yourself"}, status=400)
 
+    if from_artist.credit.balance < amount:
+        return JsonResponse({"error": "Not enough credits to send"}, status=400)
+
     existing = CreditTransaction.objects.filter(
         from_artist=from_artist, to_artist=to_artist, gig=gig
     )
@@ -798,6 +827,11 @@ def support_artist_gig(request, gig_id):
         CreditTransaction.objects.create(
             from_artist=from_artist, to_artist=to_artist, gig=gig, amount=amount
         )
+
+        from_artist.credit.balance = F("balance") - amount
+        from_artist.credit.save()
+        from_artist.credit.refresh_from_db()
+
         return JsonResponse(
             {
                 "success": True,
@@ -827,7 +861,6 @@ def accept_support(request, id):
 
     transaction.status = "accepted"
     transaction.save()
-    transaction.from_artist.credit.balance = F("balance") - transaction.amount
     transaction.to_artist.credit.balance = F("balance") + transaction.amount
     transaction.from_artist.credit.save()
     transaction.to_artist.credit.save()
@@ -846,6 +879,51 @@ def reject_support(request, id):
 
     transaction.status = "rejected"
     transaction.from_artist.credit.balance = F("balance") + transaction.amount
+    transaction.from_artist.credit.save()
     transaction.save()
     transaction.delete()
     return JsonResponse({"success": True, "message": "Transaction rejected"})
+
+
+@login_required
+def export_gig_tickets(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    gig = get_object_or_404(Gig, id=id)
+    tickets = Ticket.objects.filter(gig=gig)
+    response = HttpResponse(content_type="text/csv")
+
+    response["Content-Disposition"] = f'attachment; filename="{gig.name()}_tickets.csv"'
+    writer = csv.writer(response)
+    writer.writerow(
+        [
+            "Name",
+            "Email",
+            "Country",
+            "Postcode",
+            "Purchase Price",
+            "Discount Used",
+            "Gig Booking Fee",
+            "Gig Price",
+            "Purchase Date",
+            "Ticket Used",
+        ]
+    )
+    for ticket in tickets:
+        writer.writerow(
+            [
+                ticket.checkout_name,
+                ticket.checkout_email,
+                ticket.checkout_country,
+                ticket.checkout_postcode,
+                ticket.purchase_price,
+                ticket.discount_used,
+                ticket.gig.booking_fee,
+                ticket.gig.price,
+                ticket.created_at,
+                ticket.is_used,
+            ]
+        )
+
+    return response

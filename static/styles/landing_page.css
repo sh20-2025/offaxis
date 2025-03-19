@@ -30,6 +30,8 @@
   text-align: center;
 }
 
+
+
 .hero-circles img {
   /*display: none;*/
   position: relative;
@@ -66,6 +68,22 @@
   color: var(--oa-blue);
 }
 
+.hero-circles .hero-circle:nth-child(1) {
+  background-color: var(--oa-pink);
+}
+
+.hero-circles .hero-circle:nth-child(2) {
+  background-color: var(--oa-yellow);
+}
+
+.hero-circles .hero-circle:nth-child(3) {
+  background-color: var(--oa-green);
+}
+
+.hero-circles .hero-circle:nth-child(4) {
+  background-color: var(--oa-blue);
+}
+
 .hero-circle h4 span {
   position: absolute;
   transform-origin: bottom center;
@@ -99,7 +117,6 @@
 }
 
 .artist-of-the-week .left .artist-of-the-week-media {
-  padding: 2rem;
   background-color: var(--oa-text-medium);
   width: 20rem;
   height: 20rem;
@@ -186,9 +203,8 @@
 
 .our-partners .partner {
   position: relative;
-  width: 9rem;
-  height: 9rem;
-  background-color: var(--oa-text-medium);
+  width: auto;
+  height: 8rem;
   margin: 0.1rem;
 }
 

@@ -4,6 +4,8 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+.vscode/launch.json
+.vscode/settings.json
 
 # idea
 .idea
@@ -33,3 +35,5 @@ db.sqlite3
 
 # spotify cache
 .cache
+.vscode/launch.json
+.vscode/settings.json
