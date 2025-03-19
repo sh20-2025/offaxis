@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
   });
-  
+
   document.querySelectorAll('form[id^="rejectArtistForm_"]').forEach(form => {
     form.addEventListener('submit', function(event) {
       event.preventDefault();

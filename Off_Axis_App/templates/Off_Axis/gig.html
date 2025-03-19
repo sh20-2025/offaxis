@@ -103,7 +103,7 @@
                   <li>
                     <div class="gig-page__support-request__details">
                         <p>{{ t.from_artist.user.username }} wants to support you with {{ t.amount }} credits.</p>
-                        <a href="{% url 'artist' t.from_artist.slug %}">        
+                        <a href="{% url 'artist' t.from_artist.slug %}">
                           {% include "components/button.html" with id="button7" type="button" variant="rainbow" text="View Profile" size="sm" %}
                         </a>
                         <div class = "support-buttons">
