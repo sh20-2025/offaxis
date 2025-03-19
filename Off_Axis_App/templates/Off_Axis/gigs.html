@@ -9,6 +9,7 @@
 {% block body_block %}
     <section class="gigs">
         <h1 class="gigs__title">Gigs</h1>
+        {% include 'components/search_bar.html' with label="Search Gigs" %}
         <div class="gigs__list">
             {% for gig in gigs %}
                 {% if gig.is_approved and not gig.is_closed or user.is_staff %}

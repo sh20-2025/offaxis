@@ -1,5 +1,5 @@
 {% load static %}
-<a class="gig" href="{% url 'gig' gig.artist.slug gig.id %}">
+<a class="gig" href="{% url 'gig' gig.artist.slug gig.id %}" data-search="{{ gig.artist.user.username }}, {{ gig.venue.address.city }}">
     {% if gig.gig_photo_url %}
     <img class="gig__image"
          width="300"

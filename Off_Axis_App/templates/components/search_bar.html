@@ -1,0 +1,7 @@
+
+{% load static %}
+<script src="{% static 'scripts/search_bar.js' %}" defer></script>
+<div class="search-bar">
+    {% include "components/label.html" with id="search-bar-label" variant="dark" required="false" for="search-query" size="md" text=label %}
+    {% include 'components/input.html' with id='search-bar' name='search-query' type='text' variant='light' placeholder='Search...' size='lg' %}
+</div>

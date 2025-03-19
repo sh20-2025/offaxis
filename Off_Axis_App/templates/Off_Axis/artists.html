@@ -7,6 +7,7 @@
 {% block body_block %}
     <section class="artists">
         <h1 class="artists__title">Artists</h1>
+        {% include 'components/search_bar.html' with label="Search Artists" %}
         <div class="artists__list">
             {% for artist in artists %}
                 {% if artist.is_approved or user.is_staff %}
