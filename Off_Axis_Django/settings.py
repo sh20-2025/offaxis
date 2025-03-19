@@ -40,14 +40,11 @@ DEBUG = True
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
 
-CSRF_COOKIE_DOMAIN = os.getenv("HOST")
 HOST = os.getenv("HOST")
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "sh20.pythonanywhere.com",
-    "offaxis.fserver.online",
-]
+CSRF_COOKIE_DOMAIN = HOST
+CSRF_TRUSTED_ORIGINS = [os.getenv("TRUSTED_ORIGIN")]
+
+ALLOWED_HOSTS = [HOST]
 
 
 # Application definition
