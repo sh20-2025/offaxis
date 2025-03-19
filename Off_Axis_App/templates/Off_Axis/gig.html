@@ -72,15 +72,17 @@
                 <input type="hidden" name="action" value="add">
                 {% csrf_token %}
             </form>
-            {% if gig.artist.user != user %}
-              <form id="supportArtistForm" class="gig-page__form" action="{% url 'support_artist_gig' gig.id %}" method="post">
-                <div class="gig-page__form__quantity">
-                  {% include 'components/label.html' with variant='dark' required='true' for='amount' size='lg' text='Support Amount' %}
-                  {% include 'components/input.html' with id='amountInput' name='amount' type='number' variant='light' placeholder='1' size='lg' full='true' value='1' %}
-                </div>
-                {% include 'components/button.html' with id='supportButton' type='submit' variant='rainbow' text='Support Artist' size='lg' %}
-                {% csrf_token %}
-              </form>
+            {% if user.is_authenticated and user.artist %}
+              {% if gig.artist.user != user %}
+                <form id="supportArtistForm" class="gig-page__form" action="{% url 'support_artist_gig' gig.id %}" method="post">
+                  <div class="gig-page__form__quantity">
+                    {% include 'components/label.html' with variant='dark' required='true' for='amount' size='lg' text='Support Amount' %}
+                    {% include 'components/input.html' with id='amountInput' name='amount' type='number' variant='light' placeholder='1' size='lg' full='true' value='1' %}
+                  </div>
+                  {% include 'components/button.html' with id='supportButton' type='submit' variant='rainbow' text='Support Artist' size='lg' %}
+                  {% csrf_token %}
+                </form>
+              {% endif %}
             {% endif %}
 
             {% if accepted_transactions %}
