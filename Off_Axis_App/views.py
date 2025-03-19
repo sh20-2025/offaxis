@@ -252,7 +252,7 @@ def close_gig(request, id):
 
     gig = get_object_or_404(Gig, id=id)
     if request.method == "POST":
-        gig.is_closed = True
+        gig.is_closed = not gig.is_closed
         gig.save()
 
     return redirect(reverse("gig", args=[gig.artist.slug, gig.id]))

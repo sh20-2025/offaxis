@@ -33,3 +33,5 @@ db.sqlite3
 
 # spotify cache
 .cache
+.vscode/launch.json
+.vscode/settings.json
