@@ -1,58 +1,85 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Artist, Credit, CreditTransaction, Venue, Gig, Address
+from .models import Artist, Credit, CreditTransaction, Venue, Gig, Address, CMS
 from django.utils import timezone
 from django.core import mail
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+from django.core.files.images import ImageFile
 import os
+
+
+def init_artists_cms(self):
+    # Create two artists
+    self.user1 = User.objects.create_user(
+        username="artist1", password="test123"
+    )  # nosec
+    self.user2 = User.objects.create_user(
+        username="artist2", password="test123"
+    )  # nosec
+
+    with open("./static/images/gig-placeholder.png", "rb") as f:
+        self.artist1 = Artist.objects.create(
+            user=self.user1,
+            bio="Test bio",
+            is_approved=True,
+            profile_picture=ImageFile(f),
+            credit=Credit.objects.create(balance=2.00),
+        )
+
+        self.artist2 = Artist.objects.create(
+            user=self.user2,
+            bio="Test bio",
+            is_approved=True,
+            profile_picture=ImageFile(f),
+            credit=Credit.objects.create(balance=2.00),
+        )
+
+    # Initialize credits
+    self.artist1.credit.balance = 100
+    self.artist1.credit.save()
+    self.artist2.credit.balance = 10
+    self.artist2.credit.save()
+
+    self.address = Address.objects.create(
+        line_1="123 Main St",
+        line_2="Suite 1",
+        country="TestCountry",
+        city="TestCity",
+        state_or_province="TestState",
+        post_code="12345",
+    )
+    self.venue = Venue.objects.create(
+        name="Test Venue",
+        address=self.address,
+        description="Test venue description",
+        venue_photo_url="http://example.com/venue.jpg",
+    )
+    # Create a Gig for artist2
+    self.gig = Gig.objects.create(
+        artist=self.artist2,
+        venue=self.venue,
+        date=timezone.now(),
+        price=50.00,
+        booking_fee=5.00,
+        capacity=100,
+        description="Test gig",
+        gig_photo_url="http://example.com/gig.jpg",
+    )
+
+    cms = CMS.objects.create()
+    gigs = Gig.objects.all()
+    cms.just_announced_gigs.add(*gigs)
+    cms.featured_gigs.add(*gigs)
+    cms.artist_of_the_week = self.artist1
+    cms.save()
 
 
 class CreditTransactionTestCase(TestCase):
     def setUp(self):
-        # Create two artists
-        self.user1 = User.objects.create_user(
-            username="artist1", password="test123"
-        )  # nosec
-        self.artist1 = Artist.objects.create(user=self.user1)
-        self.user2 = User.objects.create_user(
-            username="artist2", password="test123"
-        )  # nosec
-        self.artist2 = Artist.objects.create(user=self.user2)
-
-        # Initialize credits
-        self.artist1.credit.balance = 100
-        self.artist1.credit.save()
-        self.artist2.credit.balance = 10
-        self.artist2.credit.save()
-
-        self.address = Address.objects.create(
-            line_1="123 Main St",
-            line_2="Suite 1",
-            country="TestCountry",
-            city="TestCity",
-            state_or_province="TestState",
-            post_code="12345",
-        )
-        self.venue = Venue.objects.create(
-            name="Test Venue",
-            address=self.address,
-            description="Test venue description",
-            venue_photo_url="http://example.com/venue.jpg",
-        )
-        # Create a Gig for artist2
-        self.gig = Gig.objects.create(
-            artist=self.artist2,
-            venue=self.venue,
-            date=timezone.now(),
-            price=50.00,
-            booking_fee=5.00,
-            capacity=100,
-            description="Test gig",
-            gig_photo_url="http://example.com/gig.jpg",
-        )
+        init_artists_cms(self)
 
     def test_support_artist_success(self):
         """Test a successful support request."""
@@ -184,6 +211,8 @@ class AuthenticationTestCase(TestCase):
         self.user = User.objects.create_user(
             username=self.username, email=self.email, password=self.password
         )
+
+        init_artists_cms(self)
 
     # --- Login Tests ---
     def test_login_success(self):
