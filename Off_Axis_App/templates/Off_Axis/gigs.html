@@ -11,7 +11,7 @@
         <h1 class="gigs__title">Gigs</h1>
         <div class="gigs__list">
             {% for gig in gigs %}
-                {% if gig.is_approved or user.is_staff %}
+                {% if gig.is_approved and not gig.is_closed or user.is_staff %}
                     {% include 'components/gig.html' with gig=gig %}
                 {% endif %}
             {% endfor %}

@@ -25,7 +25,13 @@ urlpatterns = [
     path("components", views.components, name="components"),
     path("approve_artist/<slug:slug>/", views.approve_artist, name="approve_artist"),
     path("approve-gig/<int:id>/", views.approve_gig, name="approve_gig"),
+    path("close-gig/<int:id>/", views.close_gig, name="close_gig"),
     path("create-gig/<slug:slug>/", views.create_gig, name="create-gig"),
+    path(
+        "export-gig-tickets/<int:id>/",
+        views.export_gig_tickets,
+        name="export_gig_tickets",
+    ),
     path(
         "upload_profile_picture/",
         views.upload_profile_picture,

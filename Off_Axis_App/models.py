@@ -120,6 +120,7 @@ class Gig(models.Model):
     gig_photo_url = models.TextField(max_length=2048)
     is_approved = models.BooleanField(default=False)
     stripe_product_id = models.TextField(max_length=256, null=True, blank=True)
+    is_closed = models.BooleanField(default=False)
 
     def tickets(self):
         return Ticket.objects.filter(gig=self.id)
@@ -180,6 +181,9 @@ class Ticket(models.Model):
     is_used = models.BooleanField(default=False)
     qr_code = models.ImageField(upload_to="ticket-qr-codes/", blank=True)
     qr_code_data = models.UUIDField(default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
 
 
 class Address(models.Model):

@@ -24,6 +24,34 @@
 </section>
 {% endif %}
 
+{% if user.is_staff %}
+<section id="close-section">
+    <h2>Close Gig</h2>
+    {% if gig.is_closed %}
+      <p>Would you like to open this gig? This will enable ticket buying and show the gig to the public view.</p>
+      <form method="post" action="{% url 'close_gig' gig.id %}">
+        {% csrf_token %}
+        {% include "components/button.html" with id="closeGigButton" type="submit" variant="secondary" text="Open Gig" size="md" %}
+      </form>
+    {% else %}
+      <p>Would you like to close this gig? This will disable ticket buying and hide the gig from public view.</p>
+      <form method="post" action="{% url 'close_gig' gig.id %}">
+          {% csrf_token %}
+          {% include "components/button.html" with id="closeGigButton" type="submit" variant="secondary" text="Close Gig" size="md" %}
+      </form>
+    {% endif %}
+</section>
+
+<section id="export-section">
+    <h2>Export Ticket Data</h2>
+    <p>This will export all the ticket sales data as a CSV for viewing in excel.</p>
+    <form method="get" action="{% url 'export_gig_tickets' gig.id %}">
+        {% csrf_token %}
+        {% include "components/button.html" with id="exportGigButton" type="submit" variant="secondary" text="Export Data" size="md" %}
+    </form>
+</section>
+{% endif %}
+
     <section class="gig-page">
         <img src="{{ gig.gig_photo_url }}"
              width="500"
