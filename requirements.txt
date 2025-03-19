@@ -44,3 +44,4 @@ spotipy==2.25.0
 coverage==7.4.4
 bandit==1.7.7
 python-dotenv==0.21.0
+gunicorn==23.0.0

@@ -8,6 +8,7 @@
 {% endblock import_block %}
 {% block body_block %}
     <section class="select-gig">
+        {% if gigs|length == 0 %}<p class="select-gig__no-gigs">You have no available gigs to scan tickets for.</p>{% endif %}
         {% for gig in gigs %}
             <div class="select-gig__gig">
                 <img src="{{ gig.gig_photo_url }}"

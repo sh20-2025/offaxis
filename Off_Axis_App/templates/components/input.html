@@ -21,7 +21,7 @@ props:
 {% if type == 'password' %}
     <div class="input-password-container">
         <input class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full }}"
-               id="{{ id|default:"" }}"
+               id="{{ id|default:name }}"
                type="{{ type|default:"text" }}"
                placeholder="{{ placeholder|default:"" }}"
                name="{{ name|default:"" }}"
@@ -36,7 +36,7 @@ props:
                 type="button"></button>
         <script>
             {
-                const input = document.getElementById("{{ id|default:"" }}");
+                const input = document.getElementById("{{ id|default:name }}");
                 const toggle = input.parentElement.querySelector(".input-password-toggle");
                 toggle.addEventListener("click", () => {
                     if (input.type === "password") {
@@ -53,14 +53,17 @@ props:
         </script>
     </div>
 {% elif type == 'select' %}
-    <select class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full|default:"false" }}"
-            id="{{ id|default:"" }}"
-            name="{{ name|default:"" }}"
-            size="{{ htmlsize|default:"" }}"
-            required="{{ required|default:"false" }}"
-            value="{{ value|default:"" }}">
-        {% for option in options %}<option value="{{ option.value }}">{{ option.label }}</option>{% endfor %}
-    </select>
+        <select class="input input-{{ variant|default:"light" }} input-{{ size|default:"md" }} input-full-{{ full|default:"false" }}"
+        id="{{ id|default:"" }}"
+        name="{{ name|default:"" }}"
+        size="{{ htmlsize|default:"" }}"
+        {% if required and required != "false" %}required{% endif %}
+        value="{{ value|default:"" }}"
+        {% if multiple %}{{ multiple }}{% endif %}>
+    {% for option in options %}
+        <option value="{{ option.value }}">{{ option.label }}</option>
+    {% endfor %}
+</select>
 
 {% elif type == 'textarea' %}
 <textarea class="input input-{{ variant|default:"light" }} textarea-{{ size|default:"md" }} textarea-full-{{ full|default:"false" }}"

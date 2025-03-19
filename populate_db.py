@@ -8,22 +8,27 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
 django.setup()
 
 # fmt: off
-from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address, Festival,)  # noqa: E402
+from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address, Festival, Credit, CMS)  # noqa: E402
 from django.conf import settings  # noqa: E402
 # fmt: on
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 
 def populate():
     Artist.objects.all().delete()
-
+    Client.objects.all().delete()
+    User.objects.all().delete()
+    # User.objects.get(username="admin").delete()
     if not User.objects.filter(username="admin").exists():
         admin_user = User.objects.create_superuser(
             "admin", "sh20.team.offaxis@gmail.com", "BespokePassword"
         )
         Client.objects.create(user=admin_user, phone_number="+447123456789")
-        Artist.objects.create(user=admin_user, bio="I am the admin", is_approved=False)
+        admin_artist = add_artist("admin", "I am the admin", True)
+
+    admin_user = User.objects.get(username="admin")
+    admin_artist = Artist.objects.get(user=admin_user)
 
     add_genre_tag("Rock")
     add_genre_tag("Pop")
@@ -128,26 +133,22 @@ def populate():
     )
 
     add_gig(
-        a5,
+        admin_artist,
         v1,
         "2022-12-12 12:00:00",
         14.00,
         40,
-        "A gig by someone",
+        "test gig",
         "/static/images/gig-placeholder.png",
-        False,
     )
 
-    add_gig(
-        a4,
-        v2,
-        "2022-12-12 12:00:00",
-        9.00,
-        15,
-        "A gig by someone",
-        "/static/images/gig-placeholder.png",
-        False,
-    )
+    CMS.objects.all().delete()
+    cms = CMS.objects.create()
+    gigs = Gig.objects.all()[:3]
+    cms.just_announced_gigs.add(*gigs)
+    cms.featured_gigs.add(*gigs)
+    cms.artist_of_the_week = a1
+    cms.save()
 
     Festival.objects.all().delete()
 
@@ -179,14 +180,48 @@ def populate():
         "https://www.youtube.com/embed/wtOvDo1Mrh8?si=wFSIWqES72Fi3Fi0",
     )
 
+    if not User.objects.filter(username="admin").exists():
+        admin_user = User.objects.create_superuser(
+            "admin", "sh20.team.offaxis@gmail.com", "BespokePassword"
+        )
+        Client.objects.create(user=admin_user, phone_number="+447123456789")
+        admin_artist = Artist.objects.create(
+            user=admin_user, bio="I am the admin", is_approved=False
+        )
+        admin_artist.save()
+
+        add_gig(
+            admin_artist,
+            v1,
+            "2022-12-12 12:00:00",
+            14.00,
+            40,
+            "A gig by admin",
+            "/static/images/gig-placeholder.png",
+        )
+        add_gig(
+            admin_artist,
+            v2,
+            "2022-12-12 12:00:00",
+            18.00,
+            100,
+            "A gig by admin 2",
+            "/static/images/gig-placeholder.png",
+        )
+
 
 def add_artist(name, bio, is_approved):
     u = User.objects.get_or_create(username=name)[0]
 
     with open("./static/images/gig-placeholder.png", "rb") as f:
         a = Artist.objects.get_or_create(
-            user=u, bio=bio, is_approved=is_approved, profile_picture=ImageFile(f)
+            user=u,
+            bio=bio,
+            is_approved=is_approved,
+            profile_picture=ImageFile(f),
+            credit=Credit.objects.create(balance=2.00),
         )[0]
+
         return a
 
 

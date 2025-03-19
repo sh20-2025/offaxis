@@ -9,22 +9,12 @@
 {% block body_block %}
     <section class="hero">
         <div class="hero-circles">
-            <div class="hero-circle" style="background-color: var(--oa-pink)">
-                <img src="{% static "images/stock_wo_man.jpg" %}" alt="rock man">
-                <h4>Flair |Glasgow</h4>
-            </div>
-            <div class="hero-circle" style="background-color: var(--oa-yellow)">
-                <img src="{% static "images/stock_music_man.jpg" %}" alt="rock man">
-                <h4>Scarlet Cavaliers |Belfast</h4>
-            </div>
-            <div class="hero-circle" style="background-color: var(--oa-green)">
-                <img src="{% static "images/stock_rock_man.jpg" %}" alt="rock man">
-                <h4>Howling Home |Glasgow</h4>
-            </div>
-            <div class="hero-circle" style="background-color: var(--oa-blue)">
-                <img src="{% static "images/stock_older_man.jpg" %}" alt="rock man">
-                <h4>Sonnet |Aberdeen</h4>
-            </div>
+            {% for gig in just_announced_gigs %}
+                <div class="hero-circle">
+                    <img src="{{ gig.gig_photo_url }}" alt="{{ gig.artist.user.username }}">
+                    <h4>{{ gig.artist.user.username }} | {{ gig.venue.address.city }}</h4>
+                </div>
+            {% endfor %}
         </div>
     </section>
     <section class="gigs-section">
@@ -32,50 +22,19 @@
             <div class="gigs-section-media"></div>
         </div>
         <div class="right">
-            <div class="gig">
-                <div class="date">
-                    <div class="num">20</div>
-                    November
+            {% for gig in featured_gigs %}
+                <div class="gig">
+                    <div class="date">
+                        <div class="num">{{ gig.date|date:"d" }}</div>
+                        {{ gig.date|date:"F" }}
+                    </div>
+                    <div class="description">
+                        <div class="name">{{ gig.artist.user.username }}</div>
+                        with - {{ gig.lineup }} | {{ gig.date|date:"d/m/Y" }}
+                    </div>
+                    <div class="buy-btn">Buy Tickets</div>
                 </div>
-                <div class="description">
-                    <div class="name">Ed Armeson</div>
-                    with - The Demographic, Unit IV, Ned Ashcroft | 20/11/2024
-                </div>
-                <div class="buy-btn">Buy Tickets</div>
-            </div>
-            <div class="gig">
-                <div class="date">
-                    <div class="num">21</div>
-                    November
-                </div>
-                <div class="description">
-                    <div class="name">Precious INK</div>
-                    with - The Demographic, Rascal, Frogeggs | 21/11/2024
-                </div>
-                <div class="buy-btn">Buy Tickets</div>
-            </div>
-            <div class="gig">
-                <div class="date">
-                    <div class="num">23</div>
-                    November
-                </div>
-                <div class="description">
-                    <div class="name">Deltamanic</div>
-                    with- The Demographic, Pommes Frites | 23/11/2024
-                </div>
-                <div class="buy-btn">Buy Tickets</div>
-            </div>
-            <div class="gig">
-                <div class="date">
-                    <div class="num">25</div>
-                    November
-                </div>
-                <div class="description">
-                    <div class="name">Sub Violet</div>
-                    with - Precious, INKCRASHKID | 23/11/2024
-                </div>
-                <div class="buy-btn">Buy Tickets</div>
-            </div>
+            {% endfor %}
         </div>
     </section>
     <div class="all-gigs-btn">
@@ -86,18 +45,20 @@
     <section class="artist-of-the-week">
 
         <div class="left">
-            <img src="{% static "images/artist_of_the_week.png" %}" alt="rock man">
+
+            <img class="artist-of-the-week-media" src="{{ artist_of_the_week.profile_picture.url }}" alt="{{ artist_of_the_week.user.username }}">
+
         </div>
 
         <div class="right">
             <div class="artist-of-the-week-info">
                 <h2>Artist of the Week</h2>
-                <h3>Flair</h3>
+                <h3>{{ artist_of_the_week.user.username }}</h3>
                 <p>
-                    Flair is a Glasgow-based band that has been making waves in the music scene with their unique sound and energetic live performances. Their music is a blend of indie rock and pop, with catchy hooks and infectious melodies that will have you dancing all night long. Check out their latest single "Electric Dreams" and catch them live at a venue near you!
+                    {{ artist_of_the_week.bio }}
                 </p>
                 <div class="artist-of-the-week-button">
-                    <a href="#">
+                    <a href="{% url 'artist' artist_of_the_week.slug %}">
                         {% include "components/button.html" with id="button9" type="button" variant="rainbow" text="Read More" size="sm" %}
                     </a>
                 </div>
@@ -211,10 +172,21 @@
     <section class="bottom-info-section">
         <h3>Our Partners</h3>
         <div class="our-partners">
-            <div class="partner"></div>
-            <div class="partner"></div>
-            <div class="partner"></div>
-            <div class="partner"></div>
+            <a href="https://www.newfoundsound.co.uk/">
+                <img class="partner" alt="newfoundsound" src="{% static 'images/nfs.png' %}"></img>
+            </a>
+            <a href="https://www.unconventionhub.org/">
+                <img class="partner" alt="unconventionhub" src="{% static 'images/uncon.png' %}"></img>
+            </a>
+            <a href="https://musiciansunion.org.uk/">
+                <img class="partner" alt="musiciansunion" src="{% static 'images/mu.png' %}"></img>
+            </a>
+            <a href="https://www.livingwage.org.uk/accredited-living-wage-employers">
+                <img class="partner" alt="livingwage" src="{% static 'images/living-wage.png' %}"></img>
+            </a>
+            <a href="https://www.creativecarbonscotland.com/green-arts-initiative/">
+                <img class="partner" alt="creativecarbonscotland" src="{% static 'images/GAI.png' %}"></img>
+            </a>
         </div>
         <div class="info-text">
             <h4>My account | Terms & Conditions | Privacy Policy</h4>

@@ -9,9 +9,11 @@ props:
     size?: The size of the button (sm, md, lg)
     full?: Whether the button should take up the full width of its container (true, false)
     class?: The additional classes
+    disabled?: Whether the button should be disabled (true, false)
 {% endcomment %}
 <button id="{{ id|default:"" }}"
         type="{{ type|default:"button" }}"
+        {% if disabled == "true" %}disabled{% endif %}
         class="btn btn-{{ variant|default:"primary" }} btn-{{ size|default:"md" }} btn-full-{{ full|default:"false" }} {{ class|default:"" }}">
     {{ text|default:"Click Me" }}
 </button>

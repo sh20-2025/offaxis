@@ -56,3 +56,39 @@
   flex-direction: column;
   gap: 1rem;
 }
+
+#approval-section,
+#close-section,
+#export-section {
+  margin: 2rem;
+  background-color: var(--oa-pink);
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.gig-page__description {
+  max-width: 500px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.support-buttons{
+  display: flex;
+  gap: 0.3rem;
+  justify-content: left;
+  align-items: left;
+}
+
+.gig-page__support-request__details{
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+ul {
+  margin-left: 20px;
+}

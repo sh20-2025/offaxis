@@ -1,4 +1,4 @@
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import (
     Artist,
@@ -10,8 +10,18 @@ from .models import (
     CartItem,
     ContactInformation,
     Festival,
+    Credit,
+    CreditTransaction,
+    CMS,
 )
-from .forms import ClientForm, ContactInformationForm, SocialLinkForm, GigForm
+from .forms import (
+    ClientForm,
+    ContactInformationForm,
+    SocialLinkForm,
+    GigForm,
+    VenueForm,
+    AddressForm,
+)
 from django.http.response import (
     HttpResponseBadRequest,
     HttpResponseNotAllowed,
@@ -34,11 +44,13 @@ from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 import json
 import stripe
 from .api.spotify_utils import get_artist_top_track
-from django.views.decorators.http import require_POST
 import re
+from django.db.models import F
+import csv
 
 
 def components(request):
@@ -56,7 +68,13 @@ def components(request):
 
 
 def index(request):
-    return render(request, "Off_Axis/index.html")
+    context = {}
+    cms = CMS.objects.first()
+    context["cms"] = cms
+    context["just_announced_gigs"] = cms.just_announced_gigs.all()[:4]
+    context["featured_gigs"] = cms.featured_gigs.all()[:4]
+    context["artist_of_the_week"] = cms.artist_of_the_week
+    return render(request, "Off_Axis/index.html", context)
 
 
 def artists_view(request):
@@ -66,18 +84,78 @@ def artists_view(request):
     return render(request, "Off_Axis/artists.html", context)
 
 
-def artist_view(request, slug):
+def create_gig(request, slug):
     artist = get_object_or_404(Artist, slug=slug)
 
-    gig_form = GigForm()
+    # For GET requests, create unbound forms
+    address_form = AddressForm(prefix="address")
+    venue_form = VenueForm(prefix="venue")
+    gig_form = GigForm(prefix="gig")
+    supporting_artists_options = [
+        {"label": a.user.username, "value": a.id} for a in Artist.objects.all()
+    ]
 
     if request.method == "POST":
-        gig_form = GigForm(request.POST, request.FILES)
-        if gig_form.is_valid():
+        post_data = request.POST.copy()
+
+        supporting_artists_value = post_data.pop(
+            gig_form["supporting_artists"].html_name, ""
+        )
+
+        if isinstance(supporting_artists_value, list):
+            supporting_artists_str = ",".join(supporting_artists_value)
+        else:
+            supporting_artists_str = supporting_artists_value
+
+        address_form = AddressForm(post_data, prefix="address")
+        venue_form = VenueForm(post_data, prefix="venue")
+        gig_form = GigForm(post_data, request.FILES, prefix="gig")
+
+        if address_form.is_valid() and venue_form.is_valid() and gig_form.is_valid():
+            address = address_form.save()
+            venue = venue_form.save(commit=False)
+            venue.address = address
+            venue.save()
+
             gig = gig_form.save(commit=False)
+            gig.venue = venue
             gig.artist = artist
+            gig.booking_fee = 1.25
             gig.save()
+            gig_form.save_m2m()
+
+            if supporting_artists_str:
+                try:
+                    artist_ids = [
+                        int(x) for x in supporting_artists_str.split(",") if x.strip()
+                    ]
+                    gig.supporting_artists.set(artist_ids)
+                except ValueError:
+                    pass
+
             return redirect(reverse("artist", args=[artist.slug]))
+        else:
+            context = {
+                "address_form": address_form,
+                "venue_form": venue_form,
+                "gig_form": gig_form,
+                "supporting_artists_options": supporting_artists_options,
+                "artist": artist,
+            }
+            return render(request, "Off_Axis/create_gig.html", context)
+
+    context = {
+        "address_form": address_form,
+        "venue_form": venue_form,
+        "gig_form": gig_form,
+        "supporting_artists_options": supporting_artists_options,
+        "artist": artist,
+    }
+    return render(request, "Off_Axis/create_gig.html", context)
+
+
+def artist_view(request, slug):
+    artist = get_object_or_404(Artist, slug=slug)
 
     # Get Spotify top track if artist has Spotify link
     top_track = None
@@ -94,14 +172,13 @@ def artist_view(request, slug):
         "artist": artist,
         "options": select_options,
         "top_track": top_track,
-        "gig_form": gig_form,
     }
     return render(request, "Off_Axis/artist.html", context)
 
 
 def register(request):
     client_form = ClientForm()
-    is_artist = request.POST.get("isArtist") == "Artist"
+    is_artist = request.POST.get("isArtist") == "True"
 
     if request.method == "POST":
         client_form = ClientForm(request.POST)
@@ -111,7 +188,8 @@ def register(request):
                 login(request, client.user)
 
                 if is_artist:
-                    artist = Artist(user=client.user)
+                    print("Creating artist")
+                    artist = Artist.objects.create(user=client.user)
                     artist.save()
                     return redirect("add_social_link", slug=artist.slug)
 
@@ -140,7 +218,13 @@ def gigs(request):
 
 def gig(request, artist, id):
     context = {}
-    context["gig"] = Gig.objects.get(id=id)
+    gig = Gig.objects.get(id=id)
+    artist_transactions = gig.artist.received_transactions.all()
+    if artist_transactions:
+        context["pending_transactions"] = gig.artist.get_pending_transactions()
+        context["accepted_transactions"] = gig.artist.get_accepted_transactions()
+
+    context["gig"] = gig
     context["tickets_sold"] = context["gig"].tickets_sold()
     context["capacity_last_few"] = context["gig"].capacity * 0.9
 
@@ -154,6 +238,31 @@ def login_redirect_view(request):
         return redirect(reverse("artist", args=[request.user.artist.slug]))
     else:
         return redirect("/")
+
+
+@login_required
+def approve_gig(request, id):
+    gig = get_object_or_404(Gig, id=id)
+    if request.method == "POST":
+        if "approve" in request.POST:
+            gig.approve()
+        else:
+            gig.is_approved = False
+            gig.save()
+    return redirect(reverse("gig", args=[gig.artist.slug, gig.id]))
+
+
+@login_required
+def close_gig(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    gig = get_object_or_404(Gig, id=id)
+    if request.method == "POST":
+        gig.is_closed = not gig.is_closed
+        gig.save()
+
+    return redirect(reverse("gig", args=[gig.artist.slug, gig.id]))
 
 
 @login_required
@@ -283,6 +392,10 @@ def cart(request):
             return response()
 
         gig = Gig.objects.get(id=gig_id)
+
+        if gig.is_closed:
+            context["error"] = "Gig is closed"
+            return response()
 
         existing_cart_item = CartItem.objects.filter(cart=cart, gig=gig).first()
         action = query_dict.get("action")
@@ -481,7 +594,8 @@ def social_link_validation(social_link, type):
 
 def add_social_link_on_artist(request):
     if request.method == "POST":
-        artist_slug = request.POST.get("artist_slug")
+        artist_slug = request.POST.get("artist_slug", "").strip()
+
         social_type = request.POST.get("type")
         social_url = request.POST.get("url")
 
@@ -625,8 +739,8 @@ def scan_tickets(request):
         return HttpResponseForbidden()
 
     context = {
-        # "gigs": Gig.objects.filter(artist=request.user.artist)
-        "gigs": Gig.objects.all()
+        "gigs": Gig.objects.filter(artist=request.user.artist).order_by("date")
+        # "gigs": Gig.objects.all()
     }
 
     return render(request, "Off_Axis/scan_tickets.html", context)
@@ -636,8 +750,7 @@ def ticket_scanner(request, id):
     if not request.user.is_authenticated or not request.user.artist:
         return HttpResponseForbidden()
 
-    # gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
-    gig = Gig.objects.filter(id=id).first()
+    gig = Gig.objects.filter(artist=request.user.artist, id=id).first()
     if not gig:
         return HttpResponseForbidden()
 
@@ -655,7 +768,7 @@ def scan_ticket_api(request, code):
         return HttpResponseNotAllowed(["POST"])
 
     ticket = Ticket.objects.filter(qr_code_data=code).first()
-    if not ticket:
+    if not ticket or request.user.artist.id != ticket.gig.artist.id or ticket.is_used:
         return HttpResponseBadRequest()
 
     ticket.is_used = True
@@ -663,4 +776,154 @@ def scan_ticket_api(request, code):
 
     print("Ticket scanned for code ", code)
 
-    return HttpResponse(status=200)
+    return JsonResponse(
+        status=200,
+        data={
+            "name": ticket.checkout_name,
+            "email": ticket.checkout_email,
+            "country": ticket.checkout_country,
+            "postcode": ticket.checkout_postcode,
+            "price": ticket.purchase_price,
+            "discount_used": ticket.discount_used,
+        },
+    )
+
+
+@transaction.atomic
+@login_required
+@require_POST
+def support_artist_gig(request, gig_id):
+    if not hasattr(request.user, "artist"):
+        return JsonResponse({"error": "user is not an artist"}, status=403)
+
+    from_artist = request.user.artist
+    gig = get_object_or_404(Gig, id=gig_id)
+    to_artist = gig.artist
+    amount = request.POST.get("amount")
+
+    if not amount:
+        return JsonResponse({"error": "Invalid request"}, status=400)
+
+    try:
+        amount = int(amount)
+    except ValueError:
+        return JsonResponse({"error": "Invalid amount"}, status=400)
+
+    if from_artist == to_artist:
+        return JsonResponse({"error": "Cannot support yourself"}, status=400)
+
+    if from_artist.credit.balance < amount:
+        return JsonResponse({"error": "Not enough credits to send"}, status=400)
+
+    existing = CreditTransaction.objects.filter(
+        from_artist=from_artist, to_artist=to_artist, gig=gig
+    )
+    if existing.exists():
+        return JsonResponse(
+            {"error": "You have already supported this gig"}, status=400
+        )
+
+    try:
+        CreditTransaction.objects.create(
+            from_artist=from_artist, to_artist=to_artist, gig=gig, amount=amount
+        )
+
+        from_artist.credit.balance = F("balance") - amount
+        from_artist.credit.save()
+        from_artist.credit.refresh_from_db()
+
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Request to support sent",
+                "new_balance": from_artist.credit.balance,
+            }
+        )
+    except ValueError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+@login_required
+@require_POST
+@transaction.atomic
+def accept_support(request, id):
+    transaction = get_object_or_404(
+        CreditTransaction, id=id, to_artist=request.user.artist
+    )
+    if transaction.status != "pending":
+        return JsonResponse({"error": "Transaction already accepted"}, status=400)
+
+    gig = Gig.objects.filter(artist=request.user.artist).first()
+    if not gig:
+        return JsonResponse(
+            {"error": "You do not have any gigs to support"}, status=400
+        )
+
+    transaction.status = "accepted"
+    transaction.save()
+    transaction.to_artist.credit.balance = F("balance") + transaction.amount
+    transaction.from_artist.credit.save()
+    transaction.to_artist.credit.save()
+    return JsonResponse({"success": True, "message": "Transaction accepted"})
+
+
+@login_required
+@require_POST
+@transaction.atomic
+def reject_support(request, id):
+    transaction = get_object_or_404(
+        CreditTransaction, id=id, to_artist=request.user.artist
+    )
+    if transaction.status != "pending":
+        return JsonResponse({"error": "Transaction already accepted"}, status=400)
+
+    transaction.status = "rejected"
+    transaction.from_artist.credit.balance = F("balance") + transaction.amount
+    transaction.from_artist.credit.save()
+    transaction.save()
+    transaction.delete()
+    return JsonResponse({"success": True, "message": "Transaction rejected"})
+
+
+@login_required
+def export_gig_tickets(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    gig = get_object_or_404(Gig, id=id)
+    tickets = Ticket.objects.filter(gig=gig)
+    response = HttpResponse(content_type="text/csv")
+
+    response["Content-Disposition"] = f'attachment; filename="{gig.name()}_tickets.csv"'
+    writer = csv.writer(response)
+    writer.writerow(
+        [
+            "Name",
+            "Email",
+            "Country",
+            "Postcode",
+            "Purchase Price",
+            "Discount Used",
+            "Gig Booking Fee",
+            "Gig Price",
+            "Purchase Date",
+            "Ticket Used",
+        ]
+    )
+    for ticket in tickets:
+        writer.writerow(
+            [
+                ticket.checkout_name,
+                ticket.checkout_email,
+                ticket.checkout_country,
+                ticket.checkout_postcode,
+                ticket.purchase_price,
+                ticket.discount_used,
+                ticket.gig.booking_fee,
+                ticket.gig.price,
+                ticket.created_at,
+                ticket.is_used,
+            ]
+        )
+
+    return response

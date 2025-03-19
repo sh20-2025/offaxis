@@ -9,7 +9,46 @@
 {% endblock import_block %}
 {% block body_block %}
     <section class="ticket-scanner">
-        <video id="cameraView" width="640" height="480" autoplay>
-        </video>
+        <div class="ticket-scanner__view">
+            <video id="cameraView" width="100%" height="100%" autoplay muted playsinline>
+            </video>
+            <div class="ticket-scanner__view__overlay">
+                <img class="ticket-scanner__view__watermark" width="120" src="{% static "images/logo.webp" %}" alt="Off Axis Logo" />
+                <div class="ticket-scanner__view__crosshair"></div>
+                <p class="ticket-scanner__view__label">Scan the QR code on the ticket</p>
+            </div>
+        </div>
+        {% include "components/button.html" with id="show-result-button" type="button" variant="primary" text="Show Ticket Info" size="lg" full="true" disabled="true" %}
     </section>
+    <div id="scan-result-modal" class="modal">
+        <div class="modal__body">
+            <div class="modal__header">
+                <h1 class="modal__title">Ticket Scanned</h1>
+                <button class="modal__close modal-close">
+                    <img src="{% static "icons/close-button.svg" %}" alt="Close Modal" />
+                </button>
+            </div>
+            <div class="modal__content">
+                <p>
+                    Customer Email: <span id="customer-email"></span>
+                </p>
+                <p>
+                    Customer Name: <span id="customer-name"></span>
+                </p>
+                <p>
+                    Customer Postcode: <span id="customer-postcode"></span>
+                </p>
+                <p>
+                    Customer Country: <span id="customer-country"></span>
+                </p>
+                <p>
+                    Ticket Price: £<span id="ticket-price"></span>
+                </p>
+                <p>
+                    Discounts Used: <span id="discounts-used"></span>
+                </p>
+                {% include "components/button.html" with type="button" variant="primary" text="Close" size="lg" full="true" class="modal-close" %}
+            </div>
+        </div>
+    </div>
 {% endblock body_block %}

@@ -2,11 +2,101 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4rem 10%;
-  height: 70vh;
+  padding: 2rem;
+  height: 80vh;
+  flex-direction: column;
 }
 
 #cameraView {
+  width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+
+.ticket-scanner__view {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  max-width: 42rem;
+  overflow: hidden;
+  border: 0.8rem solid rgb(205, 205, 205);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.ticket-scanner__view--success {
+  border-color: rgb(44, 194, 36);
+}
+
+.ticket-scanner__view--error {
+  border-color: rgb(197, 35, 35);
+}
+
+.ticket-scanner__view__overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ticket-scanner__view__crosshair {
+  --color: rgba(255, 255, 255, 0.7);
+  --size: 0.3rem;
+  width: 9rem;
   aspect-ratio: 1/1;
+  background: linear-gradient(to right, var(--color) var(--size), transparent var(--size)) 0 0,
+    linear-gradient(to right, var(--color) var(--size), transparent var(--size)) 0 100%,
+    linear-gradient(to left, var(--color) var(--size), transparent var(--size)) 100% 0,
+    linear-gradient(to left, var(--color) var(--size), transparent var(--size)) 100% 100%,
+    linear-gradient(to bottom, var(--color) var(--size), transparent var(--size)) 0 0,
+    linear-gradient(to bottom, var(--color) var(--size), transparent var(--size)) 100% 0,
+    linear-gradient(to top, var(--color) var(--size), transparent var(--size)) 0 100%,
+    linear-gradient(to top, var(--color) var(--size), transparent var(--size)) 100% 100%;
+
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+}
+
+.ticket-scanner__view__label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+  position: absolute;
+  bottom: 10%;
+}
+
+.ticket-scanner__view__watermark {
+  position: absolute;
+  top: 10%;
+  opacity: 0.7;
+  width: 25%;
+}
+
+@media screen and (max-width: 768px) {
+  .ticket-scanner {
+    padding: 1rem;
+  }
+
+  .ticket-scanner__view__label {
+    font-size: 1.5rem;
+    bottom: 5%;
+  }
+
+  .ticket-scanner__view__watermark {
+    top: 5%;
+  }
+}
+
+#show-result-button {
+  max-width: 42rem;
+  margin-top: 2rem;
+}
+
+#scan-result-modal .modal__content {
+  font-size: 1.5rem;
 }

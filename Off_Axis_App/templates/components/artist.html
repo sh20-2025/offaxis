@@ -1,5 +1,5 @@
 {% load static %}
-<a class="artist" href="{% url 'artist' artist.slug %}">
+<a class="artist" href="{% url 'artist' artist.slug %}" data-search="{{ artist.user.username }}">
     {% if artist.profile_picture %}
         <img class="artist__image"
              width="300"
