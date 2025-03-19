@@ -17,8 +17,9 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 def populate():
     Artist.objects.all().delete()
-
-    User.objects.get(username="admin").delete()
+    Client.objects.all().delete()
+    User.objects.all().delete()
+    # User.objects.get(username="admin").delete()
     if not User.objects.filter(username="admin").exists():
         admin_user = User.objects.create_superuser(
             "admin", "sh20.team.offaxis@gmail.com", "BespokePassword"
