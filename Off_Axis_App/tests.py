@@ -258,7 +258,7 @@ class AuthenticationTestCase(TestCase):
     def test_password_reset_confirm_invalid_token(self):
         # Test the password reset confirmation view with an invalid uid/token combination.
         uidb64 = "invaliduid"
-        token = "invalid-token"
+        token = "invalid-token"  # nosec
         url = reverse(
             "password_reset_confirm", kwargs={"uidb64": uidb64, "token": token}
         )
