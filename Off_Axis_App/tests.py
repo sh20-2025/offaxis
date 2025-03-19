@@ -7,14 +7,14 @@ from django.core import mail
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-
+import os
 
 class CreditTransactionTestCase(TestCase):
     def setUp(self):
         # Create two artists
-        self.user1 = User.objects.create_user(username="artist1", password="test123")
+        self.user1 = User.objects.create_user(username="artist1", password="test123") # nosec
         self.artist1 = Artist.objects.create(user=self.user1)
-        self.user2 = User.objects.create_user(username="artist2", password="test123")
+        self.user2 = User.objects.create_user(username="artist2", password="test123") # nosec
         self.artist2 = Artist.objects.create(user=self.user2)
 
         # Initialize credits
@@ -51,7 +51,7 @@ class CreditTransactionTestCase(TestCase):
 
     def test_support_artist_success(self):
         """Test a successful support request."""
-        self.client.login(username="artist1", password="test123")
+        self.client.login(username="artist1", password="test123") # nosec
         initial_balance = self.artist1.credit.balance
         support_amount = 20
         response = self.client.post(
@@ -71,7 +71,7 @@ class CreditTransactionTestCase(TestCase):
             from_artist=self.artist1, to_artist=self.artist2, amount=20
         )
         # Log in as artist2 (the recipient)
-        self.client.login(username="artist2", password="test123")
+        self.client.login(username="artist2", password="test123") # nosec
 
         # Call the accept_support view
         response = self.client.post(reverse("accept_support", args=[transaction.id]))
@@ -89,7 +89,7 @@ class CreditTransactionTestCase(TestCase):
 
     def test_reject_support(self):
         """Test that rejecting a support transaction refunds the supporter and deletes the transaction."""
-        self.client.login(username="artist1", password="test123")
+        self.client.login(username="artist1", password="test123") # nosec
         support_amount = 20
         initial_balance = self.artist1.credit.balance
         response = self.client.post(
@@ -107,7 +107,7 @@ class CreditTransactionTestCase(TestCase):
 
         # Now, artist2 rejects the support request.
         self.client.logout()
-        self.client.login(username="artist2", password="test123")
+        self.client.login(username="artist2", password="test123") # nosec
         response = self.client.post(reverse("reject_support", args=[transaction.id]))
         self.assertEqual(response.status_code, 200)
         data = response.json()
@@ -128,7 +128,7 @@ class CreditTransactionTestCase(TestCase):
         field is missing from the POST data.
         """
         # Log in as artist1 (the supporter)
-        self.client.login(username="artist1", password="test123")
+        self.client.login(username="artist1", password="test123") # nosec
         # Post without 'amount'
         response = self.client.post(
             reverse("support_artist_gig", args=[self.gig.id]), data={}
@@ -142,7 +142,7 @@ class CreditTransactionTestCase(TestCase):
         Test that the support_artist_gig view returns an error when the 'amount'
         field is not a valid number.
         """
-        self.client.login(username="artist1", password="test123")
+        self.client.login(username="artist1", password="test123") # nosec
         # Post with a non-numeric amount
         response = self.client.post(
             reverse("support_artist_gig", args=[self.gig.id]), data={"amount": "abc"}
@@ -160,7 +160,7 @@ class CreditTransactionTestCase(TestCase):
         self.artist1.credit.balance = 5
         self.artist1.credit.save()
 
-        self.client.login(username="artist1", password="test123")
+        self.client.login(username="artist1", password="test123") # nosec
         # Attempt to support with an amount greater than the available credits
         response = self.client.post(
             reverse("support_artist_gig", args=[self.gig.id]), data={"amount": "20"}
@@ -175,7 +175,7 @@ class AuthenticationTestCase(TestCase):
         # Create a user for testing login and password reset
         self.username = "testuser"
         self.email = "testuser@example.com"
-        self.password = "Password123!"
+        self.password = "Password123!" # nosec
         self.user = User.objects.create_user(
             username=self.username, email=self.email, password=self.password
         )
@@ -277,7 +277,7 @@ class AuthenticationTestCase(TestCase):
         self.assertContains(response, "Enter new password")
 
         # Post the new password via POST to the redirect URL
-        new_password = "NewPassword123!"
+        new_password = "NewPassword123!" # nosec
         response = self.client.post(
             redirect_url,
             data={"new_password1": new_password, "new_password2": new_password},
