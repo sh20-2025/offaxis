@@ -181,6 +181,9 @@ class Ticket(models.Model):
     is_used = models.BooleanField(default=False)
     qr_code = models.ImageField(upload_to="ticket-qr-codes/", blank=True)
     qr_code_data = models.UUIDField(default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
 
 
 class Address(models.Model):

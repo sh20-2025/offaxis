@@ -49,6 +49,7 @@ import stripe
 from .api.spotify_utils import get_artist_top_track
 import re
 from django.db.models import F
+import csv
 
 
 def components(request):
@@ -246,6 +247,9 @@ def approve_gig(request, id):
 
 @login_required
 def close_gig(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+
     gig = get_object_or_404(Gig, id=id)
     if request.method == "POST":
         gig.is_closed = True
@@ -863,3 +867,47 @@ def reject_support(request, id):
     transaction.save()
     transaction.delete()
     return JsonResponse({"success": True, "message": "Transaction rejected"})
+
+
+@login_required
+def export_gig_tickets(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    gig = get_object_or_404(Gig, id=id)
+    tickets = Ticket.objects.filter(gig=gig)
+    response = HttpResponse(content_type="text/csv")
+
+    response["Content-Disposition"] = f'attachment; filename="{gig.name()}_tickets.csv"'
+    writer = csv.writer(response)
+    writer.writerow(
+        [
+            "Name",
+            "Email",
+            "Country",
+            "Postcode",
+            "Purchase Price",
+            "Discount Used",
+            "Gig Booking Fee",
+            "Gig Price",
+            "Purchase Date",
+            "Ticket Used",
+        ]
+    )
+    for ticket in tickets:
+        writer.writerow(
+            [
+                ticket.checkout_name,
+                ticket.checkout_email,
+                ticket.checkout_country,
+                ticket.checkout_postcode,
+                ticket.purchase_price,
+                ticket.discount_used,
+                ticket.gig.booking_fee,
+                ticket.gig.price,
+                ticket.created_at,
+                ticket.is_used,
+            ]
+        )
+
+    return response

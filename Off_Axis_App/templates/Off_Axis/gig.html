@@ -37,6 +37,15 @@
       </form>
     {% endif %}
 </section>
+
+<section id="export-section">
+    <h2>Export Ticket Data</h2>
+    <p>This will export all the ticket sales data as a CSV for viewing in excel.</p>
+    <form method="get" action="{% url 'export_gig_tickets' gig.id %}">
+        {% csrf_token %}
+        {% include "components/button.html" with id="exportGigButton" type="submit" variant="secondary" text="Export Data" size="md" %}
+    </form>
+</section>
 {% endif %}
 
     <section class="gig-page">
