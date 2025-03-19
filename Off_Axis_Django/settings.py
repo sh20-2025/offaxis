@@ -40,8 +40,13 @@ DEBUG = True
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
 
-HOST = "http://127.0.0.1"
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "sh20.pythonanywhere.com"]
+HOST = os.getenv("HOST")
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "sh20.pythonanywhere.com",
+    "offaxis.fserver.online",
+]
 
 
 # Application definition
