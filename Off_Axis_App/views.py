@@ -764,6 +764,7 @@ def scan_ticket_api(request, code):
     )
 
 
+@transaction.atomic
 @login_required
 @require_POST
 def support_artist_gig(request, gig_id):
@@ -786,6 +787,9 @@ def support_artist_gig(request, gig_id):
     if from_artist == to_artist:
         return JsonResponse({"error": "Cannot support yourself"}, status=400)
 
+    if from_artist.credit.balance < amount:
+        return JsonResponse({"error": "Not enough credits to send"}, status=400)
+
     existing = CreditTransaction.objects.filter(
         from_artist=from_artist, to_artist=to_artist, gig=gig
     )
@@ -798,6 +802,11 @@ def support_artist_gig(request, gig_id):
         CreditTransaction.objects.create(
             from_artist=from_artist, to_artist=to_artist, gig=gig, amount=amount
         )
+
+        from_artist.credit.balance = F("balance") - amount
+        from_artist.credit.save()
+        from_artist.credit.refresh_from_db()
+
         return JsonResponse(
             {
                 "success": True,
@@ -827,7 +836,6 @@ def accept_support(request, id):
 
     transaction.status = "accepted"
     transaction.save()
-    transaction.from_artist.credit.balance = F("balance") - transaction.amount
     transaction.to_artist.credit.balance = F("balance") + transaction.amount
     transaction.from_artist.credit.save()
     transaction.to_artist.credit.save()
@@ -846,6 +854,7 @@ def reject_support(request, id):
 
     transaction.status = "rejected"
     transaction.from_artist.credit.balance = F("balance") + transaction.amount
+    transaction.from_artist.credit.save()
     transaction.save()
     transaction.delete()
     return JsonResponse({"success": True, "message": "Transaction rejected"})

@@ -73,3 +73,20 @@
   word-break: break-word;
   white-space: normal;
 }
+
+.support-buttons{
+  display: flex;
+  gap: 0.3rem;
+  justify-content: left;
+  align-items: left;
+}
+
+.gig-page__support-request__details{
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+ul {
+  margin-left: 20px;
+}
