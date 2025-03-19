@@ -835,7 +835,6 @@ def accept_support(request, id):
 
     transaction.status = "accepted"
     transaction.save()
-    # transaction.from_artist.credit.balance = F("balance") - transaction.amount
     transaction.to_artist.credit.balance = F("balance") + transaction.amount
     transaction.from_artist.credit.save()
     transaction.to_artist.credit.save()
@@ -854,6 +853,7 @@ def reject_support(request, id):
 
     transaction.status = "rejected"
     transaction.from_artist.credit.balance = F("balance") + transaction.amount
+    transaction.from_artist.credit.save()
     transaction.save()
     transaction.delete()
     return JsonResponse({"success": True, "message": "Transaction rejected"})

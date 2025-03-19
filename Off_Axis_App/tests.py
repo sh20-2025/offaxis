@@ -8,13 +8,6 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 
-# Register your models here.
-# admin.site.register(Artist)
-# admin.site.register(Client)
-# admin.site.register(SocialLink)
-# admin.site.register(GenreTag)
-
-
 class CreditTransactionTestCase(TestCase):
     def setUp(self):
         # Create two artists
@@ -55,6 +48,22 @@ class CreditTransactionTestCase(TestCase):
             gig_photo_url="http://example.com/gig.jpg",
         )
 
+    def test_support_artist_success(self):
+        """Test a successful support request."""
+        self.client.login(username="artist1", password="test123")
+        initial_balance = self.artist1.credit.balance
+        support_amount = 20
+        response = self.client.post(
+            reverse("support_artist_gig", args=[self.gig.id]),
+            data={"amount": str(support_amount)},
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data["success"])
+        # Refresh the credit object to get the updated balance.
+        self.artist1.credit.refresh_from_db()
+        self.assertEqual(self.artist1.credit.balance, initial_balance - support_amount)
+
     def test_accept_support(self):
         # Create a pending transaction from artist1 to artist2
         transaction = CreditTransaction.objects.create(
@@ -74,22 +83,43 @@ class CreditTransactionTestCase(TestCase):
 
         # Check that the transaction status is updated and balances are adjusted
         self.assertEqual(transaction.status, "accepted")
-        self.assertEqual(self.artist1.credit.balance, 80)  # 100 - 20
+        self.assertEqual(self.artist1.credit.balance, 100)
         self.assertEqual(self.artist2.credit.balance, 30)  # 10 + 20
 
     def test_reject_support(self):
-        # Create a pending transaction from artist1 to artist2
-        transaction = CreditTransaction.objects.create(
-            from_artist=self.artist1, to_artist=self.artist2, amount=20
+        """Test that rejecting a support transaction refunds the supporter and deletes the transaction."""
+        self.client.login(username="artist1", password="test123")
+        support_amount = 20
+        initial_balance = self.artist1.credit.balance
+        response = self.client.post(
+            reverse("support_artist_gig", args=[self.gig.id]),
+            data={"amount": str(support_amount)},
         )
-        # Log in as artist2 (the recipient)
-        self.client.login(username="artist2", password="test123")
-
-        # Call the reject_support view (assuming it reverses or deletes the transaction)
-        response = self.client.post(reverse("reject_support", args=[transaction.id]))
         self.assertEqual(response.status_code, 200)
+        # The transaction should have been created with a 'pending' status.
+        transaction = CreditTransaction.objects.get(
+            from_artist=self.artist1, to_artist=self.artist2, gig=self.gig
+        )
+        self.assertEqual(transaction.status, "pending")
+        self.artist1.credit.refresh_from_db()
+        self.assertEqual(self.artist1.credit.balance, initial_balance - support_amount)
 
-        # Verify that the transaction has been deleted or marked rejected as per your logic
+        # Now, artist2 rejects the support request.
+        self.client.logout()
+        self.client.login(username="artist2", password="test123")
+        response = self.client.post(
+            reverse("reject_support", args=[transaction.id])
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+
+        # Artist1's credit should have been refunded.
+        self.artist1.credit.refresh_from_db()
+        self.assertEqual(self.artist1.credit.balance, initial_balance)
+
+        self.assertTrue(data["success"])
+        self.assertEqual(data["message"], "Transaction rejected")
+        # The transaction should no longer exist.
         with self.assertRaises(CreditTransaction.DoesNotExist):
             CreditTransaction.objects.get(id=transaction.id)
 
@@ -241,11 +271,9 @@ class AuthenticationTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
         redirect_url = response['Location']
-        print(redirect_url)
         
         # Get the final form page
         response = self.client.get(redirect_url)
-        print(response)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Enter new password")
         
