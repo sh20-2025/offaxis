@@ -8,6 +8,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 
+
 class CreditTransactionTestCase(TestCase):
     def setUp(self):
         # Create two artists
@@ -107,9 +108,7 @@ class CreditTransactionTestCase(TestCase):
         # Now, artist2 rejects the support request.
         self.client.logout()
         self.client.login(username="artist2", password="test123")
-        response = self.client.post(
-            reverse("reject_support", args=[transaction.id])
-        )
+        response = self.client.post(reverse("reject_support", args=[transaction.id]))
         self.assertEqual(response.status_code, 200)
         data = response.json()
 
@@ -266,17 +265,17 @@ class AuthenticationTestCase(TestCase):
         uid = urlsafe_base64_encode(force_bytes(self.user.pk))
         token = default_token_generator.make_token(self.user)
         url = reverse("password_reset_confirm", kwargs={"uidb64": uid, "token": token})
-        
+
         # First GET returns a redirect with token replaced
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
-        redirect_url = response['Location']
-        
+        redirect_url = response["Location"]
+
         # Get the final form page
         response = self.client.get(redirect_url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Enter new password")
-        
+
         # Post the new password via POST to the redirect URL
         new_password = "NewPassword123!"
         response = self.client.post(

@@ -763,6 +763,7 @@ def scan_ticket_api(request, code):
         },
     )
 
+
 @transaction.atomic
 @login_required
 @require_POST
@@ -785,7 +786,7 @@ def support_artist_gig(request, gig_id):
 
     if from_artist == to_artist:
         return JsonResponse({"error": "Cannot support yourself"}, status=400)
-    
+
     if from_artist.credit.balance < amount:
         return JsonResponse({"error": "Not enough credits to send"}, status=400)
 
