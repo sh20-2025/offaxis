@@ -763,7 +763,7 @@ def scan_ticket_api(request, code):
         },
     )
 
-
+@transaction.atomic
 @login_required
 @require_POST
 def support_artist_gig(request, gig_id):
@@ -801,11 +801,16 @@ def support_artist_gig(request, gig_id):
         CreditTransaction.objects.create(
             from_artist=from_artist, to_artist=to_artist, gig=gig, amount=amount
         )
+
+        from_artist.credit.balance = F("balance") - amount
+        from_artist.credit.save()
+        from_artist.credit.refresh_from_db()
+
         return JsonResponse(
             {
                 "success": True,
                 "message": "Request to support sent",
-                "new_balance": from_artist.credit.balance - amount,
+                "new_balance": from_artist.credit.balance,
             }
         )
     except ValueError as e:
@@ -830,7 +835,7 @@ def accept_support(request, id):
 
     transaction.status = "accepted"
     transaction.save()
-    transaction.from_artist.credit.balance = F("balance") - transaction.amount
+    # transaction.from_artist.credit.balance = F("balance") - transaction.amount
     transaction.to_artist.credit.balance = F("balance") + transaction.amount
     transaction.from_artist.credit.save()
     transaction.to_artist.credit.save()

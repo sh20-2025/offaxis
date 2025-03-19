@@ -5,126 +5,125 @@
 {% endblock %}
 {% block import_block %}
   <link rel="stylesheet" href="{% static 'styles/gig.css' %}" />
+  <script src="{% static 'scripts/gig.js' %}"></script>
 {% endblock %}
 {% block body_block %}
-  <section class="gig-page">
-    <img src="{{ gig.gig_photo_url }}" width="500" height="500" alt="{{ gig.artist.user.username }}'s gig" class="gig-page__image" />
-    <div class="gig-page__details">
-      <h1 class="gig-page__title">{{ gig.artist.user.username }}</h1>
-      <div class="gig-page__info">
-        <p>{{ gig.date|date:'d/m/Y' }}</p>
-        <p>Start time - {{ gig.date|date:'H:i' }}</p>
-        <p>{{ gig.venue.name }}, {{ gig.venue.address.city }}</p>
-      </div>
-      <div class="gig-page__price">
-        <h2>Ticket Price <span>£{{ gig.price }}</span></h2>
-      </div>
-      <p class="gig-page__tickets-status">
-        {% if tickets_sold >= capacity %}
-          Sold Out!
-        {% elif tickets_sold >= capacity_last_few %}
-          Last Few Tickets!
-        {% else %}
-          Tickets Available!
-        {% endif %}
-      </p>
-      <table class="gig-page__price-table">
-        <tr>
-          <td>Booking Fee Per Ticket</td>
-          <td>£{{ gig.booking_fee }}</td>
-        </tr>
-        <tr>
-          <td>Total Payable Amount</td>
-          <td>£{{ gig.full_price }}</td>
-        </tr>
-      </table>
-      <form id="addToCartForm" class="gig-page__form" action="/cart/" method="post">
-        <div class="gig-page__form__quantity">
-          {% include 'components/label.html' with variant='dark' required='true' for='quantity' size='lg' text='Quantity' %}
-          {% include 'components/input.html' with id='quantityInput' name='quantity' type='number' variant='light' placeholder='1' size='lg' full='true' value='1' %}
-        </div>
-        {% include 'components/button.html' with id='submitButton' type='submit' variant='rainbow' text='Add to cart' size='lg' %}
-        <input type="hidden" name="gig_id" value="{{ gig.id }}" />
-        <input type="hidden" name="action" value="add" />
-        {% csrf_token %}
-      </form>
-      <form id="supportArtistForm" class="gig-page__form" action="{% url 'support_artist_gig' gig.id %}" method="post">
-        <div class="gig-page__form__quantity">
-          {% include 'components/label.html' with variant='dark' required='true' for='amount' size='lg' text='Support Amount' %}
-          {% include 'components/input.html' with id='amountInput' name='amount' type='number' variant='light' placeholder='10' size='lg' full='true' value='10' %}
-        </div>
-        {% include 'components/button.html' with id='supportButton' type='submit' variant='rainbow' text='Support Artist' size='lg' %}
-        {% csrf_token %}
-      </form>
-      <p class="gig-page__description">{{ gig.description }}</p>
-      <div class="gig-page__supporting-artists">
-        <h2>Supporting Artists</h2>
-        <ul>
-          {% for artist in gig.supporting_artists.all %}
-            <li>{{ artist.user.username }}</li>
-          {% endfor %}
-        </ul>
-      </div>
 
-      {% if gig.artist.transaction %}
-        {% for t in gig.artist.transaction.filter(status='pending') %}
-          <div>
-            <p>{{ t.from_artist.user.username }} wants to support you with {{ transaction.amount }} credits.</p>
-            <a href="{% url 'artist_profile' t.from_artist.slug %}">View Profile</a>
-            <form method="post" action="{% url 'accept_support' transaction.id %}">
-              {% csrf_token %}
-              <button type="submit">Accept</button>
+{% if user == gig.artist.user or user.is_staff %}
+<section id="approval-section">
+    <h2>Approval Status</h2>
+    <p>{{ gig.artist.user.username }}'s Gig Approval Status: {{ gig.is_approved }}</p>
+    {% if user.is_staff %}
+        <form method="post" action="{% url 'approve_gig' gig.id %}">
+            {% csrf_token %}
+            <label for="approve">Approve Gig:</label>
+            <input type="checkbox" id="approve" name="approve" {% if gig.is_approved %}checked{% endif %}>
+            {% include "components/button.html" with id="button3" type="submit" variant="secondary" text="Save" size="sm" %}
+        </form>
+    {% endif %}
+</section>
+{% endif %}
+
+    <section class="gig-page">
+        <img src="{{ gig.gig_photo_url }}"
+             width="500"
+             height="500"
+             alt="{{ gig.artist.user.username }}'s gig"
+             class="gig-page__image">
+        <div class="gig-page__details">
+            <h1 class="gig-page__title">{{ gig.artist.user.username }}</h1>
+            <div class="gig-page__info">
+                <p>{{ gig.date|date:"d/m/Y" }}</p>
+                <p>Start time - {{ gig.date|date:"H:i" }}</p>
+                <p>{{ gig.venue.name }}, {{ gig.venue.address.city }}</p>
+            </div>
+            <div class="gig-page__price">
+                <h2>
+                    Ticket Price <span>£{{ gig.price }}</span>
+                </h2>
+            </div>
+            <p class="gig-page__tickets-status">
+                {% if tickets_sold >= capacity %}
+                    Sold Out!
+                {% elif tickets_sold >= capacity_last_few %}
+                    Last Few Tickets!
+                {% else %}
+                    Tickets Available!
+                {% endif %}
+            </p>
+            <table class="gig-page__price-table">
+                <tr>
+                    <td>Booking Fee Per Ticket</td>
+                    <td>£{{ gig.booking_fee }}</td>
+                </tr>
+                <tr>
+                    <td>Total Payable Amount</td>
+                    <td>£{{ gig.full_price }}</td>
+                </tr>
+            </table>
+            <p class="gig-page__description">{{ gig.description }}</p>
+            <form class="gig-page__form" action="/cart/" method="post">
+                <div class="gig-page__form__quantity">
+                    {% include "components/label.html" with variant="dark" required="true" for="quantity" size="lg" text="Quantity" %}
+                    {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="lg" full="true" value="1" %}
+                </div>
+                {% include "components/button.html" with id="submitButton" type="submit" variant="rainbow" text="Add to cart" size="lg" %}
+                <input type="hidden" name="gig_id" value="{{ gig.id }}">
+                <input type="hidden" name="action" value="add">
+                {% csrf_token %}
             </form>
-            <form method="post" action="{% url 'reject_support' transaction.id %}">
-              {% csrf_token %}
-              <button type="submit">Reject</button>
-            </form>
+            {% if gig.artist.user != user %}
+              <form id="supportArtistForm" class="gig-page__form" action="{% url 'support_artist_gig' gig.id %}" method="post">
+                <div class="gig-page__form__quantity">
+                  {% include 'components/label.html' with variant='dark' required='true' for='amount' size='lg' text='Support Amount' %}
+                  {% include 'components/input.html' with id='amountInput' name='amount' type='number' variant='light' placeholder='1' size='lg' full='true' value='1' %}
+                </div>
+                {% include 'components/button.html' with id='supportButton' type='submit' variant='rainbow' text='Support Artist' size='lg' %}
+                {% csrf_token %}
+              </form>
+            {% endif %}
+
+            {% if accepted_transactions %}
+            <div class="gig-page__supporting-artists">
+              <h2>Supporting Artists</h2>
+              <ul>
+                {% for t in accepted_transactions %}
+                  <li>{{ t.from_artist.user.username }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
+            {% if gig.artist.user == user %}
+              {% if pending_transactions %}
+              <div>
+                <h2>Support Request</h2>
+                <ul>
+                  {% for t in pending_transactions %}
+                  <li>
+                    <div class="gig-page__support-request__details">
+                        <p>{{ t.from_artist.user.username }} wants to support you with {{ t.amount }} credits.</p>
+                        <a href="{% url 'artist' t.from_artist.slug %}">        
+                          {% include "components/button.html" with id="button7" type="button" variant="rainbow" text="View Profile" size="sm" %}
+                        </a>
+                        <div class = "support-buttons">
+                          <form id="acceptArtistForm_{{ t.id }}" method="post" action="{% url 'accept_support' t.id %}">
+                            {% csrf_token %}
+                            {% include "components/button.html" with id="accept_artist" type="submit" variant="primary" text="Accept" size="sm" %}
+                          </form>
+                          <form id="rejectArtistForm_{{ t.id }}" method="post" action="{% url 'reject_support' t.id %}">
+                            {% csrf_token %}
+                            {% include "components/button.html" with id="reject_artist" type="submit" variant="primary" text="Reject" size="sm" %}
+                          </form>
+                        </div>
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+              </div>
+              {% endif %}
+            {% endif %}
           </div>
-        {% endfor %}
-      {% endif %}
-    </div>
-  </section>
-  <script>
-    document.getElementById('addToCartForm').addEventListener('submit', function (event) {
-      event.preventDefault()
-      const formData = new FormData(this)
-      fetch(this.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        }
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          alert(data.success ? 'Added to cart successfully!' : data.error)
-        })
-        .catch((error) => {
-          alert('An error occurred: ' + error.message)
-        })
-    })
-    
-    document.getElementById('supportArtistForm').addEventListener('submit', function (event) {
-      event.preventDefault()
-      const formData = new FormData(this)
-      fetch(this.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        }
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            alert('Support sent successfully! New balance: £' + data.new_balance)
-          } else {
-            alert(data.error)
-          }
-        })
-        .catch((error) => {
-          alert('An error occurred: ' + error.message)
-        })
-    })
-  </script>
-{% endblock %}
+        </section>
+
+{% endblock body_block %}
