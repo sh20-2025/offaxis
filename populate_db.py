@@ -8,7 +8,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Off_Axis_Django.settings")
 django.setup()
 
 # fmt: off
-from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address, Festival, Credit,)  # noqa: E402
+from Off_Axis_App.models import (Artist, Client, User, Gig, Venue, SocialLink, GenreTag, Address, Festival, Credit, CMS)  # noqa: E402
 from django.conf import settings  # noqa: E402
 # fmt: on
 
@@ -18,6 +18,7 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 def populate():
     Artist.objects.all().delete()
 
+    User.objects.get(username="admin").delete()
     if not User.objects.filter(username="admin").exists():
         admin_user = User.objects.create_superuser(
             "admin", "sh20.team.offaxis@gmail.com", "BespokePassword"
@@ -139,6 +140,14 @@ def populate():
         "test gig",
         "/static/images/gig-placeholder.png",
     )
+
+    CMS.objects.all().delete()
+    cms = CMS.objects.create()
+    gigs = Gig.objects.all()[:3]
+    cms.just_announced_gigs.add(*gigs)
+    cms.featured_gigs.add(*gigs)
+    cms.artist_of_the_week = a1
+    cms.save()
 
     Festival.objects.all().delete()
 
