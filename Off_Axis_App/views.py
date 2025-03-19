@@ -12,6 +12,7 @@ from .models import (
     Festival,
     Credit,
     CreditTransaction,
+    CMS,
 )
 from .forms import (
     ClientForm,
@@ -66,7 +67,13 @@ def components(request):
 
 
 def index(request):
-    return render(request, "Off_Axis/index.html")
+    context = {}
+    cms = CMS.objects.first()
+    context["cms"] = cms
+    context["just_announced_gigs"] = cms.just_announced_gigs.all()[:4]
+    context["featured_gigs"] = cms.featured_gigs.all()[:4]
+    context["artist_of_the_week"] = cms.artist_of_the_week
+    return render(request, "Off_Axis/index.html", context)
 
 
 def artists_view(request):

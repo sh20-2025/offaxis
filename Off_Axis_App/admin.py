@@ -4,9 +4,11 @@ from .models import (
     Client,
     SocialLink,
     GenreTag,
+    Gig,
     ContactInformation,
     Credit,
     CreditTransaction,
+    CMS,
 )
 from .forms import ArtistForm
 from django.utils.text import slugify
@@ -80,3 +82,5 @@ class CreditTransactionAdmin(admin.ModelAdmin):
 admin.site.register(Client)
 admin.site.register(SocialLink)
 admin.site.register(GenreTag)
+admin.site.register(Gig)
+admin.site.register(CMS)
