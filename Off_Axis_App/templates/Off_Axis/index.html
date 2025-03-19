@@ -84,9 +84,11 @@
         </a>
     </div>
     <section class="artist-of-the-week">
+
         <div class="left">
-            <div class="artist-of-the-week-media"></div>
+            <img src="{% static "images/artist_of_the_week.png" %}" alt="rock man">
         </div>
+
         <div class="right">
             <div class="artist-of-the-week-info">
                 <h2>Artist of the Week</h2>
@@ -102,6 +104,7 @@
             </div>
         </div>
     </section>
+
     <section class="offaxis-socials">
         <div class="socials">
             <h2>
@@ -110,82 +113,100 @@
         </div>
     </section>
 
-    
-    <div class="insta-carousel">
-        {% comment %} 1 {% endcomment %}
-        <div class="insta-square">
-            <blockquote 
-              class="instagram-media" 
-              data-instgrm-permalink="https://www.instagram.com/reel/DHJNNF3tD8f/" 
-              data-instgrm-version="14">
-                <a href="https://www.instagram.com/reel/DHJNNF3tD8f/"></a>
-            </blockquote>
-        </div>
-        {% comment %} 2 {% endcomment %}
-        {% comment %} <div class="insta-square">
-          <blockquote 
-            class="instagram-media" 
-            data-instgrm-permalink="https://www.instagram.com/p/DGLlJGjM1er/" 
-            data-instgrm-version="14">
-              <a href="https://www.instagram.com/p/DGLlJGjM1er/"></a>
-          </blockquote>
-        </div> {% endcomment %}
-        {% comment %} 3 {% endcomment %}
-        <div class="insta-square">
-          <blockquote 
-            class="instagram-media" 
-            data-instgrm-permalink="https://www.instagram.com/reel/DFN0dk-tzr9/" 
-            data-instgrm-version="14">
-              <a href="https://www.instagram.com/reel/DFN0dk-tzr9/"></a>
-          </blockquote>
-        </div>
-        {% comment %} 4 {% endcomment %}
-        <div class="insta-square">
-            <blockquote 
-              class="instagram-media" 
-              data-instgrm-permalink="https://www.instagram.com/reel/DEQXsF9tff_/" 
-              data-instgrm-version="14">
-                <a href="https://www.instagram.com/reel/DEQXsF9tff_/"></a>
-            </blockquote>
-        </div>
-        {% comment %} 5 {% endcomment %}
-        <div class="insta-square">
-            <blockquote 
+    <div class="slider-container">
+        <button id="prevBtn" class="slider-btn prev">&#10094;</button>
+        <div class="insta-carousel">
+
+            <div class="insta-square">
+                <blockquote 
                 class="instagram-media" 
-                data-instgrm-permalink="https://www.instagram.com/reel/DDzkLYENFvk/" 
+                data-instgrm-permalink="https://www.instagram.com/reel/DHJNNF3tD8f/" 
                 data-instgrm-version="14">
-                <a href="https://www.instagram.com/reel/DDzkLYENFvk/"></a>
-            </blockquote>
-        </div>
-        {% comment %} 6 {% endcomment %}
-        <div class="insta-square">
-            <blockquote 
+                    <a href="https://www.instagram.com/reel/DHJNNF3tD8f/"></a>
+                </blockquote>
+            </div>
+
+            <div class="insta-square">
+                <blockquote 
+                    class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/reel/DFN0dk-tzr9/" 
+                    data-instgrm-version="14">
+                    <a href="https://www.instagram.com/reel/DFN0dk-tzr9/"></a>
+                </blockquote>
+            </div>
+
+            <div class="insta-square">
+                <blockquote 
                 class="instagram-media" 
-                data-instgrm-permalink="https://www.instagram.com/reel/DDh9DsIOSx4/" 
+                data-instgrm-permalink="https://www.instagram.com/reel/DEQXsF9tff_/" 
                 data-instgrm-version="14">
-                <a href="https://www.instagram.com/reel/DDh9DsIOSx4/"></a>
-            </blockquote>
+                    <a href="https://www.instagram.com/reel/DEQXsF9tff_/"></a>
+                </blockquote>
+            </div>
+
+            <div class="insta-square">
+                <blockquote 
+                    class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/reel/DDzkLYENFvk/" 
+                    data-instgrm-version="14">
+                    <a href="https://www.instagram.com/reel/DDzkLYENFvk/"></a>
+                </blockquote>
+            </div>
+
+            <div class="insta-square">
+                <blockquote 
+                    class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/reel/DDh9DsIOSx4/" 
+                    data-instgrm-version="14">
+                    <a href="https://www.instagram.com/reel/DDh9DsIOSx4/"></a>
+                </blockquote>
+            </div>
+
+            <div class="insta-square">
+                <blockquote 
+                    class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/reel/DDfeqVktTG-/" 
+                    data-instgrm-version="14">
+                    <a href="https://www.instagram.com/reel/DDfeqVktTG-/"></a>
+                </blockquote>
+            </div>
+
+            <div class="insta-square">
+                <blockquote 
+                    class="instagram-media" 
+                    data-instgrm-permalink="https://www.instagram.com/reel/DDSWgyQNIxT/" 
+                    data-instgrm-version="14">
+                    <a href="https://www.instagram.com/reel/DDSWgyQNIxT/"></a>
+                </blockquote>
+            </div>
         </div>
-        {% comment %} 7 {% endcomment %}
-        <div class="insta-square">
-            <blockquote 
-                class="instagram-media" 
-                data-instgrm-permalink="https://www.instagram.com/reel/DDfeqVktTG-/" 
-                data-instgrm-version="14">
-                <a href="https://www.instagram.com/reel/DDfeqVktTG-/"></a>
-            </blockquote>
+        <button id="nextBtn" class="slider-btn next">&#10095;</button>
         </div>
-        {% comment %} 8 {% endcomment %}
-        <div class="insta-square">
-            <blockquote 
-                class="instagram-media" 
-                data-instgrm-permalink="https://www.instagram.com/reel/DDSWgyQNIxT/" 
-                data-instgrm-version="14">
-                <a href="https://www.instagram.com/reel/DDSWgyQNIxT/"></a>
-            </blockquote>
-        </div>
-      </div>
-      <script async src="//www.instagram.com/embed.js"></script>
+        <script async src="//www.instagram.com/embed.js"></script>
+        <script>
+        // Select the carousel and navigation buttons
+        const carousel = document.querySelector('.insta-carousel');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+
+        // Calculate one slide's width (including the gap)
+        function getSlideWidth() {
+            const slide = carousel.querySelector('.insta-square');
+            const slideWidth = slide ? slide.offsetWidth : 0;
+            const gap = parseInt(getComputedStyle(carousel).gap) || 0;
+            return slideWidth + gap;
+        }
+
+        // Scroll to the next slide
+        nextBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: getSlideWidth(), behavior: 'smooth' });
+        });
+
+        // Scroll to the previous slide
+        prevBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: -getSlideWidth(), behavior: 'smooth' });
+        });
+        </script>
       
     <section class="bottom-info-section">
         <h3>Our Partners</h3>
