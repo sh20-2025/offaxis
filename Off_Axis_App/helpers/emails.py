@@ -2,6 +2,7 @@ from Off_Axis_App.models import Ticket
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
+import os
 
 
 def send_ticket_email(ticket: Ticket):
@@ -9,7 +10,7 @@ def send_ticket_email(ticket: Ticket):
         "ticket": ticket,
         "artist": ticket.gig.artist,
         "gig": ticket.gig,
-        "qr_code_src": f"{settings.TRUSTED_ORIGIN}{ticket.qr_code.url}",
+        "qr_code_src": f"{os.getenv("TRUSTED_ORIGIN")}{ticket.qr_code.url}",
     }
 
     # First, render the plain text content.
