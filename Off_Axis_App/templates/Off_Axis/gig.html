@@ -24,6 +24,21 @@
 </section>
 {% endif %}
 
+{% if user.is_staff %}
+<section id="close-section">
+    <h2>Close Gig</h2>
+    {% if gig.is_closed %}
+      <p>This gig has already been closed.</p>
+    {% else %}
+      <p>Would you like to close this gig? This will disable ticket buying and hide the gig from public view.</p>
+      <form method="post" action="{% url 'close_gig' gig.id %}">
+          {% csrf_token %}
+          {% include "components/button.html" with id="closeGigButton" type="submit" variant="secondary" text="Close Gig" size="md" %}
+      </form>
+    {% endif %}
+</section>
+{% endif %}
+
     <section class="gig-page">
         <img src="{{ gig.gig_photo_url }}"
              width="500"

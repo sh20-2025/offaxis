@@ -57,7 +57,8 @@
   gap: 1rem;
 }
 
-#approval-section {
+#approval-section,
+#close-section {
   margin: 2rem;
   background-color: var(--oa-pink);
   text-align: center;

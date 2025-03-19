@@ -120,6 +120,7 @@ class Gig(models.Model):
     gig_photo_url = models.TextField(max_length=2048)
     is_approved = models.BooleanField(default=False)
     stripe_product_id = models.TextField(max_length=256, null=True, blank=True)
+    is_closed = models.BooleanField(default=False)
 
     def tickets(self):
         return Ticket.objects.filter(gig=self.id)

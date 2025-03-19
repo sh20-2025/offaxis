@@ -245,6 +245,16 @@ def approve_gig(request, id):
 
 
 @login_required
+def close_gig(request, id):
+    gig = get_object_or_404(Gig, id=id)
+    if request.method == "POST":
+        gig.is_closed = True
+        gig.save()
+
+    return redirect(reverse("gig", args=[gig.artist.slug, gig.id]))
+
+
+@login_required
 def approve_artist(request, slug):
     artist = get_object_or_404(Artist, slug=slug)
     if request.method == "POST":
@@ -371,6 +381,10 @@ def cart(request):
             return response()
 
         gig = Gig.objects.get(id=gig_id)
+
+        if gig.is_closed:
+            context["error"] = "Gig is closed"
+            return response()
 
         existing_cart_item = CartItem.objects.filter(cart=cart, gig=gig).first()
         action = query_dict.get("action")
