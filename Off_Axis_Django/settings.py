@@ -40,6 +40,7 @@ DEBUG = True
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
 
+CSRF_COOKIE_DOMAIN = os.getenv("HOST")
 HOST = os.getenv("HOST")
 ALLOWED_HOSTS = [
     "127.0.0.1",
