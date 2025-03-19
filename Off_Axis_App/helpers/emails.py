@@ -9,7 +9,7 @@ def send_ticket_email(ticket: Ticket):
         "ticket": ticket,
         "artist": ticket.gig.artist,
         "gig": ticket.gig,
-        "qr_code_src": f"{settings.HOST}{ticket.qr_code.url}",
+        "qr_code_src": f"{settings.TRUSTED_ORIGIN}{ticket.qr_code.url}",
     }
 
     # First, render the plain text content.
