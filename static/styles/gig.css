@@ -7,6 +7,7 @@
 .gig-page__image {
   width: 100%;
   height: auto;
+  object-fit: contain;
 }
 
 .gig-page__details {
@@ -76,14 +77,14 @@
   white-space: normal;
 }
 
-.support-buttons{
+.support-buttons {
   display: flex;
   gap: 0.3rem;
   justify-content: left;
   align-items: left;
 }
 
-.gig-page__support-request__details{
+.gig-page__support-request__details {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -91,4 +92,19 @@
 
 ul {
   margin-left: 20px;
+}
+
+@media screen and (max-width: 900px) {
+  .gig-page {
+    flex-direction: column;
+  }
+
+  .gig-page__image {
+    max-width: 35rem;
+    margin: 0 auto;
+  }
+
+  .gig-page__details {
+    padding: 2rem;
+  }
 }
