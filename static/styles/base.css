@@ -30,7 +30,7 @@ body::before {
   border-color: var(--oa-pink) var(--oa-yellow) var(--oa-green) var(--oa-blue);
   pointer-events: none;
   box-sizing: border-box;
-  z-index: 100;
+  z-index: 100000;
 }
 
 ::-webkit-scrollbar {
@@ -422,17 +422,25 @@ body::before {
 }
 
 .insta-carousel {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(var(--insta-count, 8), minmax(20.25rem, 1fr));
+  grid-template-rows: 1;
   overflow-x: auto;
   gap: 1rem;
   align-items: center;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
+  scrollbar-width: none;
 }
+
 .insta-carousel::-webkit-scrollbar {
   display: none;
 }
+.slider-container::-webkit-scrollbar {
+  display: none;
+}
+
 .insta-square {
   display: flex;
   justify-content: center;
@@ -442,7 +450,9 @@ body::before {
   position: relative;
   scroll-snap-align: start;
   border-radius: 0.25rem;
+  background-color: var(--oa-text-medium);
 }
+
 .instagram-media {
   position: relative;
   transform: scale(1.15) translateY(-8rem);
@@ -455,11 +465,11 @@ body::before {
   opacity: 25% !important;
 }
 
-.WatchOnInstagramContainer{
+.WatchOnInstagramContainer {
   background-color: none !important;
 }
 
-.WatchOnInstagram{
+.WatchOnInstagram {
   background-color: none !important;
 }
 
@@ -467,6 +477,7 @@ body::before {
   position: relative;
   max-width: 90%;
   margin: 0 auto;
+  scrollbar-width: none;
 }
 
 .slider-btn {

@@ -1,5 +1,5 @@
 .gigs-section {
-  display:flex;
+  display: flex;
   justify-content: left;
   margin-top: 5rem;
   background-color: var(--oa-text-dark);
@@ -7,7 +7,7 @@
 
 .gigs-section .left {
   content: "";
-  width:40%;
+  width: 40%;
   height: 100%;
 }
 
@@ -26,19 +26,19 @@
   height: 7rem;
 }
 
-.gigs-section .right .gig:nth-child(1){
+.gigs-section .right .gig:nth-child(1) {
   background-color: var(--oa-pink-low-alpha);
 }
 
-.gigs-section .right .gig:nth-child(2){
+.gigs-section .right .gig:nth-child(2) {
   background-color: var(--oa-yellow-low-alpha);
 }
 
-.gigs-section .right .gig:nth-child(3){
+.gigs-section .right .gig:nth-child(3) {
   background-color: var(--oa-green-low-alpha);
 }
 
-.gigs-section .right .gig:nth-child(4){
+.gigs-section .right .gig:nth-child(4) {
   background-color: var(--oa-blue-low-alpha);
 }
 
@@ -52,22 +52,21 @@
   flex-grow: 2;
 }
 
-.gigs-section .date .num{
+.gigs-section .date .num {
   font-weight: bold;
   font-size: 2rem;
 }
 
 .gigs-section .description {
-  width:100%;
+  width: 100%;
   text-align: left;
   flex-shrink: 2;
 }
 
-.gigs-section .description .name{
+.gigs-section .description .name {
   font-weight: bold;
   font-size: 2rem;
 }
-
 
 .gigs-section .buy-btn {
   width: 5rem;
@@ -81,21 +80,36 @@
 }
 
 .gigs-section .right .gig:nth-child(1) .date,
-.gigs-section .right .gig:nth-child(1) .buy-btn{
+.gigs-section .right .gig:nth-child(1) .buy-btn {
   background-color: var(--oa-pink);
 }
 
 .gigs-section .right .gig:nth-child(2) .date,
-.gigs-section .right .gig:nth-child(2) .buy-btn{
+.gigs-section .right .gig:nth-child(2) .buy-btn {
   background-color: var(--oa-yellow);
 }
 
 .gigs-section .right .gig:nth-child(3) .date,
-.gigs-section .right .gig:nth-child(3) .buy-btn{
+.gigs-section .right .gig:nth-child(3) .buy-btn {
   background-color: var(--oa-green);
 }
 
 .gigs-section .right .gig:nth-child(4) .date,
-.gigs-section .right .gig:nth-child(4) .buy-btn{
+.gigs-section .right .gig:nth-child(4) .buy-btn {
   background-color: var(--oa-blue);
+}
+
+@media screen and (max-width: 900px) {
+  .gigs-section {
+    flex-direction: column;
+  }
+
+  .gigs-section .left {
+    width: 100%;
+    max-height: 28rem;
+  }
+
+  .gigs-section .right {
+    width: 100%;
+  }
 }
