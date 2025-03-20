@@ -7,6 +7,9 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.files.images import ImageFile
 import os
+from types import SimpleNamespace
+from io import BytesIO
+from unittest.mock import patch
 import inspect
 from django.test import SimpleTestCase
 from django.core.handlers.wsgi import WSGIHandler
@@ -25,9 +28,191 @@ from Off_Axis_App.models import (
     Credit,
     CreditTransaction,
     Cart,
+    Ticket,
 )
 from populate_db import populate
 from Off_Axis_App.helpers.cart import get_or_create_cart
+from Off_Axis_App.helpers.stripe_webhook import handle_checkout_session_completed
+
+
+class HandleCheckoutSessionCompletedTestCase(TestCase):
+    def setUp(self):
+        # Create a user with a Client record.
+        self.user = User.objects.create_user(
+            username="customer",
+            email="customer@example.com",
+            password="password",  # nosec
+        )
+        self.client_obj = Client.objects.create(user=self.user)
+        # Create a Gig with stripe_product_id "prod_123" and a price of 10.0.
+        # (Include other required fields for Gig if necessary.)
+        self.gig = Gig.objects.create(
+            stripe_product_id="prod_123",
+            price=10.0,
+            # Add any other required fields here.
+        )
+
+    @patch("Off_Axis_App.helpers.stripe_webhook.send_ticket_email")
+    @patch("Off_Axis_App.helpers.stripe_webhook.stripe.checkout.Session.retrieve")
+    @patch(
+        "Off_Axis_App.helpers.stripe_webhook.stripe.checkout.Session.list_line_items"
+    )
+    def test_handle_checkout_session_completed_success(
+        self, mock_list_line_items, mock_retrieve, mock_send_ticket_email
+    ):
+        """
+        Test a successful checkout event where the user, client, and gig exist.
+        Two tickets should be created (as per quantity) and emails sent.
+        """
+        # Create dummy line item data.
+        dummy_line_item_price = SimpleNamespace(
+            product="prod_123", unit_amount_decimal="1000"
+        )
+        dummy_line_item = SimpleNamespace(price=dummy_line_item_price, quantity=2)
+        dummy_list = SimpleNamespace(data=[dummy_line_item])
+        mock_list_line_items.return_value = dummy_list
+
+        # Create dummy breakdown with one discount.
+        dummy_discount = SimpleNamespace(
+            discount=SimpleNamespace(coupon=SimpleNamespace(name="DISCOUNT10"))
+        )
+        dummy_breakdown = SimpleNamespace(discounts=[dummy_discount])
+        dummy_retrieve_response = SimpleNamespace(
+            total_details=SimpleNamespace(breakdown=dummy_breakdown)
+        )
+        mock_retrieve.return_value = dummy_retrieve_response
+
+        # Create a dummy checkout session.
+        dummy_address = SimpleNamespace(postal_code="12345", country="US")
+        dummy_customer_details = SimpleNamespace(
+            email="customer@example.com", name="John Doe", address=dummy_address
+        )
+        dummy_checkout_session = SimpleNamespace(
+            id="cs_test_123",
+            customer_email="",  # email taken from customer_details below
+            customer_details=dummy_customer_details,
+        )
+        dummy_event = SimpleNamespace(
+            data=SimpleNamespace(object=dummy_checkout_session)
+        )
+
+        # Call the webhook handler.
+        handle_checkout_session_completed(dummy_event)
+
+        # Two tickets should have been created (quantity=2).
+        self.assertEqual(Ticket.objects.count(), 2)
+        ticket = Ticket.objects.first()
+        # Verify that the purchase price is computed as 1000 / 100 = 10.0.
+        self.assertEqual(ticket.purchase_price, 10.0)
+        # The discount used is a comma-joined string of coupon names.
+        self.assertEqual(ticket.discount_used, "DISCOUNT10")
+        self.assertEqual(ticket.checkout_email, "customer@example.com")
+        self.assertEqual(ticket.checkout_name, "John Doe")
+        self.assertEqual(ticket.checkout_postcode, "12345")
+        self.assertEqual(ticket.checkout_country, "US")
+        # Ensure that the email-sending function was called twice.
+        self.assertEqual(mock_send_ticket_email.call_count, 2)
+
+    @patch("Off_Axis_App.helpers.stripe_webhook.send_ticket_email")
+    @patch("Off_Axis_App.helpers.stripe_webhook.stripe.checkout.Session.retrieve")
+    @patch(
+        "Off_Axis_App.helpers.stripe_webhook.stripe.checkout.Session.list_line_items"
+    )
+    def test_handle_checkout_session_completed_no_user(
+        self, mock_list_line_items, mock_retrieve, mock_send_ticket_email
+    ):
+        """
+        Test that if no user is found for the provided email, tickets are still created
+        with the user field left as None.
+        """
+        # Use the same dummy line item setup.
+        dummy_line_item_price = SimpleNamespace(
+            product="prod_123", unit_amount_decimal="1000"
+        )
+        dummy_line_item = SimpleNamespace(price=dummy_line_item_price, quantity=1)
+        dummy_list = SimpleNamespace(data=[dummy_line_item])
+        mock_list_line_items.return_value = dummy_list
+
+        dummy_discount = SimpleNamespace(
+            discount=SimpleNamespace(coupon=SimpleNamespace(name="DISCOUNT10"))
+        )
+        dummy_breakdown = SimpleNamespace(discounts=[dummy_discount])
+        dummy_retrieve_response = SimpleNamespace(
+            total_details=SimpleNamespace(breakdown=dummy_breakdown)
+        )
+        mock_retrieve.return_value = dummy_retrieve_response
+
+        dummy_address = SimpleNamespace(postal_code="12345", country="US")
+        dummy_customer_details = SimpleNamespace(
+            email="nonexistent@example.com", name="Jane Doe", address=dummy_address
+        )
+        dummy_checkout_session = SimpleNamespace(
+            id="cs_test_456",
+            customer_email="",  # email taken from customer_details below
+            customer_details=dummy_customer_details,
+        )
+        dummy_event = SimpleNamespace(
+            data=SimpleNamespace(object=dummy_checkout_session)
+        )
+
+        handle_checkout_session_completed(dummy_event)
+
+        # Since there is no user with this email, a ticket is created with user = None.
+        self.assertEqual(Ticket.objects.count(), 1)
+        ticket = Ticket.objects.first()
+        self.assertIsNone(ticket.user)
+        self.assertEqual(ticket.checkout_email, "nonexistent@example.com")
+        self.assertEqual(ticket.checkout_name, "Jane Doe")
+        self.assertEqual(mock_send_ticket_email.call_count, 1)
+
+    @patch("Off_Axis_App.helpers.stripe_webhook.send_ticket_email")
+    @patch("Off_Axis_App.helpers.stripe_webhook.stripe.checkout.Session.retrieve")
+    @patch(
+        "Off_Axis_App.helpers.stripe_webhook.stripe.checkout.Session.list_line_items"
+    )
+    def test_handle_checkout_session_completed_no_gig(
+        self, mock_list_line_items, mock_retrieve, mock_send_ticket_email
+    ):
+        """
+        Test that if no Gig is found matching the product ID from a line item,
+        no Ticket is created and the email is not sent.
+        """
+        # Use a product ID that does not match any existing Gig.
+        dummy_line_item_price = SimpleNamespace(
+            product="nonexistent_prod", unit_amount_decimal="1000"
+        )
+        dummy_line_item = SimpleNamespace(price=dummy_line_item_price, quantity=1)
+        dummy_list = SimpleNamespace(data=[dummy_line_item])
+        mock_list_line_items.return_value = dummy_list
+
+        dummy_discount = SimpleNamespace(
+            discount=SimpleNamespace(coupon=SimpleNamespace(name="DISCOUNT10"))
+        )
+        dummy_breakdown = SimpleNamespace(discounts=[dummy_discount])
+        dummy_retrieve_response = SimpleNamespace(
+            total_details=SimpleNamespace(breakdown=dummy_breakdown)
+        )
+        mock_retrieve.return_value = dummy_retrieve_response
+
+        dummy_address = SimpleNamespace(postal_code="12345", country="US")
+        dummy_customer_details = SimpleNamespace(
+            email="customer@example.com", name="John Doe", address=dummy_address
+        )
+        dummy_checkout_session = SimpleNamespace(
+            id="cs_test_789",
+            customer_email="",  # email taken from customer_details below
+            customer_details=dummy_customer_details,
+        )
+        dummy_event = SimpleNamespace(
+            data=SimpleNamespace(object=dummy_checkout_session)
+        )
+
+        handle_checkout_session_completed(dummy_event)
+
+        # No Gig is found so no Ticket should be created.
+        self.assertEqual(Ticket.objects.count(), 0)
+        # The email sending function should not be called.
+        self.assertEqual(mock_send_ticket_email.call_count, 0)
 
 
 class GetOrCreateCartTestCase(TestCase):
