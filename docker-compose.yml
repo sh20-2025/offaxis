@@ -8,6 +8,7 @@ services:
     command: gunicorn Off_Axis_Django.wsgi:application --bind 0.0.0.0:8000 --workers 3
     volumes:
       - static_volume:/app/static
+      - media_volume:/app/media
       - type: bind
         source: ./db.sqlite3
         target: /app/db.sqlite3
@@ -19,6 +20,7 @@ services:
     build: ./nginx
     volumes:
       - static_volume:/app/static
+      - media_volume:/app/media
     ports:
       - 1337:80
     depends_on:
@@ -26,3 +28,4 @@ services:
 
 volumes:
   static_volume:
+  media_volume:
