@@ -1,7 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User
-from .models import Artist, Credit, CreditTransaction, Venue, Gig, Address, CMS
+
+# from django.contrib.auth.models import User
+
+# from .models import Artist, Credit, CreditTransaction, Venue, Gig, Address, CMS
 from django.utils import timezone
 from django.core import mail
 from django.utils.http import urlsafe_base64_encode
@@ -25,6 +27,7 @@ from Off_Axis_App.models import (
     Festival,
     CMS,
     Credit,
+    CreditTransaction,
 )
 from populate_db import populate
 
