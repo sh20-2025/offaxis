@@ -85,7 +85,6 @@ def artists_view(request):
 
 
 def create_gig(request, slug):
-    print("Creating gig")
     artist = get_object_or_404(Artist, slug=slug)
 
     # For GET requests, create unbound forms
@@ -114,7 +113,6 @@ def create_gig(request, slug):
             print(gig_form.errors)
 
         if address_form.is_valid() and venue_form.is_valid() and gig_form.is_valid():
-            print("Form is valid")
             address = address_form.save()
             venue = venue_form.save(commit=False)
             venue.address = address
@@ -139,8 +137,6 @@ def create_gig(request, slug):
             gig.save()
             gig_form.save_m2m()
 
-            print("Gig created")
-
             return redirect(reverse("artist", args=[artist.slug]))
         else:
             print("Form is not valid")
@@ -159,7 +155,6 @@ def create_gig(request, slug):
         "artist": artist,
     }
 
-    print("form is not valid")
     return render(request, "Off_Axis/create_gig.html", context)
 
 
