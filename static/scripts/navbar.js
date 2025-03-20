@@ -12,10 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const active = nav.classList.toggle("active");
     if (active) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
       navbar.classList.add("open");
     } else {
       navbar.classList.remove("open");
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
 
     // Update the `src` attribute for the <img> tag
