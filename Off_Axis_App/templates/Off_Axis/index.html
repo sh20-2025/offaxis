@@ -11,7 +11,7 @@
         <div class="hero-circles">
             {% for gig in just_announced_gigs %}
                 <div class="hero-circle">
-                    <img src="{{ gig.gig_photo_url }}" alt="{{ gig.artist.user.username }}">
+                    <img src="{{ gig.gig_picture.url }}" alt="{{ gig.artist.user.username }}">
                     <h4>{{ gig.artist.user.username }} | {{ gig.venue.address.city }}</h4>
                 </div>
             {% endfor %}
