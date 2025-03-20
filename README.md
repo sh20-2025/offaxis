@@ -48,24 +48,31 @@ flake8 .
 
 You are now ready to start developing!
 
-## Running our Project
+## Running our Project Locally
 
 1. Clone from Repository to your system
-2. Go to Project Root Directory
+
+2. Go to Project Root Directory and make sure you have the dedicated ".env" file
+
 3. Run
+```powershell
+pip install -r requirements.txt
+```
+
+4. Run
 ```powershell
 ./scripts/setup.ps1
 ```
-4. Run
+5. Run
 ```powershell
 ./scripts/activate-venv.ps1
 ```
-5. Run
+6. Run
 ```powershell
 ./scripts/check-django.ps1
 ```
-6. Run
+7. Run
 ```powershell
 ./scripts/run-docker.ps1
 ```
-7. Go to https://Localhost:8000
+8. Go to https://localhost:8000
