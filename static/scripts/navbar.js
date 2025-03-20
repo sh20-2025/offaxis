@@ -11,9 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
   hamburgerButton.addEventListener("click", () => {
     const active = nav.classList.toggle("active");
     if (active) {
+      document.body.style.overflow = "hidden";
       navbar.classList.add("open");
     } else {
       navbar.classList.remove("open");
+      document.body.style.overflow = "";
     }
 
     // Update the `src` attribute for the <img> tag
