@@ -18,6 +18,11 @@
   border: 1px solid var(--oa-pink);
 }
 
+.cart__table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .cart__table {
   border-collapse: separate;
   width: 100%;
@@ -69,4 +74,17 @@
   gap: 2rem;
   margin-top: 2rem;
   width: 100%;
+}
+
+@media screen and (max-width: 700px) {
+  .cart__table {
+    transform: scale(0.9);
+    transform-origin: top left;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .cart__table {
+    transform: scale(0.8);
+  }
 }
