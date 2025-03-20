@@ -48,7 +48,6 @@ USER appuser
 EXPOSE 8000
 
 RUN python manage.py migrate
-RUN python populate_db.py
 
 # Start the application using Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "Off_Axis_Django.wsgi:application"]
