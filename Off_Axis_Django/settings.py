@@ -42,7 +42,7 @@ DEBUG = True
 
 HOST = os.getenv("HOST")
 CSRF_COOKIE_DOMAIN = HOST
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://127.0.0.1").split(",")
 ALLOWED_HOSTS = ["localhost", HOST]
 
 # Application definition

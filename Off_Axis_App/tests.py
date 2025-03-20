@@ -23,15 +23,13 @@ class ASGIConfigTestCase(SimpleTestCase):
 
     def test_asgi_application_callable(self):
         """Ensure the ASGI application is callable."""
-        self.assertTrue(
-            callable(asgi_application), "ASGI application should be callable."
-        )
+        self.assertTrue(callable(asgi_application), "ASGI application should be callable.")
 
     def test_asgi_application_is_async(self):
-        """Ensure the ASGI application is an asynchronous callable."""
+        """Ensure the ASGI application's __call__ method is asynchronous."""
         self.assertTrue(
-            inspect.iscoroutinefunction(asgi_application),
-            "ASGI application should be an asynchronous callable.",
+            inspect.iscoroutinefunction(asgi_application.__call__),
+            "ASGI application's __call__ should be asynchronous."
         )
 
 
@@ -42,18 +40,15 @@ class WSGIConfigTestCase(SimpleTestCase):
 
     def test_wsgi_application_callable(self):
         """Ensure the WSGI application is callable."""
-        self.assertTrue(
-            callable(wsgi_application), "WSGI application should be callable."
-        )
+        self.assertTrue(callable(wsgi_application), "WSGI application should be callable.")
 
     def test_wsgi_application_instance(self):
         """Ensure the WSGI application is an instance of Django's WSGIHandler."""
         self.assertIsInstance(
             wsgi_application,
             WSGIHandler,
-            "WSGI application should be an instance of django.core.handlers.wsgi.WSGIHandler.",
+            "WSGI application should be an instance of django.core.handlers.wsgi.WSGIHandler."
         )
-
 
 def init_artists_cms(self):
     # Create two artists
