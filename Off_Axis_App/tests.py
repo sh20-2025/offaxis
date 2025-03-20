@@ -9,6 +9,50 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.files.images import ImageFile
 import os
+import inspect
+from django.test import SimpleTestCase
+from django.core.handlers.wsgi import WSGIHandler
+from Off_Axis_Django.asgi import application as asgi_application
+from Off_Axis_Django.wsgi import application as wsgi_application
+
+
+class ASGIConfigTestCase(SimpleTestCase):
+    def test_asgi_application_loaded(self):
+        """Ensure the ASGI application is loaded (not None)."""
+        self.assertIsNotNone(asgi_application, "ASGI application should be loaded.")
+
+    def test_asgi_application_callable(self):
+        """Ensure the ASGI application is callable."""
+        self.assertTrue(
+            callable(asgi_application), "ASGI application should be callable."
+        )
+
+    def test_asgi_application_is_async(self):
+        """Ensure the ASGI application is an asynchronous callable."""
+        self.assertTrue(
+            inspect.iscoroutinefunction(asgi_application),
+            "ASGI application should be an asynchronous callable.",
+        )
+
+
+class WSGIConfigTestCase(SimpleTestCase):
+    def test_wsgi_application_loaded(self):
+        """Ensure the WSGI application is loaded (not None)."""
+        self.assertIsNotNone(wsgi_application, "WSGI application should be loaded.")
+
+    def test_wsgi_application_callable(self):
+        """Ensure the WSGI application is callable."""
+        self.assertTrue(
+            callable(wsgi_application), "WSGI application should be callable."
+        )
+
+    def test_wsgi_application_instance(self):
+        """Ensure the WSGI application is an instance of Django's WSGIHandler."""
+        self.assertIsInstance(
+            wsgi_application,
+            WSGIHandler,
+            "WSGI application should be an instance of django.core.handlers.wsgi.WSGIHandler.",
+        )
 
 
 def init_artists_cms(self):
