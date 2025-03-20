@@ -42,10 +42,10 @@ DEBUG = True
 
 HOST = os.getenv("HOST")
 CSRF_COOKIE_DOMAIN = HOST
-CSRF_TRUSTED_ORIGINS = [os.getenv("TRUSTED_ORIGIN")]
-
+# CSRF_TRUSTED_ORIGINS = [os.getenv("TRUSTED_ORIGIN")]
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 ALLOWED_HOSTS = [HOST]
-
+CSRF_TRUSTED_ORIGINS = []
 
 # Application definition
 
