@@ -8,6 +8,9 @@ services:
     command: gunicorn Off_Axis_Django.wsgi:application --bind 0.0.0.0:8000 --workers 3
     volumes:
       - static_volume:/app/static
+      - type: bind
+        source: ./db.sqlite3
+        target: /app/db.sqlite3
     expose:
       - 8000
     env_file:
