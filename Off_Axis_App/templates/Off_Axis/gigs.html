@@ -12,7 +12,7 @@
         {% include 'components/search_bar.html' with label="Search Gigs" %}
         <div class="gigs__list">
             {% for gig in gigs %}
-                {% if gig.is_approved and not gig.is_closed or user.is_staff %}
+                {% if gig.is_approved and not gig.is_closed or user.is_staff or gig.artist.user == user %}
                     {% include 'components/gig.html' with gig=gig %}
                 {% endif %}
             {% endfor %}

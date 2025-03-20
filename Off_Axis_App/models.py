@@ -117,7 +117,7 @@ class Gig(models.Model):
     booking_fee = models.DecimalField(max_digits=19, decimal_places=2, default=1.25)
     capacity = models.IntegerField()
     description = models.TextField(max_length=500)
-    gig_photo_url = models.TextField(max_length=2048)
+    gig_picture = models.ImageField(upload_to="gigs/", null=True, blank=True)
     is_approved = models.BooleanField(default=False)
     stripe_product_id = models.TextField(max_length=256, null=True, blank=True)
     is_closed = models.BooleanField(default=False)
@@ -166,7 +166,7 @@ class Venue(models.Model):
     name = models.TextField(max_length=500)
     address = models.OneToOneField("Address", on_delete=models.CASCADE)
     description = models.TextField(max_length=500)
-    venue_photo_url = models.TextField(max_length=2048)
+    venue_picture = models.ImageField(upload_to="venues/", null=True, blank=True)
 
 
 class Ticket(models.Model):

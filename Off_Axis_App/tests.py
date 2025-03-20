@@ -55,7 +55,6 @@ def init_artists_cms(self):
         name="Test Venue",
         address=self.address,
         description="Test venue description",
-        venue_photo_url="http://example.com/venue.jpg",
     )
     # Create a Gig for artist2
     self.gig = Gig.objects.create(
@@ -66,8 +65,10 @@ def init_artists_cms(self):
         booking_fee=5.00,
         capacity=100,
         description="Test gig",
-        gig_photo_url="http://example.com/gig.jpg",
     )
+
+    with open("./static/images/gig-placeholder.png", "rb") as f:
+        self.gig.gig_picture.save("gig-placeholder.png", ImageFile(f), save=True)
 
     cms = CMS.objects.create()
     gigs = Gig.objects.all()

@@ -85,61 +85,69 @@ def artists_view(request):
 
 
 def create_gig(request, slug):
+    print("Creating gig")
     artist = get_object_or_404(Artist, slug=slug)
 
     # For GET requests, create unbound forms
     address_form = AddressForm(prefix="address")
     venue_form = VenueForm(prefix="venue")
     gig_form = GigForm(prefix="gig")
-    supporting_artists_options = [
-        {"label": a.user.username, "value": a.id} for a in Artist.objects.all()
-    ]
 
     if request.method == "POST":
         post_data = request.POST.copy()
-
-        supporting_artists_value = post_data.pop(
-            gig_form["supporting_artists"].html_name, ""
-        )
-
-        if isinstance(supporting_artists_value, list):
-            supporting_artists_str = ",".join(supporting_artists_value)
-        else:
-            supporting_artists_str = supporting_artists_value
 
         address_form = AddressForm(post_data, prefix="address")
         venue_form = VenueForm(post_data, prefix="venue")
         gig_form = GigForm(post_data, request.FILES, prefix="gig")
 
+        if address_form.is_valid():
+            pass
+        else:
+            print(address_form.errors)
+        if venue_form.is_valid():
+            pass
+        else:
+            print(venue_form.errors)
+        if gig_form.is_valid():
+            pass
+        else:
+            print(gig_form.errors)
+
         if address_form.is_valid() and venue_form.is_valid() and gig_form.is_valid():
+            print("Form is valid")
             address = address_form.save()
             venue = venue_form.save(commit=False)
             venue.address = address
+
+            if "venue-venue_picture" in request.FILES:
+                venue.venue_picture = request.FILES["venue-venue_picture"]
+            else:
+                return JsonResponse({"error": "Venue picture is required"}, status=400)
+
             venue.save()
 
             gig = gig_form.save(commit=False)
             gig.venue = venue
             gig.artist = artist
             gig.booking_fee = 1.25
+
+            if "gig-gig_picture" in request.FILES:
+                gig.gig_picture = request.FILES["gig-gig_picture"]
+            else:
+                return JsonResponse({"error": "Gig picture is required"}, status=400)
+
             gig.save()
             gig_form.save_m2m()
 
-            if supporting_artists_str:
-                try:
-                    artist_ids = [
-                        int(x) for x in supporting_artists_str.split(",") if x.strip()
-                    ]
-                    gig.supporting_artists.set(artist_ids)
-                except ValueError:
-                    pass
+            print("Gig created")
 
             return redirect(reverse("artist", args=[artist.slug]))
         else:
+            print("Form is not valid")
             context = {
                 "address_form": address_form,
                 "venue_form": venue_form,
                 "gig_form": gig_form,
-                "supporting_artists_options": supporting_artists_options,
                 "artist": artist,
             }
             return render(request, "Off_Axis/create_gig.html", context)
@@ -148,9 +156,10 @@ def create_gig(request, slug):
         "address_form": address_form,
         "venue_form": venue_form,
         "gig_form": gig_form,
-        "supporting_artists_options": supporting_artists_options,
         "artist": artist,
     }
+
+    print("form is not valid")
     return render(request, "Off_Axis/create_gig.html", context)
 
 
