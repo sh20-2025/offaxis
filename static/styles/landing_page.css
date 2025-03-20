@@ -30,7 +30,17 @@
   text-align: center;
 }
 
+@media screen and (max-width: 650px) {
+  .hero-circles {
+    margin-left: 5vw;
+  }
 
+  .hero-circle {
+    width: 33vw;
+    height: 33vw;
+    margin-left: -5vw;
+  }
+}
 
 .hero-circles img {
   /*display: none;*/
@@ -105,13 +115,14 @@
 .artist-of-the-week {
   display: flex;
   justify-content: space-evenly;
+  padding: 2rem;
+  gap: 2rem;
 }
 
 .artist-of-the-week .left {
   content: "";
   width: 40%;
   height: 100%;
-  background-color: var(--oa-text-dark);
   display: flex;
   justify-content: center;
 }
@@ -130,6 +141,29 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+}
+
+@media screen and (max-width: 800px) {
+  .artist-of-the-week {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .artist-of-the-week .left {
+    width: 100%;
+  }
+
+  .artist-of-the-week .left .artist-of-the-week-media {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    background: none;
+  }
+
+  .artist-of-the-week .right {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .offaxis-socials {
@@ -199,6 +233,7 @@
   display: flex;
   justify-content: left;
   padding: 1rem;
+  flex-wrap: wrap;
 }
 
 .our-partners .partner {

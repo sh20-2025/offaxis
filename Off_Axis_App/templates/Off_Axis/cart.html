@@ -10,61 +10,63 @@
     <section class="cart">
         <h1 class="cart__title">Cart</h1>
         {% if error != "" %}<p class="cart__error">Error: {{ error }}</p>{% endif %}
-        <table class="cart__table">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total Price</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
+        <div class="cart__table-container">
+            <table class="cart__table">
+                <thead>
                     <tr>
-                        <td>
-                            <a class="cart__table__product"
-                               href="{% url 'gig' item.gig.artist.slug item.gig.id %}"
-                               title="{{ item.gig.name }}'s Gig Page">
-                                <img class="cart__item__image"
-                                     width="200"
-                                     height="200"
-                                     src="{{ item.gig.gig_photo_url }}"
-                                     alt="{{ item.gig.name }}'s gig">
-                                <p>{{ item.gig.name }}</p>
-                            </a>
-                        </td>
-                        <td>£{{ item.gig.full_price }}</td>
-                        <td>
-                            <form action="/cart/" method="post">
-                                {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="sm" min="1" max="10" value=item.quantity %}
-                                {% include "components/button.html" with id="updateButton" type="submit" variant="rainbow" text="Update" size="sm" %}
-                                <input type="hidden" name="gig_id" value="{{ item.gig.id }}">
-                                <input type="hidden" name="action" value="update">
-                                {% csrf_token %}
-                            </form>
-                        </td>
-                        <td>£{{ item.total_price }}</td>
-                        <td>
-                            <form action="/cart/" method="post">
-                                {% include "components/button.html" with id="removeButton" type="submit" variant="primary" text="Remove" size="sm" %}
-                                <input type="hidden" name="gig_id" value="{{ item.gig.id }}">
-                                <input type="hidden" name="action" value="remove">
-                                {% csrf_token %}
-                            </form>
-                        </td>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3">Total</td>
-                    <td>£{{ cart_total_price }}</td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                        <tr>
+                            <td>
+                                <a class="cart__table__product"
+                                href="{% url 'gig' item.gig.artist.slug item.gig.id %}"
+                                title="{{ item.gig.name }}'s Gig Page">
+                                    <img class="cart__item__image"
+                                        width="200"
+                                        height="200"
+                                        src="{{ item.gig.gig_picture.url }}"
+                                        alt="{{ item.gig.name }}'s gig">
+                                    <p>{{ item.gig.name }}</p>
+                                </a>
+                            </td>
+                            <td>£{{ item.gig.full_price }}</td>
+                            <td>
+                                <form action="/cart/" method="post">
+                                    {% include "components/input.html" with id="quantityInput" name="quantity" type="number" variant="light" placeholder="1" size="sm" min="1" max="10" value=item.quantity %}
+                                    {% include "components/button.html" with id="updateButton" type="submit" variant="rainbow" text="Update" size="sm" %}
+                                    <input type="hidden" name="gig_id" value="{{ item.gig.id }}">
+                                    <input type="hidden" name="action" value="update">
+                                    {% csrf_token %}
+                                </form>
+                            </td>
+                            <td>£{{ item.total_price }}</td>
+                            <td>
+                                <form action="/cart/" method="post">
+                                    {% include "components/button.html" with id="removeButton" type="submit" variant="primary" text="Remove" size="sm" %}
+                                    <input type="hidden" name="gig_id" value="{{ item.gig.id }}">
+                                    <input type="hidden" name="action" value="remove">
+                                    {% csrf_token %}
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">Total</td>
+                        <td>£{{ cart_total_price }}</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
         <div class="cart__controls">
             <a href="/checkout/" class="cart__controls__checkout">
                 {% include "components/button.html" with id="checkoutButton" type="button" variant="rainbow" text="Checkout" size="md" %}

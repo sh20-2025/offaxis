@@ -24,10 +24,12 @@
     </section>
     <section class="festival-artists">
         <h2 class="festival-artists__title">Featuring</h2>
-        <div class="festival-artists__list">
-            {% for artist in artists %}
-                {% include 'components/artist.html' with artist=artist %}
-            {% endfor %}
+        <div class="festival-artists__list-container">
+            <div class="festival-artists__list">
+                {% for artist in artists %}
+                    {% include 'components/artist.html' with artist=artist %}
+                {% endfor %}
+            </div>
         </div>
     </section>
 {% endblock body_block %}

@@ -1,9 +1,21 @@
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
   margin: 0;
   padding: 0;
   position: relative;
+  scrollbar-color: var(--oa-yellow-dark-dark) var(--oa-yellow);
+  scrollbar-width: thin;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100vw;
 }
 
 body::before {
@@ -11,14 +23,25 @@ body::before {
   position: fixed;
   top: 0;
   left: 0;
-  width: 98.8vw;
+  width: 100vw;
   height: 100vh;
   border-style: solid;
-  border-width: 5px;
+  border-width: 0.4rem;
   border-color: var(--oa-pink) var(--oa-yellow) var(--oa-green) var(--oa-blue);
   pointer-events: none;
   box-sizing: border-box;
-  z-index: 100;
+  z-index: 100000;
+}
+
+::-webkit-scrollbar {
+  width: 0.4rem;
+  height: 0.4rem;
+  background-color: var(--oa-yellow-dark-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--oa-yellow);
+  border-radius: 0.1rem;
 }
 
 :root {
@@ -31,6 +54,7 @@ body::before {
   --oa-yellow: #f7ef3b;
   --oa-yellow-light: #fff990;
   --oa-yellow-dark: #dcd212;
+  --oa-yellow-dark-dark: #bdbd13;
   --oa-yellow-low-alpha: #dcd21233;
 
   --oa-green: #19892a;
@@ -57,7 +81,6 @@ body::before {
   background-size: cover;
   color: white;
 }
-
 
 * {
   box-sizing: border-box;
@@ -153,7 +176,8 @@ body::before {
   z-index: 3;
 }
 
-.header.scrolled {
+.header.scrolled,
+.header.open {
   background-color: var(--oa-text-dark);
   position: fixed;
   top: 0;
@@ -164,7 +188,8 @@ body::before {
   display: none;
 }
 
-.header-scroll-placeholder.scrolled {
+.header-scroll-placeholder.scrolled,
+.header-scroll-placeholder.open {
   display: block;
 }
 
@@ -175,8 +200,35 @@ body::before {
   padding: 15px 20px;
 }
 
+.header.open .header-container {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.header.open .nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: auto !important;
+  height: auto !important;
+  font-size: 1.4rem;
+}
+
+.header.open #hamburgerMenuSVG {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
 .header .logo {
   margin-right: 20px;
+}
+
+.header.open .logo {
+  margin-right: 0;
 }
 
 .logo img {
@@ -318,6 +370,8 @@ body::before {
   color: var(--oa-text-light);
   padding: 20px 0;
   text-align: center;
+  margin-top: auto;
+  width: 100%;
 }
 
 .footer p {
@@ -368,17 +422,25 @@ body::before {
 }
 
 .insta-carousel {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(var(--insta-count, 8), minmax(20.25rem, 1fr));
+  grid-template-rows: 1;
   overflow-x: auto;
   gap: 1rem;
   align-items: center;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
+  scrollbar-width: none;
 }
+
 .insta-carousel::-webkit-scrollbar {
   display: none;
 }
+.slider-container::-webkit-scrollbar {
+  display: none;
+}
+
 .insta-square {
   display: flex;
   justify-content: center;
@@ -388,7 +450,9 @@ body::before {
   position: relative;
   scroll-snap-align: start;
   border-radius: 0.25rem;
+  background-color: var(--oa-text-medium);
 }
+
 .instagram-media {
   position: relative;
   transform: scale(1.15) translateY(-8rem);
@@ -401,11 +465,11 @@ body::before {
   opacity: 25% !important;
 }
 
-.WatchOnInstagramContainer{
+.WatchOnInstagramContainer {
   background-color: none !important;
 }
 
-.WatchOnInstagram{
+.WatchOnInstagram {
   background-color: none !important;
 }
 
@@ -413,6 +477,7 @@ body::before {
   position: relative;
   max-width: 90%;
   margin: 0 auto;
+  scrollbar-width: none;
 }
 
 .slider-btn {
