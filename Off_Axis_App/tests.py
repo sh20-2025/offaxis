@@ -14,6 +14,103 @@ from django.test import SimpleTestCase
 from django.core.handlers.wsgi import WSGIHandler
 from Off_Axis_Django.asgi import application as asgi_application
 from Off_Axis_Django.wsgi import application as wsgi_application
+from Off_Axis_App.models import (
+    Artist,
+    Client,
+    User,
+    Gig,
+    Venue,
+    GenreTag,
+    Address,
+    Festival,
+    CMS,
+    Credit,
+)
+from populate_db import populate
+
+
+class PopulateDBTestCase(TestCase):
+    def setUp(self):
+        # Run the population script to seed the database.
+        populate()
+
+    def test_users_count(self):
+        """
+        Expecting:
+         - 8 users created via add_artist (including admin)
+         - 4 users created via add_client
+         Total: 12 users.
+        """
+        self.assertEqual(User.objects.count(), 12, "There should be 12 users created.")
+
+    def test_artists_count(self):
+        # 8 artists should be created.
+        self.assertEqual(
+            Artist.objects.count(), 8, "There should be 8 artists created."
+        )
+
+    def test_clients_count(self):
+        # A client is created for admin in the if block plus 4 more via add_client.
+        self.assertEqual(
+            Client.objects.count(), 5, "There should be 5 clients created."
+        )
+
+    def test_venues_count(self):
+        # Two venues are added.
+        self.assertEqual(Venue.objects.count(), 2, "There should be 2 venues created.")
+
+    def test_gigs_count(self):
+        # After deleting old gigs, the script creates 7 gigs.
+        self.assertEqual(Gig.objects.count(), 7, "There should be 7 gigs created.")
+
+    def test_genre_tags_count(self):
+        # The script adds 10 genre tags.
+        self.assertEqual(
+            GenreTag.objects.count(), 10, "There should be 10 genre tags created."
+        )
+
+    def test_cms_created(self):
+        # One CMS object should be created, and it should have 3 gigs in both just announced and featured.
+        cms_objs = CMS.objects.all()
+        self.assertEqual(cms_objs.count(), 1, "There should be 1 CMS created.")
+        cms = cms_objs.first()
+        self.assertEqual(
+            cms.just_announced_gigs.count(),
+            3,
+            "CMS should have 3 just announced gigs.",
+        )
+        self.assertEqual(
+            cms.featured_gigs.count(),
+            3,
+            "CMS should have 3 featured gigs.",
+        )
+
+    def test_festivals_count(self):
+        # Three festivals should be created.
+        self.assertEqual(
+            Festival.objects.count(), 3, "There should be 3 festivals created."
+        )
+
+    def test_addresses_count(self):
+        # Each call to add_venue creates a new Address; with 2 venues, expect 2 addresses.
+        self.assertEqual(
+            Address.objects.count(),
+            2,
+            "There should be 2 addresses created for venues.",
+        )
+
+    def test_admin_is_superuser(self):
+        # Check that the admin user is created as a superuser.
+        admin_user = User.objects.get(username="admin")
+        self.assertTrue(admin_user.is_superuser, "Admin user should be a superuser.")
+
+    def test_artists_have_credits(self):
+        # Each artist should have an associated credit record.
+        for artist in Artist.objects.all():
+            self.assertIsNotNone(
+                artist.credit,
+                f"Artist '{artist}' should have an associated credit record.",
+            )
 
 
 class ASGIConfigTestCase(SimpleTestCase):
