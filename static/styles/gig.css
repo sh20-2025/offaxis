@@ -5,7 +5,7 @@
 }
 
 .gig-page__image {
-  width: 100%;
+  width: 50rem;
   height: auto;
   object-fit: contain;
 }

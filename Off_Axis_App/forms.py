@@ -134,30 +134,35 @@ class AddressForm(forms.ModelForm):
 class VenueForm(forms.ModelForm):
     class Meta:
         model = Venue
-        fields = ["name", "description", "venue_photo_url"]
+        fields = ["name", "description", "venue_picture"]
+
+        widgets = {
+            "name": forms.TextInput(attrs={"placeholder": "Enter venue name"}),
+            "description": forms.Textarea(
+                attrs={"rows": 4, "placeholder": "Enter venue description"}
+            ),
+            "venue_picture": forms.ClearableFileInput(attrs={"class": "form-control"}),
+        }
 
 
 class GigForm(forms.ModelForm):
     class Meta:
         model = Gig
         fields = [
-            "supporting_artists",
             "date",
             "price",
-            "booking_fee",
             "capacity",
             "description",
-            "gig_photo_url",
+            "gig_picture",
             "is_approved",
         ]
         widgets = {
             "date": forms.DateTimeInput(attrs={"type": "datetime-local"}),
             "venue": forms.TextInput(attrs={"placeholder": "Enter venue name"}),
-            "supporting_artists": forms.SelectMultiple(attrs={"size": 5}),
             "description": forms.Textarea(
                 attrs={"rows": 4, "placeholder": "Enter description"}
             ),
-            "gig_photo_url": forms.URLInput(attrs={"placeholder": "Enter a valid URL"}),
+            "gig_picture": forms.ClearableFileInput(attrs={"class": "form-control"}),
             "is_approved": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 

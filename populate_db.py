@@ -84,7 +84,6 @@ def populate():
         10.00,
         100,
         "A gig by someone",
-        "/static/images/gig-placeholder.png",
     )
     add_gig(
         a1,
@@ -93,7 +92,6 @@ def populate():
         12.00,
         50,
         "A gig by someone",
-        "/static/images/gig-placeholder.png",
     )
     add_gig(
         a3,
@@ -102,7 +100,6 @@ def populate():
         6.00,
         20,
         "A gig by someone",
-        "/static/images/gig-placeholder.png",
     )
     add_gig(
         a2,
@@ -111,7 +108,6 @@ def populate():
         8.00,
         35,
         "A gig by someone",
-        "/static/images/gig-placeholder.png",
     )
     add_gig(
         a4,
@@ -120,7 +116,6 @@ def populate():
         9.00,
         15,
         "A gig by someone",
-        "/static/images/gig-placeholder.png",
     )
     add_gig(
         a5,
@@ -129,7 +124,6 @@ def populate():
         14.00,
         40,
         "A gig by someone",
-        "/static/images/gig-placeholder.png",
     )
 
     add_gig(
@@ -139,7 +133,6 @@ def populate():
         14.00,
         40,
         "test gig",
-        "/static/images/gig-placeholder.png",
     )
 
     CMS.objects.all().delete()
@@ -197,7 +190,6 @@ def populate():
             14.00,
             40,
             "A gig by admin",
-            "/static/images/gig-placeholder.png",
         )
         add_gig(
             admin_artist,
@@ -206,7 +198,6 @@ def populate():
             18.00,
             100,
             "A gig by admin 2",
-            "/static/images/gig-placeholder.png",
         )
 
 
@@ -231,7 +222,7 @@ def add_client(name, phone_number):
     return c
 
 
-def add_venue(name, description, venue_photo_url):
+def add_venue(name, description, venue_picture):
     a = Address.objects.create(
         line_1="123 Argyle St",
         line_2="",
@@ -241,24 +232,23 @@ def add_venue(name, description, venue_photo_url):
         post_code="G1 7DX",
     )
     v = Venue.objects.get_or_create(
-        name=name, description=description, venue_photo_url=venue_photo_url, address=a
+        name=name, description=description, venue_picture=venue_picture, address=a
     )[0]
     return v
 
 
-def add_gig(
-    artist, venue, date, price, capacity, description, gig_photo_url, is_approved=True
-):
-    g = Gig.objects.get_or_create(
-        artist=artist,
-        venue=venue,
-        date=parse_datetime(date),
-        price=price,
-        capacity=capacity,
-        description=description,
-        gig_photo_url=gig_photo_url,
-        is_approved=is_approved,
-    )[0]
+def add_gig(artist, venue, date, price, capacity, description, is_approved=True):
+    with open("./static/images/gig-placeholder.png", "rb") as f:
+        g = Gig.objects.get_or_create(
+            artist=artist,
+            venue=venue,
+            date=parse_datetime(date),
+            price=price,
+            capacity=capacity,
+            description=description,
+            gig_picture=ImageFile(f),
+            is_approved=is_approved,
+        )[0]
 
     if is_approved:
         g.approve()

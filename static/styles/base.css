@@ -420,3 +420,69 @@ body::before {
 .artist-card {
   margin: 0 auto;
 }
+
+.insta-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  align-items: center;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+.insta-carousel::-webkit-scrollbar {
+  display: none;
+}
+.insta-square {
+  display: flex;
+  justify-content: center;
+  width: 20.25rem;
+  height: 14.25rem;
+  overflow: hidden;
+  position: relative;
+  scroll-snap-align: start;
+  border-radius: 0.25rem;
+}
+.instagram-media {
+  position: relative;
+  transform: scale(1.15) translateY(-8rem);
+}
+
+.insta-square blockquote.instagram-media {
+  width: 100% !important;
+  height: 100% !important;
+  transform: none !important;
+  opacity: 25% !important;
+}
+
+.WatchOnInstagramContainer{
+  background-color: none !important;
+}
+
+.WatchOnInstagram{
+  background-color: none !important;
+}
+
+.slider-container {
+  position: relative;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: #fff;
+  padding: 1rem;
+  cursor: pointer;
+  z-index: 10;
+}
+.prev {
+  left: 0;
+}
+.next {
+  right: 0;
+}
