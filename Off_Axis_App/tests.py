@@ -8,8 +8,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.files.images import ImageFile
 import os
 from types import SimpleNamespace
-from io import BytesIO
 from unittest.mock import patch
+from io import BytesIO
 import inspect
 from django.test import SimpleTestCase
 from django.core.handlers.wsgi import WSGIHandler
@@ -44,12 +44,37 @@ class HandleCheckoutSessionCompletedTestCase(TestCase):
             password="password",  # nosec
         )
         self.client_obj = Client.objects.create(user=self.user)
-        # Create a Gig with stripe_product_id "prod_123" and a price of 10.0.
-        # (Include other required fields for Gig if necessary.)
+
+        # Create a dummy artist for the gig.
+        self.artist = Artist.objects.create(
+            user=User.objects.create_user(
+                username="artist_for_gig", password="password"
+            ),  # nosec
+            bio="Test artist",
+            is_approved=True,
+            credit=Credit.objects.create(balance=100),
+        )
+
+        # Create a Venue
+        self.venue = Venue.objects.create(
+            name="Test Venue",
+            address=Address.objects.create(
+                line_1="123 Main St",
+                city="Test City",
+                country="Test Country",
+                post_code="12345",
+            ),
+            description="Test venue description",
+        )
+
+        # Create a Gig with the required fields (including a valid artist, date, capacity, and venue).
         self.gig = Gig.objects.create(
+            artist=self.artist,
+            venue=self.venue,  # Add the venue here
             stripe_product_id="prod_123",
             price=10.0,
-            # Add any other required fields here.
+            date=timezone.now(),  # Use timezone-aware datetime
+            capacity=100,
         )
 
     @patch("Off_Axis_App.helpers.stripe_webhook.send_ticket_email")
