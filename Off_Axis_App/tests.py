@@ -1,9 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-
-# from django.contrib.auth.models import User
-
-# from .models import Artist, Credit, CreditTransaction, Venue, Gig, Address, CMS
 from django.utils import timezone
 from django.core import mail
 from django.utils.http import urlsafe_base64_encode
@@ -28,8 +24,130 @@ from Off_Axis_App.models import (
     CMS,
     Credit,
     CreditTransaction,
+    Cart,
 )
 from populate_db import populate
+from Off_Axis_App.helpers.cart import get_or_create_cart
+
+
+class GetOrCreateCartTestCase(TestCase):
+    def setUp(self):
+        # Clean up any existing carts.
+        Cart.objects.all().delete()
+        # Create a user and associated Client.
+        self.user_client = User.objects.create_user(
+            username="clientuser", password="test123"
+        )
+        # Assume that Client has a OneToOne relation with User and a "cart" field.
+        self.client_obj = Client.objects.create(user=self.user_client, cart=None)
+
+        # Create a user and associated Artist.
+        self.user_artist = User.objects.create_user(
+            username="artistuser", password="test123"
+        )
+        # Assume that Artist has a OneToOne relation with User and a "cart" field.
+        self.artist_obj = Artist.objects.create(user=self.user_artist, cart=None)
+
+        # Create a user without any role (no client or artist).
+        self.user_no_role = User.objects.create_user(
+            username="noroleuser", password="test123"
+        )
+
+    def test_no_user_no_cartid(self):
+        """When neither a user nor a cart_id is provided, a new cart is created."""
+        cart = get_or_create_cart()
+        self.assertIsNotNone(cart)
+        self.assertEqual(Cart.objects.count(), 1)
+
+    def test_user_no_existing_cart_client(self):
+        """For a client user with no existing cart, a new cart is created and assigned."""
+        cart = get_or_create_cart(u=self.user_client)
+        self.assertIsNotNone(cart)
+        self.client_obj.refresh_from_db()
+        self.assertEqual(self.client_obj.cart, cart)
+        self.assertEqual(Cart.objects.count(), 1)
+
+    def test_user_existing_cart_client(self):
+        """For a client user with an existing cart, the existing cart is returned."""
+        existing_cart = Cart.objects.create()
+        self.client_obj.cart = existing_cart
+        self.client_obj.save()
+        cart = get_or_create_cart(u=self.user_client)
+        self.assertEqual(cart, existing_cart)
+        self.assertEqual(Cart.objects.count(), 1)
+
+    def test_user_no_existing_cart_artist(self):
+        """For an artist user with no existing cart, a new cart is created and assigned."""
+        cart = get_or_create_cart(u=self.user_artist)
+        self.assertIsNotNone(cart)
+        self.artist_obj.refresh_from_db()
+        self.assertEqual(self.artist_obj.cart, cart)
+        self.assertEqual(Cart.objects.count(), 1)
+
+    def test_user_existing_cart_artist(self):
+        """For an artist user with an existing cart, the existing cart is returned."""
+        existing_cart = Cart.objects.create()
+        self.artist_obj.cart = existing_cart
+        self.artist_obj.save()
+        cart = get_or_create_cart(u=self.user_artist)
+        self.assertEqual(cart, existing_cart)
+        self.assertEqual(Cart.objects.count(), 1)
+
+    def test_cart_id_existing_valid_client(self):
+        """
+        When a valid cart_id is provided and the cart belongs to the user,
+        the cart is returned.
+        """
+        cart_obj = Cart.objects.create()
+        self.client_obj.cart = cart_obj
+        self.client_obj.save()
+        cart = get_or_create_cart(u=self.user_client, cart_id=cart_obj.id)
+        self.assertEqual(cart, cart_obj)
+
+    def test_cart_id_existing_invalid_owner(self):
+        """
+        When a valid cart_id is provided but belongs to a different user,
+        it is ignored and a new cart is created and assigned to the provided user.
+        """
+        # Create a cart and assign it to the client user.
+        other_cart = Cart.objects.create()
+        self.client_obj.cart = other_cart
+        self.client_obj.save()
+        # Now, call with the artist user and the same cart_id.
+        cart = get_or_create_cart(u=self.user_artist, cart_id=other_cart.id)
+        self.artist_obj.refresh_from_db()
+        self.assertNotEqual(cart, other_cart)
+        self.assertEqual(self.artist_obj.cart, cart)
+        # Two carts should exist now.
+        self.assertEqual(Cart.objects.count(), 2)
+
+    def test_cart_id_does_not_exist(self):
+        """
+        When a cart_id is provided that does not exist,
+        a new cart is created.
+        """
+        cart = get_or_create_cart(cart_id=9999)
+        self.assertIsNotNone(cart)
+        self.assertEqual(Cart.objects.count(), 1)
+
+    def test_cart_id_does_not_exist_with_user(self):
+        """
+        When a non-existent cart_id is provided along with a user,
+        a new cart is created and assigned to the user.
+        """
+        cart = get_or_create_cart(u=self.user_client, cart_id=9999)
+        self.assertIsNotNone(cart)
+        self.client_obj.refresh_from_db()
+        self.assertEqual(self.client_obj.cart, cart)
+        self.assertEqual(Cart.objects.count(), 1)
+
+    def test_user_without_artist_or_client(self):
+        """
+        If the user doesn't have associated artist or client attributes,
+        a ValueError should be raised.
+        """
+        with self.assertRaises(ValueError):
+            get_or_create_cart(u=self.user_no_role)
 
 
 class PopulateDBTestCase(TestCase):
