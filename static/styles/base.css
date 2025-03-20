@@ -169,7 +169,8 @@ body::before {
   z-index: 3;
 }
 
-.header.scrolled {
+.header.scrolled,
+.header.open {
   background-color: var(--oa-text-dark);
   position: fixed;
   top: 0;
@@ -180,7 +181,8 @@ body::before {
   display: none;
 }
 
-.header-scroll-placeholder.scrolled {
+.header-scroll-placeholder.scrolled,
+.header-scroll-placeholder.open {
   display: block;
 }
 
@@ -191,8 +193,35 @@ body::before {
   padding: 15px 20px;
 }
 
+.header.open .header-container {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.header.open .nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: auto !important;
+  height: auto !important;
+  font-size: 1.4rem;
+}
+
+.header.open #hamburgerMenuSVG {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
 .header .logo {
   margin-right: 20px;
+}
+
+.header.open .logo {
+  margin-right: 0;
 }
 
 .logo img {
