@@ -37,21 +37,21 @@ class GetOrCreateCartTestCase(TestCase):
         # Create a user and associated Client.
         self.user_client = User.objects.create_user(
             username="clientuser", password="test123"
-        )
+        )  # nosec
         # Assume that Client has a OneToOne relation with User and a "cart" field.
         self.client_obj = Client.objects.create(user=self.user_client, cart=None)
 
         # Create a user and associated Artist.
         self.user_artist = User.objects.create_user(
             username="artistuser", password="test123"
-        )
+        )  # nosec
         # Assume that Artist has a OneToOne relation with User and a "cart" field.
         self.artist_obj = Artist.objects.create(user=self.user_artist, cart=None)
 
         # Create a user without any role (no client or artist).
         self.user_no_role = User.objects.create_user(
             username="noroleuser", password="test123"
-        )
+        )  # nosec
 
     def test_no_user_no_cartid(self):
         """When neither a user nor a cart_id is provided, a new cart is created."""
