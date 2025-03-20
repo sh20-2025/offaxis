@@ -5,9 +5,10 @@
 }
 
 .gig-page__image {
-  width: 50rem;
+  width: 100%;
   height: auto;
   object-fit: contain;
+  padding: 1rem;
 }
 
 .gig-page__details {
