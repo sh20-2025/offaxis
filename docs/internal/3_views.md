@@ -48,4 +48,4 @@
 
 # Website Flowchart Diagram
 
-
+![Website Flowchart Diagram](Website_View_Flowchart.png)
