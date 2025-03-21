@@ -155,11 +155,11 @@ body::before {
   }
 
   .nav ul li a {
-    background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue), var(--oa-pink));
-    color: transparent;
-    background-clip: text;
-    background-size: 200% auto;
-    animation: gradientAnimation 5s linear infinite;
+    /* background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue), var(--oa-pink)); */
+    color: whitesmoke;
+    /* background-clip: text; */
+    /* background-size: 200% auto; */
+    /* animation: gradientAnimation 5s linear infinite; */
     font-size: 1.5rem;
     text-decoration: none;
     text-align: center;
@@ -261,7 +261,7 @@ body::before {
 
 .nav ul li a {
   background: linear-gradient(to right, white, rgb(230, 230, 230), white);
-  color: transparent;
+  color: white;
   background-clip: text;
   background-size: 200% auto;
   animation: gradientAnimation 5s linear infinite;
@@ -269,15 +269,6 @@ body::before {
   font-weight: bold;
   font-size: 1.2em;
   padding: 10px 15px;
-}
-
-@keyframes gradientAnimation {
-  0%{
-    background-position: 200% 50%;
-  }
-  100%{
-    background-color: 0% 50% ;
-  }
 }
 
 .nav ul li a:hover {
