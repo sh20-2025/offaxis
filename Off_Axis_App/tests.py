@@ -962,7 +962,7 @@ class ViewsTestCase(TestCase):
 
     def test_create_gig_with_artist(self):
         """Test an artist can access the create gig page."""
-        self.client.login(username="artist1", password="test123") # nosec
+        self.client.login(username="artist1", password="test123")  # nosec
         # Pass the artist slug as an argument.
         response = self.client.get(
             reverse("create-gig", args=[self.artist1.user.username])
