@@ -112,16 +112,26 @@
   }
 
   .just-announced-msg-container {
-    margin-top: 2rem;
+    margin-top: 4rem;
     display:flex;
     justify-content: center;
   }
   .just-announced-msg {
     display: block;
-    background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue));
+    background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue), var(--oa-pink));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    background-size: 200% auto;
+    animation: gradientAnimation 5s linear infinite;
+  }
+  @keyframes gradientAnimation {
+    0%{
+      background-position: 200% 50%;
+    }
+    100%{
+      background-color: 0% 50% ;
+    }
   }
 }
 
