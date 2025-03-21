@@ -38,7 +38,19 @@ body::before {
   border-color: var(--oa-pink) var(--oa-yellow) var(--oa-green) var(--oa-blue);
   pointer-events: none;
   box-sizing: border-box;
-  z-index: 100000;
+  background: url("../images/background_static.png") repeat;
+  background-size: cover;
+  animation: backgroundShift 10s infinite alternate;
+  z-index: -2;
+}
+
+@keyframes backgroundShift {
+  0% {
+    background-position: 0 50%;
+  }
+  100% {
+    background-position:50% 0 ;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -85,9 +97,19 @@ body::before {
   --oa-text-medium: #5a5a5a;
   --oa-text-medium-light: #a4a4a4;
 
+  animation: backgroundShift 10s infinite alternate;
   background: url("../images/background_static.png") repeat;
-  background-size: cover;
+  background-size: contain;
   color: white;
+}
+
+@keyframes backgroundShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50% 0;
+  }
 }
 
 * {
