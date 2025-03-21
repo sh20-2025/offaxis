@@ -32,13 +32,13 @@
 
 @media screen and (max-width: 650px) {
   .hero-circles {
-    margin-left: 5vw;
+    margin-left: 5.5vw;
   }
 
   .hero-circle {
-    width: 33vw;
-    height: 33vw;
-    margin-left: -5vw;
+    width: 28vw;
+    height: 28vw;
+    margin-left: -4.5vw;
   }
 }
 
@@ -98,6 +98,12 @@
   position: absolute;
   transform-origin: bottom center;
   transition: transform 2s;
+}
+
+@media screen and (max-width: 650px) {
+  .hero-circle h4{
+    display:none;
+  }
 }
 
 .all-gigs-btn {

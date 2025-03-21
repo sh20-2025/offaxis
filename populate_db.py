@@ -46,6 +46,43 @@ def populate():
     a3 = add_artist("Sub Violet", "I am a musician", True)
     a4 = add_artist("Deltamaniac", "I am a musician", True)
     a5 = add_artist("The Demographic", "I am a musician", True)
+
+    # more specific artists
+    aurora_engine = add_artist(
+        "Aurora Engine",
+        "Originally from the north east of England, "
+        "Aurora Engine (aka Deborah Shaw) is a ground-breaking"
+        " Edinburgh-based singer-songwriter, composer and producer. "
+        "She was Single of the Week on BBC Radio Scotland flagship show "
+        "The Afternoon Show and interviewed by Janice Forsyth, Artist of the "
+        "Week in Scotland On Sunday featured by The Skinny for her sold out "
+        "run at Edinburgh Festival Fringe (Terre for Made In Scotland) and "
+        "secured airplay via BBC Radio Newcastle, Amazing Radio and more.",
+        True,
+        "./static/images/AuroraEngine.png",
+    )
+
+    becca_james = add_artist(
+        "Becca James",
+        "Becca James is a singer-songwriter from Glasgow, Scotland.",
+        True,
+        "./static/images/BeccaJames.png",
+    )
+
+    harry_miles_watson = add_artist(
+        "Harry Miles Watson",
+        "Harry Miles Watson is a singer-songwriter from Glasgow, Scotland.",
+        True,
+        "./static/images/HarryMilesWatson.png",
+    )
+
+    ria_timkin = add_artist(
+        "Ria Timkin",
+        "Ria Timkin is a singer-songwriter from Glasgow, Scotland.",
+        True,
+        "./static/images/RiaTimkin.png",
+    )
+
     add_artist("The Sun Day", "I am a musician", False)
     add_artist("Dear Heather", "I am a musician", False)
 
@@ -76,6 +113,50 @@ def populate():
                 pass
 
     Gig.objects.all().delete()
+
+    add_gig(
+        aurora_engine,
+        v2,
+        "2022-12-12 12:00:00",
+        10.00,
+        100,
+        "A gig by aurora_engine",
+        True,
+        "./static/images/AuroraEngine.png",
+    )
+
+    add_gig(
+        becca_james,
+        v1,
+        "2022-12-12 12:00:00",
+        10.00,
+        100,
+        "A gig by Becca James",
+        True,
+        "./static/images/BeccaJames.png",
+    )
+
+    add_gig(
+        harry_miles_watson,
+        v1,
+        "2022-12-12 12:00:00",
+        10.00,
+        100,
+        "A gig by Harry Miles Watson",
+        True,
+        "./static/images/HarryMilesWatson.png",
+    )
+
+    add_gig(
+        ria_timkin,
+        v2,
+        "2022-12-12 12:00:00",
+        10.00,
+        100,
+        "A gig by Ria Timkin",
+        True,
+        "./static/images/RiaTimkin.png",
+    )
 
     add_gig(
         a1,
@@ -137,7 +218,7 @@ def populate():
 
     CMS.objects.all().delete()
     cms = CMS.objects.create()
-    gigs = Gig.objects.all()[:3]
+    gigs = Gig.objects.all()[:4]
     cms.just_announced_gigs.add(*gigs)
     cms.featured_gigs.add(*gigs)
     cms.artist_of_the_week = a1
@@ -201,10 +282,12 @@ def populate():
         )
 
 
-def add_artist(name, bio, is_approved):
+def add_artist(
+    name, bio, is_approved, image_path="./static/images/gig-placeholder.png"
+):
     u = User.objects.get_or_create(username=name)[0]
 
-    with open("./static/images/gig-placeholder.png", "rb") as f:
+    with open(image_path, "rb") as f:
         a = Artist.objects.get_or_create(
             user=u,
             bio=bio,
@@ -237,8 +320,17 @@ def add_venue(name, description, venue_picture):
     return v
 
 
-def add_gig(artist, venue, date, price, capacity, description, is_approved=True):
-    with open("./static/images/gig-placeholder.png", "rb") as f:
+def add_gig(
+    artist,
+    venue,
+    date,
+    price,
+    capacity,
+    description,
+    is_approved=True,
+    gig_picture_path="./static/images/gig-placeholder.png",
+):
+    with open(gig_picture_path, "rb") as f:
         g = Gig.objects.get_or_create(
             artist=artist,
             venue=venue,
