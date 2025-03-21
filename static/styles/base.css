@@ -16,6 +16,14 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   width: 100vw;
+  opacity: 0;
+  animation: fadeInAnimation 1s ease forwards;
+}
+
+@keyframes fadeInAnimation {
+  to {
+    opacity: 1;
+  }
 }
 
 body::before {
