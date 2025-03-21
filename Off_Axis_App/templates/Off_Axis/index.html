@@ -7,6 +7,9 @@
     <script src="{% static "scripts/landing_page.js" %}"></script>
 {% endblock %}
 {% block body_block %}
+    <div class="just-announced-msg-container">
+        <h2 class="just-announced-msg"> Just Announced Off Axis Gigs </h2>
+    </div>
     <section class="hero">
         <div class="hero-circles">
             {% for gig in just_announced_gigs %}

@@ -100,9 +100,28 @@
   transition: transform 2s;
 }
 
+
+
+.just-announced-msg {
+  display:none;
+}
+
 @media screen and (max-width: 650px) {
-  .hero-circle h4{
+  .hero-circle h4 {
     display:none;
+  }
+
+  .just-announced-msg-container {
+    margin-top: 2rem;
+    display:flex;
+    justify-content: center;
+  }
+  .just-announced-msg {
+    display: block;
+    background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }
 
