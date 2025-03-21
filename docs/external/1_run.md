@@ -31,4 +31,6 @@ python populate_db.py
 
 To see the local version of the project:
 
-Go to https://localhost:8000
+Find the locally hosted port, this is should be on your docker desktop if ran correctly.
+
+Commonly - http://localhost:1337
