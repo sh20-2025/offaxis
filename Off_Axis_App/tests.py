@@ -493,16 +493,16 @@ class PopulateDBTestCase(TestCase):
     def test_users_count(self):
         """
         Expecting:
-         - 8 users created via add_artist (including admin)
+         - 12 users created via add_artist (including admin)
          - 4 users created via add_client
-         Total: 12 users.
+         Total: 16 users.
         """
-        self.assertEqual(User.objects.count(), 12, "There should be 12 users created.")
+        self.assertEqual(User.objects.count(), 16, "There should be 16 users created.")
 
     def test_artists_count(self):
-        # 8 artists should be created.
+        # 12 artists should be created.
         self.assertEqual(
-            Artist.objects.count(), 8, "There should be 8 artists created."
+            Artist.objects.count(), 12, "There should be 12 artists created."
         )
 
     def test_clients_count(self):
@@ -517,7 +517,7 @@ class PopulateDBTestCase(TestCase):
 
     def test_gigs_count(self):
         # After deleting old gigs, the script creates 7 gigs.
-        self.assertEqual(Gig.objects.count(), 7, "There should be 7 gigs created.")
+        self.assertEqual(Gig.objects.count(), 11, "There should be 11 gigs created.")
 
     def test_genre_tags_count(self):
         # The script adds 10 genre tags.
@@ -532,13 +532,13 @@ class PopulateDBTestCase(TestCase):
         cms = cms_objs.first()
         self.assertEqual(
             cms.just_announced_gigs.count(),
-            3,
-            "CMS should have 3 just announced gigs.",
+            4,
+            "CMS should have 4 just announced gigs.",
         )
         self.assertEqual(
             cms.featured_gigs.count(),
-            3,
-            "CMS should have 3 featured gigs.",
+            4,
+            "CMS should have 4 featured gigs.",
         )
 
     def test_festivals_count(self):
