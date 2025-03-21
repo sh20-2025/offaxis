@@ -44,6 +44,8 @@ black .
 flake8 .
 ```
 
+It is possible to automate the deployment process from our implementation of docker (docker compose) from this repository.
+
 You are now ready to start developing!
 
 ## Models
