@@ -83,3 +83,5 @@ To see the local version of the project:
 Find the locally hosted port, this is should be on your docker desktop if ran correctly.
 
 Commonly - http://localhost:1337
+
+It is possible to automate the deployment process from our implementation of docker (docker compose) from this repository.
