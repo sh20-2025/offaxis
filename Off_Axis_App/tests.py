@@ -8,9 +8,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.files.images import ImageFile
 import os
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from io import BytesIO
 import inspect
+import unittest
 from django.test import SimpleTestCase
 from django.core.handlers.wsgi import WSGIHandler
 from Off_Axis_Django.asgi import application as asgi_application
@@ -33,6 +34,130 @@ from Off_Axis_App.models import (
 from populate_db import populate
 from Off_Axis_App.helpers.cart import get_or_create_cart
 from Off_Axis_App.helpers.stripe_webhook import handle_checkout_session_completed
+from Off_Axis_App.api.spotify_utils import (
+    get_spotify_client,
+    extract_spotify_artist_id,
+    get_artist_top_track,
+)
+from spotipy import Spotify
+from dotenv import load_dotenv
+
+
+class SpotifyUtilsTestCase(unittest.TestCase):
+    def test_extract_spotify_artist_id_valid(self):
+        """Test that a valid Spotify artist URL returns the expected artist ID."""
+        url = "https://open.spotify.com/artist/abc123?si=someparam"
+        artist_id = extract_spotify_artist_id(url)
+        self.assertEqual(artist_id, "abc123")
+
+    def test_extract_spotify_artist_id_invalid(self):
+        """Test that an URL not containing an artist ID returns None."""
+        url = "https://open.spotify.com/album/xyz789"
+        artist_id = extract_spotify_artist_id(url)
+        self.assertIsNone(artist_id)
+
+    @patch("Off_Axis_App.api.spotify_utils.SpotifyClientCredentials")
+    @patch("Off_Axis_App.api.spotify_utils.Spotify")
+    def test_get_spotify_client(self, mock_spotify, mock_client_creds):
+        """
+        Test that get_spotify_client returns a Spotify instance,
+        and that the client credentials are initialized with the settings values.
+        """
+        dummy_auth_manager = MagicMock()
+        mock_client_creds.return_value = dummy_auth_manager
+
+        dummy_spotify_instance = MagicMock(spec=Spotify)
+        mock_spotify.return_value = dummy_spotify_instance
+
+        client = get_spotify_client()
+        self.assertIs(client, dummy_spotify_instance)
+        mock_client_creds.assert_called_once_with(
+            client_id=os.getenv("SPOTIFY_CLIENT_ID"),
+            client_secret=os.getenv("SPOTIFY_CLIENT_SECRET"),
+        )
+        mock_spotify.assert_called_once_with(auth_manager=dummy_auth_manager)
+
+    @patch("Off_Axis_App.api.spotify_utils.get_spotify_client")
+    def test_get_artist_top_track_success(self, mock_get_spotify_client):
+        """
+        Test that get_artist_top_track returns the expected track info when the Spotify
+        client returns a valid top tracks response.
+        """
+        fake_spotify = MagicMock()
+        # Simulate a response with one track.
+        fake_response = {
+            "tracks": [
+                {
+                    "name": "Test Track",
+                    "preview_url": "http://example.com/preview",
+                    "external_urls": {"spotify": "http://spotify.com/track"},
+                    "album": {
+                        "name": "Test Album",
+                        "images": [{"url": "http://example.com/album.jpg"}],
+                    },
+                }
+            ]
+        }
+        fake_spotify.artist_top_tracks.return_value = fake_response
+        mock_get_spotify_client.return_value = fake_spotify
+
+        url = "https://open.spotify.com/artist/abc123"
+        result = get_artist_top_track(url)
+        expected = {
+            "name": "Test Track",
+            "preview_url": "http://example.com/preview",
+            "external_url": "http://spotify.com/track",
+            "album_name": "Test Album",
+            "album_image": "http://example.com/album.jpg",
+        }
+        self.assertEqual(result, expected)
+        fake_spotify.artist_top_tracks.assert_called_once_with("abc123", country="GB")
+
+    @patch("Off_Axis_App.api.spotify_utils.get_spotify_client")
+    def test_get_artist_top_track_no_tracks(self, mock_get_spotify_client):
+        """
+        Test that if the Spotify client returns an empty list for tracks,
+        get_artist_top_track returns None.
+        """
+        fake_spotify = MagicMock()
+        fake_response = {"tracks": []}
+        fake_spotify.artist_top_tracks.return_value = fake_response
+        mock_get_spotify_client.return_value = fake_spotify
+
+        url = "https://open.spotify.com/artist/abc123"
+        result = get_artist_top_track(url)
+        self.assertIsNone(result)
+
+    @patch("Off_Axis_App.api.spotify_utils.get_spotify_client")
+    def test_get_artist_top_track_no_artist_id(self, mock_get_spotify_client):
+        """
+        Test that if the provided URL does not contain an artist ID,
+        get_artist_top_track returns None.
+        """
+        # URL does not match the expected pattern.
+        url = "https://open.spotify.com/album/xyz789"
+        result = get_artist_top_track(url)
+        self.assertIsNone(result)
+        # get_spotify_client is still called because our function does not check artist_id first.
+        mock_get_spotify_client.assert_called_once()
+
+    @patch("Off_Axis_App.api.spotify_utils.get_spotify_client")
+    def test_get_artist_top_track_exception(self, mock_get_spotify_client):
+        """
+        Test that if an exception is raised while fetching the top tracks,
+        get_artist_top_track catches it and returns None.
+        """
+        fake_spotify = MagicMock()
+        fake_spotify.artist_top_tracks.side_effect = Exception("Test error")
+        mock_get_spotify_client.return_value = fake_spotify
+
+        url = "https://open.spotify.com/artist/abc123"
+        result = get_artist_top_track(url)
+        self.assertIsNone(result)
+
+
+if __name__ == "__main__":
+    unittest.main()
 
 
 class HandleCheckoutSessionCompletedTestCase(TestCase):
