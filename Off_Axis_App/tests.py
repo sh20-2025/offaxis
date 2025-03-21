@@ -920,3 +920,61 @@ class AuthenticationTestCase(TestCase):
         self.client.logout()
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password(new_password))
+
+
+class ViewsTestCase(TestCase):
+    def setUp(self):
+        init_artists_cms(self)
+
+    def test_index_view(self):
+        """Test that the index view loads correctly and contains correct content."""
+        response = self.client.get(reverse("index"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Off Axis")
+        self.assertContains(response, "Just Announced")
+        self.assertContains(response, "artist1")
+
+    def test_artists_page(self):
+        """Test that the artist page loads correctly and contains all artists."""
+        response = self.client.get(reverse("artists"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "artist1")
+        self.assertContains(response, "artist2")
+
+    def test_artist_page_details(self):
+        """Test that the artist details page loads correctly and contains the correct content."""
+        response = self.client.get(reverse("artist", args=[self.artist1.user.username]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "artist1")
+        self.assertContains(response, "Test bio")
+
+    # def test_gigs_page(self):
+    #     """Test that the gigs page loads correctly and contains all gigs."""
+    #     response = self.client.get(reverse("gigs"))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertContains(response, self.gig.artist.user.username)
+    #     self.assertContains(response, "Test gig")
+
+    def test_gig_page_details(self):
+        """Test that the gig details page loads correctly and contains the correct content."""
+        response = self.client.get(
+            reverse("gig", args=[self.gig.artist.user.username, self.gig.id])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "artist2")
+        self.assertContains(response, "Test gig")
+        self.assertContains(response, "50.00")
+        self.assertContains(response, "5.00")
+
+    # def test_create_gig_page_requires_login(self):
+    #     """Test that the create gig page requires login."""
+    #     response = self.client.get(reverse('create_gig'))
+    #     self.assertEqual(response.status_code, 302)
+    #     self.assertTrue(response.url.startswith('/login/'))
+
+    # def test_create_gig_with_artist(self):
+    #     """Test an artist can access the create gig page."""
+    #     self.client.login(username="artist1", password="test123")
+    #     response = self.client.get(reverse('create_gig'))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertContains(response, "Create a Gig")
