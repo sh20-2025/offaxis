@@ -37,24 +37,36 @@ body::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  border-style: solid;
-  border-width: 0.4rem;
-  border-color: var(--oa-pink) var(--oa-yellow) var(--oa-green) var(--oa-blue);
   pointer-events: none;
   box-sizing: border-box;
   background: url("../images/background_static.png") repeat;
   background-size: cover;
   animation: backgroundShift 10s infinite alternate;
-  z-index: -2;
+  z-index: -1;
 }
 
 @keyframes backgroundShift {
   0% {
-    background-position: 0 50%;
+    background-position: 50% 120%;
   }
   100% {
-    background-position:50% 0 ;
+    background-position: 120% 50% ;
   }
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border-style: solid;
+  border-width: 0.4rem;
+  border-color: var(--oa-pink) var(--oa-yellow) var(--oa-green) var(--oa-blue);
+  pointer-events: none;
+  box-sizing: border-box;
+  z-index: 10000;
 }
 
 ::-webkit-scrollbar {
@@ -101,19 +113,7 @@ body::before {
   --oa-text-medium: #5a5a5a;
   --oa-text-medium-light: #a4a4a4;
 
-  animation: backgroundShift 10s infinite alternate;
-  background: url("../images/background_static.png") repeat;
-  background-size: contain;
   color: white;
-}
-
-@keyframes backgroundShift {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 50% 0;
-  }
 }
 
 * {
@@ -181,11 +181,7 @@ body::before {
   }
 
   .nav ul li a {
-    /* background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue), var(--oa-pink)); */
     color: whitesmoke;
-    /* background-clip: text; */
-    /* background-size: 200% auto; */
-    /* animation: gradientAnimation 5s linear infinite; */
     font-size: 1.5rem;
     text-decoration: none;
     text-align: center;
@@ -303,12 +299,11 @@ body::before {
 }
 
 .hero {
-  height: 600px;
+  height: 30rem;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0 20px;
 }
 
 .hero h1 {

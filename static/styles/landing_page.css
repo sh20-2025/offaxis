@@ -18,6 +18,10 @@
 }
 
 @media screen and (max-width: 650px) {
+  .hero {
+    height: 18rem;
+  }
+
   .hero-circles {
     margin-left: 5.5vw;
   }
@@ -30,7 +34,6 @@
 }
 
 .hero-circles img {
-  /*display: none;*/
   position: relative;
   height: 100%;
   width: 100%;
@@ -87,10 +90,27 @@
   transition: transform 2s;
 }
 
-
-
+.just-announced-msg-container {
+  margin-top: 4rem;
+  display:flex;
+  justify-content: center;
+}
 .just-announced-msg {
-  display:none;
+  display: block;
+  background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue), var(--oa-pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+  animation: gradientAnimation 5s linear infinite;
+}
+@keyframes gradientAnimation {
+  0%{
+    background-position: 200% 50%;
+  }
+  100%{
+    background-color: 0% 50% ;
+  }
 }
 
 @media screen and (max-width: 650px) {
@@ -98,28 +118,6 @@
     display:none;
   }
 
-  .just-announced-msg-container {
-    margin-top: 4rem;
-    display:flex;
-    justify-content: center;
-  }
-  .just-announced-msg {
-    display: block;
-    background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue), var(--oa-pink));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    background-size: 200% auto;
-    animation: gradientAnimation 5s linear infinite;
-  }
-  @keyframes gradientAnimation {
-    0%{
-      background-position: 200% 50%;
-    }
-    100%{
-      background-color: 0% 50% ;
-    }
-  }
 }
 
 .all-gigs-btn {
