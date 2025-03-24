@@ -7,6 +7,9 @@
     <script src="{% static "scripts/landing_page.js" %}"></script>
 {% endblock %}
 {% block body_block %}
+    <div class="just-announced-msg-container">
+        <h2 class="just-announced-msg"> Just Announced Off Axis Gigs </h2>
+    </div>
     <section class="hero">
         <div class="hero-circles">
             {% for gig in just_announced_gigs %}
@@ -19,7 +22,9 @@
     </section>
     <section class="gigs-section">
         <div class="left">
-            <div class="gigs-section-media"></div>
+            <div class="gigs-section-media">
+                <iframe width="" height="" src="https://www.youtube.com/embed/wtOvDo1Mrh8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
         </div>
         <div class="right">
             {% for gig in featured_gigs %}

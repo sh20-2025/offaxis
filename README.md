@@ -2,12 +2,11 @@
 
 ## Members
 
-- 2840506 Heng Zhen Yao test push
-- 2671747 Dulmant Jan
-- 2777042 Levack Fraser Wiremu I am Fraser Levack <h4> 🦈 </h4>
-- 2802089 Tee Zhi Xi "Hello World!"
-- 2618972 McIntyre Aaron "Hello World"
-- 2768903 Nelson Freddie hello universe
+- 2840506 Heng Zhen Yao
+- 2777042 Levack Fraser Wiremu
+- 2802089 Tee Zhi Xi
+- 2618972 McIntyre Aaron
+- 2768903 Nelson Freddie
 
 ## Requirements
 
@@ -48,24 +47,41 @@ flake8 .
 
 You are now ready to start developing!
 
-## Running our Project
+## Running our Project Locally
 
-1. Clone from Repository to your system
-2. Go to Project Root Directory
-3. Run
+1. Clone from the git repository to your system
+
+2. Go to Project Root Directory and make sure you have the dedicated ".env" file
+
+3. Check you have docker installed on your system, if not install it from [here](https://docs.docker.com/get-docker/)
+
+4. Next Run
 ```powershell
 ./scripts/setup.ps1
 ```
-4. Run
+5. Then Run
 ```powershell
 ./scripts/activate-venv.ps1
 ```
-5. Run
+6. To check the django version Run
 ```powershell
 ./scripts/check-django.ps1
 ```
-6. Run
+7. Run
+```powershell
+python manage.py mirgate
+
+python populate_db.py
+```
+8. And Finally Run
 ```powershell
 ./scripts/run-docker.ps1
 ```
-7. Go to https://Localhost:8000
+
+To see the local version of the project:
+
+Find the locally hosted port, this is should be on your docker desktop if ran correctly.
+
+Commonly - http://localhost:1337
+
+It is possible to automate the deployment process from our implementation of docker (docker compose) from this repository.

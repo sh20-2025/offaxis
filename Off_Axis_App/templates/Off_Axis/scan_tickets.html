@@ -11,7 +11,7 @@
         {% if gigs|length == 0 %}<p class="select-gig__no-gigs">You have no available gigs to scan tickets for.</p>{% endif %}
         {% for gig in gigs %}
             <div class="select-gig__gig">
-                <img src="{{ gig.gig_photo_url }}"
+                <img src="{{ gig.gig_picture.url }}"
                      alt="{{ gig.artist.user.username }}'s Gig"
                      width="300"
                      height="300" />

@@ -20,6 +20,14 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   width: 100vw;
+  opacity: 0;
+  animation: fadeInAnimation 1s ease forwards;
+}
+
+@keyframes fadeInAnimation {
+  to {
+    opacity: 1;
+  }
 }
 
 body::before {
@@ -34,7 +42,19 @@ body::before {
   border-color: var(--oa-pink) var(--oa-yellow) var(--oa-green) var(--oa-blue);
   pointer-events: none;
   box-sizing: border-box;
-  z-index: 100000;
+  background: url("../images/background_static.png") repeat;
+  background-size: cover;
+  animation: backgroundShift 10s infinite alternate;
+  z-index: -2;
+}
+
+@keyframes backgroundShift {
+  0% {
+    background-position: 0 50%;
+  }
+  100% {
+    background-position:50% 0 ;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -81,9 +101,19 @@ body::before {
   --oa-text-medium: #5a5a5a;
   --oa-text-medium-light: #a4a4a4;
 
+  animation: backgroundShift 10s infinite alternate;
   background: url("../images/background_static.png") repeat;
-  background-size: cover;
+  background-size: contain;
   color: white;
+}
+
+@keyframes backgroundShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50% 0;
+  }
 }
 
 * {
@@ -151,7 +181,11 @@ body::before {
   }
 
   .nav ul li a {
-    color: var(--oa-text-light);
+    /* background: linear-gradient(to right, var(--oa-pink), var(--oa-yellow), var(--oa-green), var(--oa-blue), var(--oa-pink)); */
+    color: whitesmoke;
+    /* background-clip: text; */
+    /* background-size: 200% auto; */
+    /* animation: gradientAnimation 5s linear infinite; */
     font-size: 1.5rem;
     text-decoration: none;
     text-align: center;
@@ -253,7 +287,11 @@ body::before {
 }
 
 .nav ul li a {
-  color: var(--oa-text-light);
+  background: linear-gradient(to right, white, rgb(230, 230, 230), white);
+  color: white;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: gradientAnimation 5s linear infinite;
   text-decoration: none;
   font-weight: bold;
   font-size: 1.2em;
