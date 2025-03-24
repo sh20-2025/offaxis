@@ -2,6 +2,10 @@ html {
   overflow-x: hidden;
 }
 
+* {
+  font-family: "jaf-bernina-sans-narrow", "Arial", sans-serif;
+}
+
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
@@ -245,6 +249,7 @@ body::before {
 
 .nav ul li {
   margin: 0;
+  text-transform: uppercase;
 }
 
 .nav ul li a {
