@@ -95,6 +95,9 @@
   text-align: center;
   color: var(--oa-text-dark);
   flex-grow: 2;
+  text-decoration: none;
+  cursor: pointer;
+  display:block;
 }
 
 .gigs-section .right .gig:nth-child(1) .date,

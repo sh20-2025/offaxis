@@ -37,7 +37,7 @@
                         <div class="name">{{ gig.artist.user.username }}</div>
                         with - {{ gig.lineup }} | {{ gig.date|date:"d/m/Y" }}
                     </div>
-                    <div class="buy-btn">Buy Tickets</div>
+                    <a href="{% url 'gig' gig.artist.slug gig.id %}" class="buy-btn" >Buy Tickets</a>
                 </div>
             {% endfor %}
         </div>
@@ -45,7 +45,7 @@
     <div class="all-gigs-btn">
         <a href='#'>
             {% include "components/button.html" with id="button7" type="button" variant="rainbow" text="View All Gigs!" size="lg" %}
-        </a>
+        
     </div>
     <section class="artist-of-the-week">
 
