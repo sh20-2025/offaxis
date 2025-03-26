@@ -46,7 +46,7 @@ html, body {
   font-size: 14px;
   background: var(--body-bg);
   background-color: #000000;
-  color: var(--body-fg);
+  color: var(--body-fg) !important;
   line-height: 1.6;
 }
 
